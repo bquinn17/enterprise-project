@@ -8,7 +8,7 @@ team_sales
 
 ## Team
 
-- 
+- Bryan Quinn - bquinn17
 
 - 
 
