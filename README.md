@@ -10,7 +10,7 @@ team_sales
 
 - Bryan Quinn - bquinn17
 
-- 
+- Peter Howard - peterhoward45
 
 - 
 
