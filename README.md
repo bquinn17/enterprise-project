@@ -6,11 +6,11 @@ An ERP system developed in Java 8 using Spring Boot
 team_sales
 
 
-## Team (yeet)
+## Team 
 
 - Bryan Quinn - bquinn17
 
-- Peter Howard - peterhoward45 / pjh6651
+- Peter Howard - peterhoward45
 
 - Aaron Stadler - aaron13michael 
 
