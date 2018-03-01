@@ -9,14 +9,10 @@ team_sales
 ## Team 
 
 - Bryan Quinn - bquinn17
-
 - Peter Howard - peterhoward45
-
 - Aaron Stadler - aaron13michael 
-
 - Kevin Barnett - pdfkpb
-
-- 
+- Brendan Jones - BrendanJones44
 
 ##Prerequisites
 
@@ -30,7 +26,7 @@ team_sales
 ##How to begin (setup instructions)
 
 1. `git clone https://github.com/RIT-SWEN-343-201705-KennUWare/erp-2175-erp-sales.git`
- 
+
 2. `javac -jar ErpSalesApplication`
 
 3. `java ErpSalesApplication.jar`
