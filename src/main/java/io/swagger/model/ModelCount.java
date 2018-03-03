@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
  * A key value pair of a model to quantity
  */
 @ApiModel(description = "A key value pair of a model to quantity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-02T21:31:43.530Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 public class ModelCount   {
   @JsonProperty("model")

@@ -6,6 +6,7 @@
 package io.swagger.api;
 
 import io.swagger.model.RetailOrder;
+import io.swagger.model.WholesaleOrder;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +22,68 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-01T23:17:54.274Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 @Api(value = "orders", description = "the orders API")
 public interface OrdersApi {
 
-    @ApiOperation(value = "Add a new retail order to the sales system", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "", notes = "Add a new retail order to the sales system", response = Void.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Created", response = Void.class) })
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
     
     @RequestMapping(value = "/orders/retail/new",
         produces = { "application/json" }, 
-        consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<Void> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+
+
+    @ApiOperation(value = "", notes = "Add a new wholesale order to the sales system", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
+    
+    @RequestMapping(value = "/orders/wholesale/new",
+        produces = { "application/json" }, 
+        method = RequestMethod.POST)
+    ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body);
+
+
+    @ApiOperation(value = "", notes = "Update the status of an order", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
+    
+    @RequestMapping(value = "/orders/update/status",
+        produces = { "application/json" }, 
+        method = RequestMethod.PUT)
+    ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+
+
+    @ApiOperation(value = "", notes = "Gets a completed Order", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
+    
+    @RequestMapping(value = "/orders/completed",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<Void> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum);
+
+
+    @ApiOperation(value = "", notes = "HR Endpoint for getting information about sales rep", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
+    
+    @RequestMapping(value = "/orders",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<Void> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo);
+
+
+    @ApiOperation(value = "", notes = "Support submitting of $0 orders", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Created", response = Void.class) })
+    
+    @RequestMapping(value = "/orders/new/refund",
+        produces = { "application/json" }, 
+        method = RequestMethod.POST)
+    ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 }
