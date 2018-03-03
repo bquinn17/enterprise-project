@@ -1,0 +1,238 @@
+swagger: "2.0"
+info:
+  description: "TODO"
+  version: "1.0.0"
+  title: "erp-2175-erp-sales"
+  #termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "bpj1651@rit.edu"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "TODO"
+schemes:
+- "http"
+paths:
+  /orders:
+    get:
+      description: "HR Endpoint for getting information about sales rep"
+      operationId: "getSalesRep"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "sales_rep_id"
+        type: "string"
+        required: true
+
+      - in: "query"
+        name: "date_from"
+        type: "string"
+        required: true
+
+      - in: "query"
+        name: "date_to"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "Created"
+  /orders/retail/new:
+    post:
+      description: "Add a new retail order to the sales system"
+      operationId: "addRetailOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Retail order object that needs to be added to the Sales System"
+        required: true
+        schema:
+          $ref: "#/definitions/RetailOrder"
+      responses:
+        200:
+          description: "Created"
+
+  /orders/wholesale/new:
+    post:
+      description: "Add a new wholesale order to the sales system"
+      operationId: "addWholesaleOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Retail order object that needs to be added to the Sales System"
+        required: true
+        schema:
+          $ref: "#/definitions/WholesaleOrder"
+      responses:
+        200:
+          description: "Created"
+
+  /orders/new/refund:
+    post:
+      description: "Support submitting of $0 orders"
+      operationId: "zeroDollarOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Retail order object that needs to be added to the Sales System"
+        required: true
+        schema:
+          $ref: "#/definitions/RetailOrder"
+      responses:
+        200:
+          description: "Created"
+
+  /orders/completed:
+    get:
+      description: "Gets a completed Order"
+      operationId: "getOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "serial_num"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "Created"
+
+  /orders/update/status:
+    put:
+      description: "Update the status of an order"
+      operationId: "changeOrderStatus"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Retail order object that needs to be added to the Sales System"
+        required: true
+        schema:
+          $ref: "#/definitions/RetailOrder"
+      responses:
+        200:
+          description: "Created"
+definitions:
+  RetailOrder:
+    type: "object"
+    properties:
+      # id:
+      #   type: "integer"
+      #   format: "int64"
+      customerEmail:
+        type: "string"
+      customerShippingStreetAddress:
+        type: "string"
+      customerShippingZip:
+        type: "string"
+      customerShippingTown:
+        type: "string"
+      customerShippingState:
+        type: "string"
+
+      status:
+        type: "string"
+        enum:
+        - "fullfilled"
+        - "shipped"
+        - "arrived"
+
+      products:
+        type: "array"
+        items:
+          $ref: "#/definitions/Product"
+
+  WholesaleOrder:
+    type: "object"
+    properties:
+      wholesaleAccount:
+        $ref: "#/definitions/WholesaleAccount"
+
+      status:
+        type: "string"
+        enum:
+        - "placed"
+        - "paid"
+        - "fullfilled"
+        - "shipped"
+        - "arrived"
+
+      orderMap:
+        type: "object"
+        items:
+          $ref: "#/definitions/OrderMap"
+
+  Product:
+    type: "object"
+    properties:
+      model:
+        type: "string"
+
+      serialNumber:
+        type: "string"
+
+      refurbished:
+        type: "boolean"
+
+  OrderMap:
+    type: "object"
+    additionalProperties:
+      $ref: "#/definitions/ModelCount"
+
+  ModelCount:
+    description: "A key value pair of a model to quantity"
+    type: "object"
+    properties:
+      model:
+        type: "string"
+
+      quantity:
+        type: "integer"
+
+  WholesaleAccount:
+    type: "object"
+    properties:
+      salesRep:
+        $ref: "#/definitions/SalesRep"
+
+      email:
+        type: "string"
+
+      shippingAddress:
+        type: "string"
+
+      shippingState:
+        type: "string"
+
+      shippingTown:
+        type: "string"
+
+      shippingZip:
+        type: "string"
+  SalesRep:
+    type: "object"
+    properties:
+      firstName:
+        type: "string"
+
+      lastName:
+        type: "string"
+
+      region:
+        type: "string"
+        enum:
+        - "north"
+        - "south"
+        - "east"
+        - "west"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
