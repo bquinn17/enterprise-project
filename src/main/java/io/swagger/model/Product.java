@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,13 +15,19 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
+@Entity
 public class Product   {
+
+  @Column(name = "model")
   @JsonProperty("model")
   private String model = null;
 
+  @Id
+  @Column(name = "serial_number")
   @JsonProperty("serialNumber")
   private String serialNumber = null;
 
+  @Column(name = "refurbished")
   @JsonProperty("refurbished")
   private Boolean refurbished = null;
 

@@ -4,11 +4,13 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.sun.javafx.beans.IDProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Product;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -17,19 +19,30 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
+@Entity
+@Table(name = "retail_orders")
 public class RetailOrder   {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
+  @Column(name = "customer_email")
   @JsonProperty("customerEmail")
   private String customerEmail = null;
 
+  @Column(name = "customer_street_address")
   @JsonProperty("customerShippingStreetAddress")
   private String customerShippingStreetAddress = null;
 
+  @Column(name = "customer_zip")
   @JsonProperty("customerShippingZip")
   private String customerShippingZip = null;
 
+  @Column(name = "customer_town")
   @JsonProperty("customerShippingTown")
   private String customerShippingTown = null;
 
+  @Column(name = "customer_state")
   @JsonProperty("customerShippingState")
   private String customerShippingState = null;
 
@@ -66,9 +79,11 @@ public class RetailOrder   {
     }
   }
 
+  @Column(name = "order_status")
   @JsonProperty("status")
   private StatusEnum status = null;
 
+  @Transient
   @JsonProperty("products")
   private List<Product> products = null;
 
