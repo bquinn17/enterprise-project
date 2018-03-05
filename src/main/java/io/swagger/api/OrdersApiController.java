@@ -31,7 +31,7 @@ public class OrdersApiController implements OrdersApi {
 
         // Check if the order contains at least one product.
         if(body.getProducts().isEmpty()){
-            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
         // Check to see if any fields are empty
@@ -39,7 +39,7 @@ public class OrdersApiController implements OrdersApi {
                 body.getCustomerShippingStreetAddress().isEmpty() ||
                 body.getCustomerShippingTown().isEmpty() ||
                 body.getCustomerShippingZip().isEmpty()){
-            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
         // Create the Retail Order object with the info from body
