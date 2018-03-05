@@ -123,7 +123,7 @@ public class WholesaleOrder {
      * @return orderMap
      **/
     @ApiModelProperty(value = "")
-    public Object getOrderMap() {
+    public List<ModelCount> getOrderMap() {
         return orderMap;
     }
 

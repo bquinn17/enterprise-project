@@ -1,27 +1,19 @@
 package io.swagger.api;
 
-import io.swagger.model.Product;
-import io.swagger.model.OrderMap;
-import io.swagger.model.RetailOrder;
-import io.swagger.model.SalesRep;
-import io.swagger.model.WholesaleAccount;
-import io.swagger.model.WholesaleOrder;
+import io.swagger.model.*;
 import io.swagger.repository.*;
 import io.swagger.annotations.*;
 
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -63,17 +55,12 @@ public class OrdersApiController implements OrdersApi {
         // do some magic!
         /*
         {
-          "orderMap": {
-            "string" : {
-                "string": int,
-                "string": int
-            },
-            "string" : {
-                "string": int,
-                "string": int
+          "orderMap": [
+            {
+              "model": "string",
+              "quantity": 0
             }
-
-          },
+          ],
           "status": "placed",
           "wholesaleAccount": {
             "email": "string",
@@ -92,20 +79,11 @@ public class OrdersApiController implements OrdersApi {
         WholesaleOrder order = new WholesaleOrder();
 
         // order.status(body.getStatus() != null ? body.getStatus() : WholesaleOrder.StatusEnum.PLACED);
-        order.status(WholesaleOrder.StatusEnum.PLACED);
+        order.setStatus(WholesaleOrder.StatusEnum.PLACED);
 
-        WholesaleAccount wholesaleAccount = order.getWholesaleAccount(); // need to find a way to identify WholesaleAccountRepository.findOne();
+        order.setWholesaleAccount(body.getWholesaleAccount()); // need to find a way to identify WholesaleAccountRepository.findOne();
 
-        OrderMap orderMap = new OrderMap();
-        if (body.getOrderMap() != null) {
-            orderMap = new OrderMap(); //(OrderMap) body.getOrderMap();
-        } else {
-            //return new ResponseEntity<Exception>();
-        }
-
-        for (String modelName: orderMap.keySet()) {
-            // Call product repository or something
-        }
+        order.setOrderMap(body.getOrderMap());
 
         wholesaleOrderRepository.save(order);
 
