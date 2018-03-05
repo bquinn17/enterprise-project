@@ -1,23 +1,57 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
+import { Router, Link } from 'react-static'
 import { hot } from 'react-hot-loader'
 //
-import './app.css'
-import logo from './logo.png'
+import Routes from 'react-static-routes'
 
-class App extends Component {
+import Reboot from 'material-ui/Reboot'
+import AppBar from 'material-ui/AppBar'
+import Tabs, { Tab } from 'material-ui/Tabs'
+import { withStyles } from 'material-ui/styles'
+
+// Custom styles
+const styles = {
+  '@global': {
+    img: {
+      maxWidth: '100%',
+    },
+  },
+  appBar: {
+    flexWrap: 'wrap',
+  },
+  tabs: {
+    width: '100%',
+  },
+  content: {
+    padding: '1rem',
+  },
+}
+
+class App extends PureComponent {
+  // Remove the server-side injected CSS.
+  componentDidMount () {
+    const jssStyles = document.getElementById('jss-server-side')
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles)
+    }
+  }
+
   render () {
+    const { classes } = this.props
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React-Static</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Router>
+        <div className={classes.container}>
+          <Reboot />
+          <div className={classes.content}>
+            <Routes />
+          </div>
+        </div>
+      </Router>
     )
   }
 }
 
-export default hot(module)(App)
+const AppWithStyles = withStyles(styles)(App)
+
+export default hot(module)(AppWithStyles)
