@@ -35,7 +35,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/retail/new",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+    ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 
     @ApiOperation(value = "", notes = "Add a new wholesale order to the sales system", response = Void.class, tags={  })
