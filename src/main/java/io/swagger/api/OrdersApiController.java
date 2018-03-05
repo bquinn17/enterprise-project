@@ -46,7 +46,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrderRepository.save(retailOrder);
 
         // Return status code
-        return new ResponseEntity<RetailOrder>(HttpStatus.CREATED);
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
 
     public ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
