@@ -1,12 +1,17 @@
 package io.swagger.api;
 
 import io.swagger.model.Product;
+import io.swagger.model.OrderMap;
 import io.swagger.model.RetailOrder;
 import io.swagger.model.SalesRep;
+import io.swagger.model.WholesaleAccount;
 import io.swagger.model.WholesaleOrder;
 import io.swagger.repository.*;
 import io.swagger.annotations.*;
 
+import io.swagger.repository.WholesaleAccountRepository;
+import io.swagger.repository.WholesaleOrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -26,10 +33,13 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     RetailOrderRepository retailOrderRepository;
 
+    @Autowired
+    WholesaleOrderRepository wholesaleOrderRepository;
+
+    @Autowired
+    WholesaleAccountRepository wholesaleAccountRepository;
 
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-
-
 
         // Create the Retail Order object with the info from body
         RetailOrder retailOrder = new RetailOrder();
@@ -51,6 +61,43 @@ public class OrdersApiController implements OrdersApi {
 
     public ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
         // do some magic!
+        /*
+        {
+          "orderMap": {},
+          "status": "placed",
+          "wholesaleAccount": {
+            "email": "string",
+            "salesRep": {
+              "firstName": "string",
+              "lastName": "string",
+              "region": "north"
+            },
+            "shippingAddress": "string",
+            "shippingState": "string",
+            "shippingTown": "string",
+            "shippingZip": "string"
+          }
+        }
+         */
+        WholesaleOrder order = new WholesaleOrder();
+
+        // order.status(body.getStatus() != null ? body.getStatus() : WholesaleOrder.StatusEnum.PLACED);
+        order.status(WholesaleOrder.StatusEnum.PLACED);
+
+        WholesaleAccount wholesaleAccount = order.getWholesaleAccount(); // need to find a way to identify WholesaleAccountRepository.findOne();
+
+        OrderMap orderMap = new OrderMap();
+        if (body.getOrderMap() != null) {
+            orderMap = (OrderMap) body.getOrderMap();
+        } else {
+            //return new ResponseEntity<Exception>();
+        }
+
+        for (String modelName: orderMap.keySet()) {
+            // Call product repository or something
+        }
+
+
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

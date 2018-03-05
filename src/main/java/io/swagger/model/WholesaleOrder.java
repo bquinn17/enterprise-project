@@ -7,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.WholesaleAccount;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,7 +20,11 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
+@Entity
+@Table(name = "wholesale_order")
 public class WholesaleOrder   {
+
+  @Transient
   @JsonProperty("wholesaleAccount")
   private WholesaleAccount wholesaleAccount = null;
 
@@ -56,9 +65,11 @@ public class WholesaleOrder   {
     }
   }
 
+  @Column(name = "status")
   @JsonProperty("status")
   private StatusEnum status = null;
 
+  @Transient
   @JsonProperty("orderMap")
   private Object orderMap = null;
 
