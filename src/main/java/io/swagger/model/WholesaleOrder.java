@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,7 +34,7 @@ public class WholesaleOrder {
 
     @Transient
     @JsonProperty("orderMap")
-    private Object orderMap = null;
+    private List<ModelCount> orderMap = null;
 
     /**
      * Gets or Sets status
@@ -111,7 +112,7 @@ public class WholesaleOrder {
         this.status = status;
     }
 
-    public WholesaleOrder orderMap(Object orderMap) {
+    public WholesaleOrder orderMap(List<ModelCount> orderMap) {
         this.orderMap = orderMap;
         return this;
     }
@@ -126,7 +127,7 @@ public class WholesaleOrder {
         return orderMap;
     }
 
-    public void setOrderMap(Object orderMap) {
+    public void setOrderMap(List<ModelCount> orderMap) {
         this.orderMap = orderMap;
     }
 
