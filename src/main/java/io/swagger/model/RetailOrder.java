@@ -78,11 +78,12 @@ public class RetailOrder   {
     }
   }
 
+  @Enumerated(EnumType.STRING) // TODO fix enumerated
   @Column(name = "order_status")
   @JsonProperty("status")
   private StatusEnum status = null;
 
-  @Transient
+  @Transient // TODO change to actually put products into the db
   @JsonProperty("products")
   private List<Product> products = null;
 
