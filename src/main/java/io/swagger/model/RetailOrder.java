@@ -91,6 +91,11 @@ public class RetailOrder   {
     this.customerEmail = customerEmail;
     return this;
   }
+    /**
+     * Get ID
+     * @return id of order
+     **/
+    public Long getID() { return id; }
 
    /**
    * Get customerEmail
