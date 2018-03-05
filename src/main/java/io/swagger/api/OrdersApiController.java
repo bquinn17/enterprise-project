@@ -1,6 +1,8 @@
 package io.swagger.api;
 
+import io.swagger.model.Product;
 import io.swagger.model.RetailOrder;
+import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
 
 import io.swagger.annotations.*;
@@ -8,20 +10,17 @@ import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
-@Controller
+@RestController
 public class OrdersApiController implements OrdersApi {
 
 
@@ -41,16 +40,34 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) {
+        Product product = new Product();
+        product.setModel("KennUWare Watch");
+        product.setRefurbished(false);
+        product.setSerialNumber("123456789");
+        List<Product> productList = new ArrayList<Product>();
+        productList.add(product);
+
+        RetailOrder retailOrder = new RetailOrder();
+        retailOrder.setCustomerEmail("goodguy@gmail.com");
+        retailOrder.setCustomerShippingState("NY");
+        retailOrder.setCustomerShippingStreetAddress("1 Lomb Memorial Dr");
+        retailOrder.setCustomerShippingTown("Rochester");
+        retailOrder.setCustomerShippingZip("14623");
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setProducts(productList);
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
     }
 
-    public ResponseEntity<Void> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
+    public ResponseEntity<SalesRep> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        SalesRep rep = new SalesRep();
+        rep.setFirstName("Selly");
+        rep.setLastName("McSellsit");
+        rep.setRegion(SalesRep.RegionEnum.EAST);
+        return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
     }
 
     public ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {

@@ -6,6 +6,7 @@
 package io.swagger.api;
 
 import io.swagger.model.RetailOrder;
+import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
 
 import io.swagger.annotations.*;
@@ -64,7 +65,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/completed",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum);
+    ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum);
 
 
     @ApiOperation(value = "", notes = "HR Endpoint for getting information about sales rep", response = Void.class, tags={  })
@@ -74,7 +75,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo);
+    ResponseEntity<SalesRep> getSalesRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo);
 
 
     @ApiOperation(value = "", notes = "Support submitting of $0 orders", response = Void.class, tags={  })
