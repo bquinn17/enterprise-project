@@ -59,11 +59,21 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
+    public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
         // do some magic!
         /*
         {
-          "orderMap": {},
+          "orderMap": {
+            "string" : {
+                "string": int,
+                "string": int
+            },
+            "string" : {
+                "string": int,
+                "string": int
+            }
+
+          },
           "status": "placed",
           "wholesaleAccount": {
             "email": "string",
@@ -88,7 +98,7 @@ public class OrdersApiController implements OrdersApi {
 
         OrderMap orderMap = new OrderMap();
         if (body.getOrderMap() != null) {
-            orderMap = (OrderMap) body.getOrderMap();
+            orderMap = new OrderMap(); //(OrderMap) body.getOrderMap();
         } else {
             //return new ResponseEntity<Exception>();
         }
@@ -97,8 +107,9 @@ public class OrdersApiController implements OrdersApi {
             // Call product repository or something
         }
 
+        wholesaleOrderRepository.save(order);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<WholesaleOrder>(order, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
