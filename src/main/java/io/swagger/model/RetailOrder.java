@@ -19,7 +19,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 @Entity
-@Table(name = "retail_orders")
+@Table(name = "retail_order")
 public class RetailOrder   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
