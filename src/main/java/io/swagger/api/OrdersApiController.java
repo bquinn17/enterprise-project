@@ -29,6 +29,19 @@ public class OrdersApiController implements OrdersApi {
 
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
+        // Check if the order contains at least one product.
+        if(body.getProducts().isEmpty()){
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+        }
+
+        // Check to see if any fields are empty
+        if(body.getCustomerEmail().isEmpty() || body.getCustomerShippingState().isEmpty() ||
+                body.getCustomerShippingStreetAddress().isEmpty() ||
+                body.getCustomerShippingTown().isEmpty() ||
+                body.getCustomerShippingZip().isEmpty()){
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+        }
+
         // Create the Retail Order object with the info from body
         RetailOrder retailOrder = new RetailOrder();
         retailOrder.setCustomerEmail(body.getCustomerEmail());
@@ -39,11 +52,6 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
         retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
         retailOrder.setProducts(body.getProducts());
-
-        // Check if the order contains at least one product.
-        if(body.getProducts().isEmpty()){
-            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
-        }
 
         // Save Object into database
         retailOrderRepository.save(retailOrder);
