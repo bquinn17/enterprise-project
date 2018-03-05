@@ -50,9 +50,9 @@ public class RetailOrder   {
    */
   public enum StatusEnum {
     FULLFILLED("fullfilled"),
-    
+
     SHIPPED("shipped"),
-    
+
     ARRIVED("arrived");
 
     private String value;
@@ -78,8 +78,8 @@ public class RetailOrder   {
     }
   }
 
-  @Enumerated(EnumType.STRING) // TODO fix enumerated
   @Column(name = "order_status")
+  @Enumerated(EnumType.STRING)
   @JsonProperty("status")
   private StatusEnum status = null;
 
@@ -264,7 +264,7 @@ public class RetailOrder   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RetailOrder {\n");
-    
+
     sb.append("    customerEmail: ").append(toIndentedString(customerEmail)).append("\n");
     sb.append("    customerShippingStreetAddress: ").append(toIndentedString(customerShippingStreetAddress)).append("\n");
     sb.append("    customerShippingZip: ").append(toIndentedString(customerShippingZip)).append("\n");
