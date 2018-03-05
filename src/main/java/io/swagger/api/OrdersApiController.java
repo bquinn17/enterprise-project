@@ -31,6 +31,9 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     WholesaleAccountRepository wholesaleAccountRepository;
 
+    @Autowired
+    ModelCountRepository modelCountRepository;
+
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
         // Create the Retail Order object with the info from body
@@ -87,7 +90,12 @@ public class OrdersApiController implements OrdersApi {
 
         wholesaleOrderRepository.save(order);
 
-        return new ResponseEntity<WholesaleOrder>(order, HttpStatus.OK);
+        for (ModelCount modelCount: body.getOrderMap()) {
+            modelCount.setOrder_id(order.getId());
+            modelCountRepository.save(modelCount);
+        }
+
+        return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
     public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {

@@ -29,12 +29,17 @@ public class WholesaleOrder {
     private WholesaleAccount wholesaleAccount = null;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     @JsonProperty("status")
     private StatusEnum status = null;
 
-    @Transient
     @JsonProperty("orderMap")
+    @OneToMany(mappedBy="order_id")
     private List<ModelCount> orderMap = null;
+
+    public Long getId() {
+        return id;
+    }
 
     /**
      * Gets or Sets status
