@@ -29,23 +29,21 @@ public class OrdersApiController implements OrdersApi {
 
     public ResponseEntity<Void> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
-        // Check valid email using regex
+        // Create the Retail Order object with the info from body
+        RetailOrder retailOrder = new RetailOrder();
+        retailOrder.setCustomerEmail(body.getCustomerEmail());
+        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
+        retailOrder.setCustomerShippingStreetAddress(body.getCustomerShippingStreetAddress());
+        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
+        retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
+        retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
+        retailOrder.setStatus(body.getStatus());
+        retailOrder.setProducts(body.getProducts());
 
-        // Check valid state
+        // Save Object into database
+        retailOrderRepository.save(retailOrder);
 
-        // Check valid address
-
-        // Check valid zip
-
-        // Check valid town
-
-        // Check for at least one product
-        if(body.getProducts().isEmpty()){
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
-
-        retailOrderRepository.save(body);
-
+        // Return status code
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 

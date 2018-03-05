@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RetailOrderRepository extends JpaRepository<RetailOrder, Long> {
-
+    //Nothing is needed here. save(), findAll(), findOne(), delete() are provided by JpaRepository
 }
