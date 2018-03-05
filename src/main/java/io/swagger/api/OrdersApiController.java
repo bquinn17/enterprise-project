@@ -29,12 +29,25 @@ public class OrdersApiController implements OrdersApi {
     WholesaleOrderRepository wholesaleOrderRepository;
 
     @Autowired
-    WholesaleAccountRepository wholesaleAccountRepository;
-
+    WholesaleAccountRepository wholesaleAccountRepository;        
+  
     @Autowired
     ModelCountRepository modelCountRepository;
 
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
+
+        // Check if the order contains at least one product.
+        if(body.getProducts().isEmpty()){
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
+        }
+
+        // Check to see if any fields are empty
+        if(body.getCustomerEmail().isEmpty() || body.getCustomerShippingState().isEmpty() ||
+                body.getCustomerShippingStreetAddress().isEmpty() ||
+                body.getCustomerShippingTown().isEmpty() ||
+                body.getCustomerShippingZip().isEmpty()){
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
+        }
 
         // Create the Retail Order object with the info from body
         RetailOrder retailOrder = new RetailOrder();
