@@ -34,7 +34,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(body.getStatus());
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
         retailOrder.setProducts(body.getProducts());
 
         // Save Object into database
