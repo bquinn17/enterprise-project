@@ -4,15 +4,15 @@ import io.swagger.model.Product;
 import io.swagger.model.RetailOrder;
 import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
-
+import io.swagger.repository.*;
 import io.swagger.annotations.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,11 +23,30 @@ import javax.validation.Valid;
 @RestController
 public class OrdersApiController implements OrdersApi {
 
+    @Autowired
+    RetailOrderRepository retailOrderRepository;
 
 
     public ResponseEntity<Void> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+
+        // Check valid email using regex
+
+        // Check valid state
+
+        // Check valid address
+
+        // Check valid zip
+
+        // Check valid town
+
+        // Check for at least one product
+        if(body.getProducts().isEmpty()){
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
+
+        retailOrderRepository.save(body);
+
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
     public ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
