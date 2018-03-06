@@ -1,5 +1,7 @@
 import React from 'react'
 //
+import axios from 'axios'
+//
 import { Link } from 'react-static'
 //
 import Button from 'material-ui/Button'
@@ -15,6 +17,7 @@ import { withStyles } from 'material-ui/styles'
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
 import styles from './WholesaleOrderPageStyles'
+
 //
 import getRepsFromRegion from '../../stubbed-data/dataFromHR'
 import getWholeSaleAccounts from '../../stubbed-data/dataFromFutureReleases'
@@ -100,11 +103,22 @@ class WholesaleOrderPage extends React.Component {
 
     // Create the post request
     const request = {
-      "orderMap": {
-        "Kenn-U-Active": this.state.numActive,
-        "Kenn-U-Flex": this.state.numFlex,
-        "Kenn-U-Style": this.state.numStyle,
-      },
+      "orderMap": [
+          {
+            "model": "Kenn-U-Active",
+            "quantity": this.state.numActive
+          },
+          {
+            "model": "Kenn-U-Flex",
+            "quantity": this.state.numFlex
+          },
+          {
+            "model": "Kenn-U-Style",
+            "quantity": this.state.numStyle
+          }
+          // { "Kenn-U-Flex": this.state.numFlex },
+          // { "Kenn-U-Style": this.state.numStyle },
+        ],
       "status": "placed",
       "wholesaleAccount": {
         "email": wholesale.email,
@@ -119,8 +133,18 @@ class WholesaleOrderPage extends React.Component {
       },
       "region": this.state.region
     }
-    // TODO: POST the request
-    console.log(request)
+
+    const requestAsString = JSON.stringify(request)
+    console.log(requestAsString)
+
+    // POST the request
+    axios.post('http://127.0.0.1:8080/orders/wholesale/new', {
+      requestAsString
+    }).then(function(response) {
+      alert("success!" + response)
+    }).catch(function(error) {
+      alert("error!" + error)
+    })
   }
 
   render() {
