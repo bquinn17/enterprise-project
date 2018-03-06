@@ -5,7 +5,6 @@ import { withRouteData, Link } from 'react-static'
 import { hot } from 'react-hot-loader'
 //
 import AppBar from 'material-ui/AppBar'
-import Avatar from 'material-ui/Avatar'
 import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
 import Menu, { MenuItem } from 'material-ui/Menu'
@@ -81,21 +80,6 @@ class Store extends React.Component {
       )
     })
 
-//     {
-    //  "customerEmail": "string",
-    //  "customerShippingState": "string",
-    //  "customerShippingStreetAddress": "string",
-    //  "customerShippingTown": "string",
-    //  "customerShippingZip": "string",
-    //  "products": [
-    //    {
-    //      "model": "string",
-    //      "refurbished": false,
-    //      "serialNumber": "string"
-    //    }
-    //  ],
-    //  "status": "fullfilled"
-    // }
     const request = {
       "customerEmail":"suzy@email.com",
       "customerShippingState":"NY",
@@ -115,7 +99,11 @@ class Store extends React.Component {
     var pageToShow
     switch(this.props.data.storePage) {
       case 'catalog':
-        pageToShow = <CatalogPage addItem={this.addItem} isEmpty={this.state.itemsInCart.length === 0} handleSubmit={this.handleSubmit}/>
+        pageToShow = <CatalogPage
+                        addItem={ this.addItem }
+                        isEmpty={ this.state.itemsInCart.length === 0 }
+                        handleSubmit={ this.handleSubmit }
+                     />
         break;
       case 'contact-us':
         pageToShow = <ContactUs />
@@ -145,7 +133,10 @@ class Store extends React.Component {
             />
             <Tab component={ Link } to="/store/contact-us" label="Contact Us" />
             <div className={ classes.cart }>
-              <span className={ classes.totalCost }>${this.state.totalCost}</span>
+              <span
+                className={ classes.totalCost }>
+                ${ this.state.totalCost }
+                </span>
               <IconButton>
                 <ShoppingCart onClick={ this.handleCartClick }/>
               </IconButton>

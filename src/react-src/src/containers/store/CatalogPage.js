@@ -3,10 +3,11 @@ import React from 'react'
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
 import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
+import IconButton from 'material-ui/IconButton'
 import Subheader from 'material-ui/List/ListSubheader'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
-import IconButton from 'material-ui/IconButton'
+//
 import AddCircle from 'material-ui-icons/AddCircle'
 //
 import styles from './catalogPageStyles'
@@ -67,26 +68,6 @@ class CatalogPage extends React.Component {
   render() {
     const { classes } = this.props
 
-    const flexWatchData = {
-      "model": "Kenn-U-Flex",
-      "refurbished": false,
-      "serialNumber": "12345",
-      "cost": 49.99
-    }
-
-    const styleWatchData = {
-      "model": "Kenn-U-Style",
-      "refurbished": false,
-      "serialNumber": "123124",
-      "cost": 129.99
-    }
-
-    const activeWatchData = {
-      "model": "Kenn-U-Style",
-      "refurbished": false,
-      "serialNumber": "12245",
-      "cost": 69.99
-    }
     return (
       <div>
         <Typography
@@ -101,30 +82,31 @@ class CatalogPage extends React.Component {
         <Card>
           <div className={ classes.root }>
             <GridList cellHeight={ 300 } className={ classes.gridList }>
-              {/*
-              <GridListTile key="Subheader" cols={ 2 } style={{ height: 'auto' }}>
-                <Subheader component="div">Featured Products</Subheader>
-              </GridListTile>
-              */}
               <GridListTile className={ classes.imgWrapper }>
-                <img src={activeImg} />
+                <img src={ activeImg } />
                 <GridListTileBar
                   title={"Kenn-U-Active"}
-                  subtitle={<span>Starting at $69.99</span>}
+                  subtitle={ <span>Starting at $69.99</span> }
                   actionIcon={
-                    <IconButton className={classes.icon} onClick={this.addActiveWatchToCart}>
+                    <IconButton
+                      className={ classes.icon }
+                      onClick={ this.addActiveWatchToCart }
+                    >
                       <AddCircle />
                     </IconButton>
                   }
                 />
               </GridListTile>
               <GridListTile className={ classes.imgWrapper }>
-                <img src={styleImg} />
+                <img src={ styleImg } />
                 <GridListTileBar
-                  title={"Kenn-U-Style"}
-                  subtitle={<span>Starting at $129.99</span>}
+                  title={ "Kenn-U-Style" }
+                  subtitle={ <span>Starting at $129.99</span> }
                   actionIcon={
-                    <IconButton className={classes.icon} onClick={this.addStyleWatchToCart}>
+                    <IconButton
+                      className={ classes.icon }
+                      onClick={ this.addStyleWatchToCart }
+                    >
                       <AddCircle />
                     </IconButton>
                   }
@@ -133,10 +115,14 @@ class CatalogPage extends React.Component {
               <GridListTile className={ classes.imgWrapper }>
                 <img src={flexImg} />
                 <GridListTileBar
-                  title={"Kenn-U-Flex"}
-                  subtitle={<span>Starting at $49.99</span>}
+                  title={ "Kenn-U-Flex" }
+                  subtitle={ <span>Starting at $49.99</span> }
                   actionIcon={
-                    <IconButton className={classes.icon} onClick={this.addFlexWatchToCart}>
+                    <IconButton
+                      className={ classes.icon }
+                      onClick=
+                      { this.addFlexWatchToCart }
+                    >
                       <AddCircle />
                     </IconButton>
                   }
@@ -144,8 +130,12 @@ class CatalogPage extends React.Component {
               </GridListTile>
             </GridList>
           </div>
-          <Button onClick={this.props.handleSubmit} disabled={this.props.isEmpty} variant="raised" className={classes.button}>
-            Checkout
+          <Button
+            onClick={ this.props.handleSubmit }
+            disabled={ this.props.isEmpty }
+            variant="raised"
+            className={ classes.button }>
+              Checkout
           </Button>
         </Card>
       </div>
