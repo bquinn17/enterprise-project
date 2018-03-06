@@ -97,7 +97,7 @@ class Store extends React.Component {
 
     console.log(requestAsString)
 
-    axios.post('http://127.0.0.1:8080/orders/wholesale/new', {
+    axios.post('http://127.0.0.1:8080/orders/retail/new', {
       requestAsString
     }).then(function(response) {
       alert("success!" + response)
@@ -123,7 +123,7 @@ class Store extends React.Component {
         pageToShow = <ContactUs />
         break;
     }
-    
+
     const itemsInCart = this.state.itemsInCart
 
     return (
