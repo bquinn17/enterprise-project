@@ -3,6 +3,7 @@ package io.swagger.model;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -37,6 +38,7 @@ public class WholesaleOrder {
     @OneToMany(mappedBy="order_id")
     private List<ModelCount> orderMap = null;
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }

@@ -2,6 +2,7 @@ package io.swagger.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -30,7 +31,7 @@ public class ModelCount {
     @JsonProperty("quantity")
     private Integer quantity = null;
 
-    @JsonProperty("order_id")
+    @JsonIgnore
     private Long order_id;
 
     public ModelCount model(String model) {
