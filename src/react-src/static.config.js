@@ -20,7 +20,17 @@ export default {
       },
       {
         path: '/employee/login',
-        component: 'src/containers/employee-login/EmployeeLoginPage',
+        component: 'src/containers/employee-login/Employee',
+        getData: () => ({
+          data: {"employeePage": "login"},
+        }),
+      },
+      {
+        path: '/employee/dashboard',
+        component: 'src/containers/employee-login/Employee',
+        getData: () => ({
+          data: {"employeePage": "dashboard"},
+        }),
       },
       {
         path: '/store/catalog',
@@ -51,7 +61,7 @@ export default {
 
     const generateClassName = createGenerateClassName()
 
-    const html = render(
+    const html = render (
       <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
         <MuiThemeProvider theme={muiTheme} sheetsManager={new Map()}>
           <Comp />
