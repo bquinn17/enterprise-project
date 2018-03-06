@@ -22,6 +22,8 @@ team_sales
 
 - MySQL (mysql-client and mysql-server)
 
+- Yarn (may need to use PATH="$PATH:/usr/local/bin" yarn install)
+
 - IntelliJ - as developer platform
 
 
@@ -35,7 +37,15 @@ https://wiki.gandi.net/en/hosting/using-linux/tutorials/ubuntu/createdatabase
 
 2. Grant a user all permissions to that databse to -u admin -p toor
 
-### Code ###
+### Front end ###
+
+ - `cd src/react-src/`
+
+ - `yarn install`
+ 
+ - `yarn start`
+
+### Back end ###
 
 1. `git clone https://github.com/RIT-SWEN-343-201705-KennUWare/erp-2175-erp-sales.git`
 
