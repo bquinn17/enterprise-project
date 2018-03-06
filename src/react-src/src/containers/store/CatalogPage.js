@@ -24,15 +24,28 @@ class CatalogPage extends React.Component {
   constructor(props){
     super(props)
 
-    this.callUpdate = this.callUpdate.bind(this)
+    this.addStyleWatchToCart = this.addStyleWatchToCart.bind(this)
+    this.addFlexWatchToCart = this.addFlexWatchToCart.bind(this)
   }
 
-  callUpdate() {
+  addFlexWatchToCart() {
+    const flexWatchData = {
+      "model": "Kenn-U-Flex",
+      "refurbished": false,
+      "serialNumber": "12345",
+      "cost": 49.99,
+      "imgSrc": flexImg
+    }
+    this.props.addItem(flexWatchData)
+  }
+
+  addStyleWatchToCart() {
     const styleWatchData = {
       "model": "Kenn-U-Style",
       "refurbished": false,
       "serialNumber": "123124",
-      "cost": 129.99
+      "cost": 129.99,
+      "imgSrc": styleImg
     }
     this.props.addItem(styleWatchData)
   }
@@ -98,7 +111,7 @@ class CatalogPage extends React.Component {
                   title={"Kenn-U-Style"}
                   subtitle={<span>Starting at $129.99</span>}
                   actionIcon={
-                    <IconButton className={classes.icon} onClick={this.callUpdate}>
+                    <IconButton className={classes.icon} onClick={this.addStyleWatchToCart}>
                       <AddCircle />
                     </IconButton>
                   }
@@ -110,7 +123,7 @@ class CatalogPage extends React.Component {
                   title={"Kenn-U-Flex"}
                   subtitle={<span>Starting at $49.99</span>}
                   actionIcon={
-                    <IconButton className={classes.icon}>
+                    <IconButton className={classes.icon} onClick={this.addFlexWatchToCart}>
                       <AddCircle />
                     </IconButton>
                   }

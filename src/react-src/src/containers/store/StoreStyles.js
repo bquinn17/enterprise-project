@@ -38,6 +38,16 @@ export default {
 
   totalCost: {
     fontFamily: 'Roboto'
-  }
+  },
+
+  cartMenu: {
+    marginTop: '50px'
+  },
+
+  productImg: {
+    borderRadius: "50%",
+    maxWidth: "30px",
+    marginRight: "10px"
+  },
 
 }

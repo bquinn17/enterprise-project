@@ -166,7 +166,7 @@ class WholesaleOrderPage extends React.Component {
         <br />
         <img
          className={ classes.productImg }
-         src={styleImg}
+         src={ styleImg }
         />
         <TextField
           label="Kenn-U-Style"

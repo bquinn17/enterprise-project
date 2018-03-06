@@ -46,7 +46,9 @@ class Store extends React.Component {
   }
 
   addItem(item) {
-    const newTotalCost = this.state.totalCost + item.cost
+    var addedTotalCost = this.state.totalCost + item.cost
+    var roundedTotalCost = addedTotalCost.toFixed(2)
+    var newTotalCost = parseFloat(roundedTotalCost)
     this.state.itemsInCart.push(item)
     this.setState({
       totalCost: newTotalCost,
@@ -111,9 +113,16 @@ class Store extends React.Component {
                 anchorEl={ this.state.menuAnchor }
                 open={ Boolean(this.state.menuAnchor) }
                 onClose={ this.handleCartClose }
+                className={ classes.cartMenu }
               >
                 { itemsInCart.map(item => (
-                    <MenuItem value={ item.serialNumber }>{ item.model } ${ item.cost }</MenuItem>
+                    <MenuItem value={ item.serialNumber }>
+                      <img
+                       className={ classes.productImg }
+                       src={ "../../" + item.imgSrc }
+                      />
+                    { item.model } ${ item.cost }
+                    </MenuItem>
                 ))}
               </Menu>
             </div>
