@@ -34,6 +34,7 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     ModelCountRepository modelCountRepository;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
         // Check if the order contains at least one product.
@@ -67,6 +68,7 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
         // do some magic!
         /*
