@@ -92,8 +92,8 @@ class Store extends React.Component {
       "products": cartArr,
       "status": "fullfilled"
     }
-    
-    axios.post('http://127.0.0.1:8080/orders/retail/new',
+
+    axios.post('http://vm344h.se.rit.edu:8080/orders/retail/new',
       request
     ).then(function(response) {
       alert("success!" + response)
