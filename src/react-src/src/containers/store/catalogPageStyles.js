@@ -22,7 +22,15 @@ export default {
     marginTop: "20px",
     maxWidth: 250,
     maxHeight: 300,
-    marginLeft: "40px"
-  }
+    marginRight: "40px"
+  },
+
+  button: {
+    marginTop: "30px",
+    width: "50%",
+    marginLeft: "25%",
+    marginRight: "25%",
+    marginBottom: "20px"
+  },
 
 }

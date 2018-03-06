@@ -35,6 +35,7 @@ class Store extends React.Component {
       menuAnchor: null
     }
     this.addItem = this.addItem.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   // Remove the server-side injected CSS.
@@ -67,6 +68,46 @@ class Store extends React.Component {
     })
   }
 
+  handleSubmit() {
+
+    var cartArr = []
+    this.state.itemsInCart.forEach(function(item) {
+      cartArr.push(
+        {
+          "model": item.model,
+          "refurbished": "false",
+          "serialNumber": item.serialNumber
+        }
+      )
+    })
+
+//     {
+    //  "customerEmail": "string",
+    //  "customerShippingState": "string",
+    //  "customerShippingStreetAddress": "string",
+    //  "customerShippingTown": "string",
+    //  "customerShippingZip": "string",
+    //  "products": [
+    //    {
+    //      "model": "string",
+    //      "refurbished": false,
+    //      "serialNumber": "string"
+    //    }
+    //  ],
+    //  "status": "fullfilled"
+    // }
+    const request = {
+      "customerEmail":"suzy@email.com",
+      "customerShippingState":"NY",
+      "customerShippingStreetAddress":"12 Lomb Memorial Drive",
+      "customerShippingTown": "Rochester",
+      "customerShippingZip": "14623",
+      "products": cartArr,
+      "status": "fullfilled"
+    }
+    console.log(request)
+  }
+
   render() {
     const { classes } = this.props
 
@@ -74,7 +115,7 @@ class Store extends React.Component {
     var pageToShow
     switch(this.props.data.storePage) {
       case 'catalog':
-        pageToShow = <CatalogPage addItem={this.addItem}/>
+        pageToShow = <CatalogPage addItem={this.addItem} isEmpty={this.state.itemsInCart.length === 0} handleSubmit={this.handleSubmit}/>
         break;
       case 'contact-us':
         pageToShow = <ContactUs />

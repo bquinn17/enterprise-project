@@ -1,5 +1,6 @@
 import React from 'react'
 //
+import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
 import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
 import Subheader from 'material-ui/List/ListSubheader'
@@ -26,6 +27,7 @@ class CatalogPage extends React.Component {
 
     this.addStyleWatchToCart = this.addStyleWatchToCart.bind(this)
     this.addFlexWatchToCart = this.addFlexWatchToCart.bind(this)
+    this.addActiveWatchToCart = this.addActiveWatchToCart.bind(this)
   }
 
   addFlexWatchToCart() {
@@ -48,6 +50,17 @@ class CatalogPage extends React.Component {
       "imgSrc": styleImg
     }
     this.props.addItem(styleWatchData)
+  }
+
+  addActiveWatchToCart() {
+    const activeWatchData = {
+      "model": "Kenn-U-Active",
+      "refurbished": false,
+      "serialNumber": "123124",
+      "cost": 69.99,
+      "imgSrc": activeImg
+    }
+    this.props.addItem(activeWatchData)
   }
 
 
@@ -99,7 +112,7 @@ class CatalogPage extends React.Component {
                   title={"Kenn-U-Active"}
                   subtitle={<span>Starting at $69.99</span>}
                   actionIcon={
-                    <IconButton className={classes.icon}>
+                    <IconButton className={classes.icon} onClick={this.addActiveWatchToCart}>
                       <AddCircle />
                     </IconButton>
                   }
@@ -131,6 +144,9 @@ class CatalogPage extends React.Component {
               </GridListTile>
             </GridList>
           </div>
+          <Button onClick={this.props.handleSubmit} disabled={this.props.isEmpty} variant="raised" className={classes.button}>
+            Checkout
+          </Button>
         </Card>
       </div>
     )
