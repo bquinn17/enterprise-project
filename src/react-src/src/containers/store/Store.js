@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 //
-import { withRouteData,Link } from 'react-static'
+import { withRouteData, Link } from 'react-static'
 //
 import { hot } from 'react-hot-loader'
 //
@@ -42,11 +42,9 @@ class Store extends PureComponent {
     var pageToShow
     switch(this.props.data.storePage) {
       case 'catalog':
-        console.log("Found catalog")
         pageToShow = <CatalogPage />
         break;
       case 'contact-us':
-        console.log("Found contact us")
         pageToShow = <ContactUs />
         break;
     }

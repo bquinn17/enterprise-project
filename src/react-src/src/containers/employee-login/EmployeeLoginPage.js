@@ -15,15 +15,45 @@ import ArrowBack from 'material-ui-icons/ArrowBack'
 import { withStyles } from 'material-ui/styles'
 //
 import componentStyles from './employeeLoginPageStyles'
-
+//
+import Loader from 'react-loader'
+//
+import logoImg from '../../logo.jpg'
 /**
  * LoginForm represents the login page the employees of KennUWare Corp Sales ERP
  *
  * Author: Brendan Jones, bpj1651@rit.edu
  */
 class LoginForm extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      userId: '',
+      password: '',
+      loading: false
+    }
+
+    this.handleFormChange = this.handleFormChange.bind(this)
+  }
+
+  handleFormChange = prop => event => {
+    this.setState({ [prop]: event.target.value} )
+  }
+
+  handleSubmit() {
+    console.log("submit")
+    this.setState({ loading: true} )
+
+    setTimeout(function(){
+            this.setState({loading:false})
+            window.location.assign("/employee/dashboard")
+       }.bind(this),1000)
+
+  }
 
   render(){
+    console.log(this.state.password)
     const { classes } = this.props
     return (
       <div>
@@ -41,18 +71,33 @@ class LoginForm extends React.Component {
               <ArrowBack />
             </IconButton>
           </Link>
+          <img src={ logoImg} className={ classes.logoImg } />
           <TextField
             required="true"
             placeholder="User ID"
             className={ classes.textbox }
+            onChange = { this.handleFormChange('userId') }
           />
           <TextField
             required="true"
             type="password"
             placeholder="Password"
             className={ classes.textbox }
+            onChange = { this.handleFormChange('password') }
           />
-          <Button className={ classes.submitButton }>Log in</Button>
+          <Button
+            disabled={ this.state.loading }
+            className={ classes.submitButton }
+            onClick={ this.handleSubmit.bind(this) }
+          >
+            Log in
+          </Button>
+          <Loader
+
+             loaded={ !this.state.loading }
+             className={ classes.loadWheel}
+          >
+          </Loader>
         </Card>
       </div>
     )
