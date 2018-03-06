@@ -134,13 +134,10 @@ class WholesaleOrderPage extends React.Component {
       "region": this.state.region
     }
 
-    const requestAsString = JSON.stringify(request)
-    console.log(requestAsString)
-
     // POST the request
-    axios.post('http://127.0.0.1:8080/orders/wholesale/new', {
-      requestAsString
-    }).then(function(response) {
+    axios.post('http://127.0.0.1:8080/orders/wholesale/new',
+      request
+    ).then(function(response) {
       alert("success!" + response)
     }).catch(function(error) {
       alert("error!" + error)
