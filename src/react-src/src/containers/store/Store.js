@@ -92,14 +92,10 @@ class Store extends React.Component {
       "products": cartArr,
       "status": "fullfilled"
     }
-
-    const requestAsString = JSON.stringify(request)
-
-    console.log(requestAsString)
-
-    axios.post('http://127.0.0.1:8080/orders/retail/new', {
-      requestAsString
-    }).then(function(response) {
+    
+    axios.post('http://127.0.0.1:8080/orders/retail/new',
+      request
+    ).then(function(response) {
       alert("success!" + response)
     }).catch(function(error) {
       alert("error!" + error)
