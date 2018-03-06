@@ -8,6 +8,7 @@ import AppBar from 'material-ui/AppBar'
 import Avatar from 'material-ui/Avatar'
 import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
+import Menu, { MenuItem } from 'material-ui/Menu'
 import { withStyles } from 'material-ui/styles'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import Toolbar from 'material-ui/Toolbar'
@@ -25,7 +26,16 @@ import styles from './StoreStyles'
  *
  * Author: Brendan Jones, bpj1651@rit.edu
  */
-class Store extends PureComponent {
+class Store extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      totalCost: 0,
+      itemsInCart: [],
+      menuAnchor: null
+    }
+    this.addItem = this.addItem.bind(this)
+  }
 
   // Remove the server-side injected CSS.
   componentDidMount () {
@@ -35,6 +45,26 @@ class Store extends PureComponent {
     }
   }
 
+  addItem(item) {
+    const newTotalCost = this.state.totalCost + item.cost
+    this.state.itemsInCart.push(item)
+    this.setState({
+      totalCost: newTotalCost,
+    })
+  }
+
+  handleCartClick = event => {
+    this.setState({
+      menuAnchor: event.currentTarget
+    })
+  }
+
+  handleCartClose = () => {
+    this.setState({
+      menuAnchor: null
+    })
+  }
+
   render() {
     const { classes } = this.props
 
@@ -42,12 +72,15 @@ class Store extends PureComponent {
     var pageToShow
     switch(this.props.data.storePage) {
       case 'catalog':
-        pageToShow = <CatalogPage />
+        pageToShow = <CatalogPage addItem={this.addItem}/>
         break;
       case 'contact-us':
         pageToShow = <ContactUs />
         break;
     }
+
+    console.log(itemsInCart)
+    const itemsInCart = this.state.itemsInCart
 
     return (
       <div className={ classes.root }>
@@ -69,9 +102,20 @@ class Store extends PureComponent {
             />
             <Tab component={ Link } to="/store/contact-us" label="Contact Us" />
             <div className={ classes.cart }>
+              <span className={ classes.totalCost }>${this.state.totalCost}</span>
               <IconButton>
-                <ShoppingCart />
+                <ShoppingCart onClick={ this.handleCartClick }/>
               </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={ this.state.menuAnchor }
+                open={ Boolean(this.state.menuAnchor) }
+                onClose={ this.handleCartClose }
+              >
+                { itemsInCart.map(item => (
+                    <MenuItem value={ item.serialNumber }>{ item.model } ${ item.cost }</MenuItem>
+                ))}
+              </Menu>
             </div>
           </Toolbar>
         </AppBar>

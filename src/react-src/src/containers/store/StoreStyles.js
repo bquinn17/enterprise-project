@@ -35,5 +35,9 @@ export default {
   title: {
     maringLeft: '20px'
   },
-  
+
+  totalCost: {
+    fontFamily: 'Roboto'
+  }
+
 }

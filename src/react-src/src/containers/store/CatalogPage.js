@@ -21,9 +21,46 @@ import activeImg from '../../active.jpg'
  * Author: Brendan Jones, bpj1651@rit.edu
  */
 class CatalogPage extends React.Component {
+  constructor(props){
+    super(props)
+
+    this.callUpdate = this.callUpdate.bind(this)
+  }
+
+  callUpdate() {
+    const styleWatchData = {
+      "model": "Kenn-U-Style",
+      "refurbished": false,
+      "serialNumber": "123124",
+      "cost": 129.99
+    }
+    this.props.addItem(styleWatchData)
+  }
+
 
   render() {
     const { classes } = this.props
+
+    const flexWatchData = {
+      "model": "Kenn-U-Flex",
+      "refurbished": false,
+      "serialNumber": "12345",
+      "cost": 49.99
+    }
+
+    const styleWatchData = {
+      "model": "Kenn-U-Style",
+      "refurbished": false,
+      "serialNumber": "123124",
+      "cost": 129.99
+    }
+
+    const activeWatchData = {
+      "model": "Kenn-U-Style",
+      "refurbished": false,
+      "serialNumber": "12245",
+      "cost": 69.99
+    }
     return (
       <div>
         <Typography
@@ -61,7 +98,7 @@ class CatalogPage extends React.Component {
                   title={"Kenn-U-Style"}
                   subtitle={<span>Starting at $129.99</span>}
                   actionIcon={
-                    <IconButton className={classes.icon}>
+                    <IconButton className={classes.icon} onClick={this.callUpdate}>
                       <AddCircle />
                     </IconButton>
                   }
