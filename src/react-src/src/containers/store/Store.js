@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react'
 //
+import axios from 'axios'
+//
 import { withRouteData, Link } from 'react-static'
 //
 import { hot } from 'react-hot-loader'
@@ -18,6 +20,7 @@ import ShoppingCart from 'material-ui-icons/ShoppingCart'
 import CatalogPage from './CatalogPage'
 import ContactUs from './ContactUs'
 import logoImg from '../../logo.jpg'
+//
 import styles from './StoreStyles'
 
 /**
@@ -89,7 +92,18 @@ class Store extends React.Component {
       "products": cartArr,
       "status": "fullfilled"
     }
-    console.log(request)
+
+    const requestAsString = JSON.stringify(request)
+
+    console.log(requestAsString)
+
+    axios.post('http://127.0.0.1:8080/orders/wholesale/new', {
+      requestAsString
+    }).then(function(response) {
+      alert("success!" + response)
+    }).catch(function(error) {
+      alert("error!" + error)
+    })
   }
 
   render() {
@@ -109,8 +123,7 @@ class Store extends React.Component {
         pageToShow = <ContactUs />
         break;
     }
-
-    console.log(itemsInCart)
+    
     const itemsInCart = this.state.itemsInCart
 
     return (
