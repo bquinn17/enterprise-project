@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "TODO"
+  description: "API Documentation for Sales"
   version: "1.0.0"
   title: "erp-2175-erp-sales"
   #termsOfService: "http://swagger.io/terms/"
@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "TODO"
+host: "vm344h.se.rit.edu:3000"
 schemes:
 - "http"
 paths:
@@ -54,7 +54,7 @@ paths:
         200:
           description: "Created"
 
-  /orders/wholesale/new:
+  /orders/wholesale/order/new:
     post:
       description: "Add a new wholesale order to the sales system"
       operationId: "addWholesaleOrder"
@@ -70,7 +70,22 @@ paths:
       responses:
         200:
           description: "Created"
-
+  /orders/wholesale/account/new:
+    post:
+      description: "Add a new wholesale account to the sales system"
+      operationId: "addWholesaleAccount"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Add a new wholesale account to the sale system"
+        required: true
+        schema:
+          $ref: "#/definitions/WholesaleAccount"
+      responses:
+        201:
+          description: "Created"
   /orders/new/refund:
     post:
       description: "Support submitting of $0 orders"
