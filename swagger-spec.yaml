@@ -63,7 +63,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Retail order object that needs to be added to the Sales System"
+        description: "Add a new wholesale order to the sales system"
         required: true
         schema:
           $ref: "#/definitions/WholesaleOrder"
@@ -80,7 +80,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Retail order object that needs to be added to the Sales System"
+        description: "Support submitting of $0 orders"
         required: true
         schema:
           $ref: "#/definitions/RetailOrder"
@@ -112,7 +112,7 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Retail order object that needs to be added to the Sales System"
+        description: "Update the status of an order"
         required: true
         schema:
           $ref: "#/definitions/RetailOrder"
@@ -140,7 +140,7 @@ definitions:
       status:
         type: "string"
         enum:
-        - "fullfilled"
+        - "fulfilled"
         - "shipped"
         - "arrived"
 
@@ -165,9 +165,9 @@ definitions:
         - "arrived"
 
       orderMap:
-        type: "object"
+        type: "array"
         items:
-          $ref: "#/definitions/OrderMap"
+          $ref: "#/definitions/ModelCount"
 
   Product:
     type: "object"
@@ -180,11 +180,6 @@ definitions:
 
       refurbished:
         type: "boolean"
-
-  OrderMap:
-    type: "object"
-    additionalProperties:
-      $ref: "#/definitions/ModelCount"
 
   ModelCount:
     description: "A key value pair of a model to quantity"

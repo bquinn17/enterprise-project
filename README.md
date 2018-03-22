@@ -2,11 +2,11 @@
 
 An ERP system developed in Java 8 using Spring Boot
 
-## Silo:  
+## Silo:  ##
 team_sales
 
 
-## Team 
+## Team ##
 
 - Bryan Quinn - bquinn17
 - Peter Howard - peterhoward45
@@ -14,26 +14,49 @@ team_sales
 - Kevin Barnett - pdfkpb
 - Brendan Jones - BrendanJones44
 
-##Prerequisites
+## Prerequisites ##
 
-- Java 8
+- Java 8 (openjdk and openjre 1.8)
 
-- MySQL
+- Maven3 (3.0.5 or higher) https://gist.github.com/stephanetimmermans/8fa47ddfe1afede6e310
+
+- MySQL (mysql-client and mysql-server)
+
+- Yarn (may need to use PATH="$PATH:/usr/local/bin" yarn install)
 
 - IntelliJ - as developer platform
 
 
-##How to begin (setup instructions)
+## Setup ##
+
+### Database ###
+
+https://wiki.gandi.net/en/hosting/using-linux/tutorials/ubuntu/createdatabase
+
+1. Create a database called sales
+
+2. Grant a user all permissions to that databse to -u admin -p toor
+
+### Front end ###
+
+ - `cd src/react-src/`
+
+ - `yarn install`
+ 
+ - `yarn start`
+
+### Back end ###
 
 1. `git clone https://github.com/RIT-SWEN-343-201705-KennUWare/erp-2175-erp-sales.git`
 
-2. `javac -jar ErpSalesApplication`
+2. `mvn install`
 
-3. `java ErpSalesApplication.jar`
+3. `java -jar target/swagger-spring-1.0.0.jar`
+
+4. Go to `http://127.0.0.1:8080`
 
 
-
-##License
+## License ##
 MIT License
 
 See LICENSE for details.

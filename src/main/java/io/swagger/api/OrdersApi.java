@@ -6,6 +6,7 @@
 package io.swagger.api;
 
 import io.swagger.model.RetailOrder;
+import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
 
 import io.swagger.annotations.*;
@@ -34,7 +35,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/retail/new",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+    ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 
     @ApiOperation(value = "", notes = "Add a new wholesale order to the sales system", response = Void.class, tags={  })
@@ -44,7 +45,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/wholesale/new",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body);
+    ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body);
 
 
     @ApiOperation(value = "", notes = "Update the status of an order", response = Void.class, tags={  })
@@ -64,7 +65,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/completed",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum);
+    ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum);
 
 
     @ApiOperation(value = "", notes = "HR Endpoint for getting information about sales rep", response = Void.class, tags={  })
@@ -74,7 +75,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo);
+    ResponseEntity<SalesRep> getSalesRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo);
 
 
     @ApiOperation(value = "", notes = "Support submitting of $0 orders", response = Void.class, tags={  })

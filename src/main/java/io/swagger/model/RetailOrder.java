@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -19,7 +21,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 @Entity
-@Table(name = "retail_orders")
+@Table(name = "retail_order")
 public class RetailOrder   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,9 +52,9 @@ public class RetailOrder   {
    */
   public enum StatusEnum {
     FULLFILLED("fullfilled"),
-    
+
     SHIPPED("shipped"),
-    
+
     ARRIVED("arrived");
 
     private String value;
@@ -78,8 +80,8 @@ public class RetailOrder   {
     }
   }
 
-  @Enumerated(EnumType.STRING) // TODO fix enumerated
   @Column(name = "order_status")
+  @Enumerated(EnumType.STRING)
   @JsonProperty("status")
   private StatusEnum status = null;
 
@@ -91,6 +93,12 @@ public class RetailOrder   {
     this.customerEmail = customerEmail;
     return this;
   }
+    /**
+     * Get ID
+     * @return id of order
+     **/
+    @JsonIgnore
+    public Long getID() { return id; }
 
    /**
    * Get customerEmail
@@ -264,7 +272,7 @@ public class RetailOrder   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RetailOrder {\n");
-    
+
     sb.append("    customerEmail: ").append(toIndentedString(customerEmail)).append("\n");
     sb.append("    customerShippingStreetAddress: ").append(toIndentedString(customerShippingStreetAddress)).append("\n");
     sb.append("    customerShippingZip: ").append(toIndentedString(customerShippingZip)).append("\n");
