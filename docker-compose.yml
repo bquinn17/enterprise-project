@@ -1,23 +1,47 @@
-version: '3'
-
-# https://medium.com/@itsromiljain/docker-compose-file-to-run-rest-spring-boot-application-container-and-mysql-container-775f15d21416
-
+version: '2'
 services:
-  docker-mysql:
+  database:
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_DATABASE=test
-      - MYSQL_PASSWORD=root
-  spring-boot-jpa-docker-webapp:
-    image: gradle-springboot
-    depends_on:
-      - docker-mysql
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_DATABASE=sales
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=toor
     ports:
-      - 8080:8080
-    environment:
-      - DATABASE_HOST=docker-mysql
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=root
-      - DATABASE_NAME=test
-- DATABASE_PORT=3306
+        - "3306:3306"
+  api:
+    build: ./
+    depends_on:
+      - database
+    #restart: always
+    links:
+      - database
+    ports:
+      - "8080:8080"
+#  ui:
+#    build: ./src/react-src
+#    ports:
+#      - "80:3000"
+
+
+## https://medium.com/@itsromiljain/docker-compose-file-to-run-rest-spring-boot-application-container-and-mysql-container-775f15d21416
+#
+#services:
+#  docker-mysql:
+#    image: mysql:latest
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=
+#      - MYSQL_DATABASE=test
+#      - MYSQL_PASSWORD=root
+#  spring-boot-jpa-docker-webapp:
+#    image: gradle-springboot
+#    depends_on:
+#      - docker-mysql
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - DATABASE_HOST=docker-mysql
+#      - DATABASE_USER=root
+#      - DATABASE_PASSWORD=root
+#      - DATABASE_NAME=test
+#- DATABASE_PORT=3306
