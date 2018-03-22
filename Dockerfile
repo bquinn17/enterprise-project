@@ -1,6 +1,5 @@
 FROM maven:3.3-jdk-8
-VOLUME /tmp
-COPY pom.xml ./home
+COPY pom.xml /home
 COPY src/ /home/src/
 WORKDIR /home/
 RUN mvn clean install
