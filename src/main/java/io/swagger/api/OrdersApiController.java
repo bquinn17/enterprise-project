@@ -52,7 +52,7 @@ public class OrdersApiController implements OrdersApi {
     public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //Currently just return that everything is okay
         //Plans to implement an actual order update
-        //Will require further/more precise definition of update
+        //Will require further/more precise definition of update.
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -68,7 +68,8 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
+    public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         // Create the Retail Order object with the info from body
         RetailOrder retailOrder = new RetailOrder();
         retailOrder.setCustomerEmail(body.getCustomerEmail());
@@ -83,7 +84,7 @@ public class OrdersApiController implements OrdersApi {
         // Save Object into database
         retailOrderRepository.save(retailOrder);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<RetailOrder>(HttpStatus.OK);
     }
 
 }
