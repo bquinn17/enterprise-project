@@ -93,7 +93,7 @@ class Store extends React.Component {
       "status": "fullfilled"
     }
 
-    axios.post('http://vm344h.se.rit.edu:8080/orders/retail/new',
+    axios.post('http://erpsales_api_1:8080/orders/retail/new',
       request
     ).then(function(response) {
       alert("success!" + response)

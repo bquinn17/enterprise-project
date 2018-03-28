@@ -135,7 +135,7 @@ class WholesaleOrderPage extends React.Component {
     }
 
     // POST the request
-    axios.post('http://vm344h.se.rit.edu:8080/orders/wholesale/new',
+    axios.post('http://erpsales_api_1:8080/orders/wholesale/new',
       request
     ).then(function(response) {
       alert("success!" + response)

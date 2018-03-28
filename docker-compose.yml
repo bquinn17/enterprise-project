@@ -1,0 +1,28 @@
+# sudo usermod -a -G docker $USER
+version: '2'
+services:
+  database:
+    container_name: erpsales_database
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_DATABASE=sales
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=toor
+    ports:
+        - "3306:3306"
+  api:
+    container_name: erpsales_api
+    build: ./
+    depends_on:
+      - database
+    restart: always
+    ports:
+      - "8080:8080"
+  ui:
+    container_name: erpsales_ui
+    build: ./src/react-src
+    ports:
+      - "80:3000"
+    restart: always
