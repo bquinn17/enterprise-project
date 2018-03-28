@@ -169,7 +169,7 @@ public class OrdersApiController implements OrdersApi {
         // Save Object into database
         retailOrderRepository.save(retailOrder);
 
-        return new ResponseEntity<RetailOrder>(HttpStatus.OK);
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.OK);
     }
 
 }
