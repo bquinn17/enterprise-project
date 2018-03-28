@@ -113,11 +113,13 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
+    @CrossOrigin
     public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @CrossOrigin
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) {
         Product product = new Product();
         product.setModel("KennUWare Watch");
@@ -137,6 +139,7 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
     }
 
+    @CrossOrigin
     public ResponseEntity<SalesRep> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo) {
@@ -148,9 +151,10 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
     }
 
+    @CrossOrigin
     public ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }

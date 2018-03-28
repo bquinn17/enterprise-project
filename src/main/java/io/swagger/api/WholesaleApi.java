@@ -32,7 +32,7 @@ public interface WholesaleApi {
     @RequestMapping(value = "/wholesale/account/new",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body);
+    ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body);
 
 
     @ApiOperation(value = "", nickname = "getWholesaleAccounts", notes = "Get all wholesale accounts", tags={  })
@@ -41,6 +41,6 @@ public interface WholesaleApi {
     @RequestMapping(value = "/wholesale/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getWholesaleAccounts();
+    ResponseEntity<List> getWholesaleAccounts();
 
 }
