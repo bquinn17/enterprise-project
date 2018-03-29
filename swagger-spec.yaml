@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "TODO"
+  description: "API Documentation for Sales"
   version: "1.0.0"
   title: "erp-2175-erp-sales"
   #termsOfService: "http://swagger.io/terms/"
@@ -9,10 +9,35 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "TODO"
+host: "vm344h.se.rit.edu:3000"
 schemes:
 - "http"
 paths:
+  /wholesale/account/new:
+    post:
+      description: "Add a new wholesale account to the sales system"
+      operationId: "addWholesaleAccount"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Add a new wholesale account to the sale system"
+        required: true
+        schema:
+          $ref: "#/definitions/WholesaleAccount"
+      responses:
+        201:
+          description: "Created"
+  /wholesale/accounts:
+    get:
+      description: "Get all wholesale accounts"
+      operationId: "getWholesaleAccounts"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
   /orders:
     get:
       description: "HR Endpoint for getting information about sales rep"
@@ -36,7 +61,7 @@ paths:
         required: true
       responses:
         200:
-          description: "Created"
+          description: "OK"
   /orders/retail/new:
     post:
       description: "Add a new retail order to the sales system"
@@ -51,7 +76,7 @@ paths:
         schema:
           $ref: "#/definitions/RetailOrder"
       responses:
-        200:
+        201:
           description: "Created"
 
   /orders/wholesale/new:
@@ -68,9 +93,8 @@ paths:
         schema:
           $ref: "#/definitions/WholesaleOrder"
       responses:
-        200:
+        201:
           description: "Created"
-
   /orders/new/refund:
     post:
       description: "Support submitting of $0 orders"
@@ -85,7 +109,7 @@ paths:
         schema:
           $ref: "#/definitions/RetailOrder"
       responses:
-        200:
+        201:
           description: "Created"
 
   /orders/completed:
@@ -101,7 +125,7 @@ paths:
         required: true
       responses:
         200:
-          description: "Created"
+          description: "OK"
 
   /orders/update/status:
     put:
@@ -117,8 +141,8 @@ paths:
         schema:
           $ref: "#/definitions/RetailOrder"
       responses:
-        200:
-          description: "Created"
+        202:
+          description: "Updated"
 definitions:
   RetailOrder:
     type: "object"
