@@ -9,7 +9,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "vm344h.se.rit.edu:3000"
+host: "vm344h.se.rit.edu"
 schemes:
 - "http"
 paths:
@@ -147,9 +147,6 @@ definitions:
   RetailOrder:
     type: "object"
     properties:
-      # id:
-      #   type: "integer"
-      #   format: "int64"
       customerEmail:
         type: "string"
       customerShippingStreetAddress:
@@ -167,7 +164,8 @@ definitions:
         - "fulfilled"
         - "shipped"
         - "arrived"
-
+      totalPrice:
+        type: "number"
       products:
         type: "array"
         items:
@@ -178,6 +176,8 @@ definitions:
     properties:
       wholesaleAccount:
         $ref: "#/definitions/WholesaleAccount"
+      salesRep:
+        $ref: "#/definitions/SalesRep"
 
       status:
         type: "string"
@@ -193,6 +193,9 @@ definitions:
         items:
           $ref: "#/definitions/ModelCount"
 
+      totalPrice:
+        type: "number"
+
   Product:
     type: "object"
     properties:
@@ -204,6 +207,9 @@ definitions:
 
       refurbished:
         type: "boolean"
+
+      priceSoldAt:
+        type: "number"
 
   ModelCount:
     description: "A key value pair of a model to quantity"
@@ -218,9 +224,6 @@ definitions:
   WholesaleAccount:
     type: "object"
     properties:
-      salesRep:
-        $ref: "#/definitions/SalesRep"
-
       email:
         type: "string"
 
@@ -235,9 +238,12 @@ definitions:
 
       shippingZip:
         type: "string"
+
   SalesRep:
     type: "object"
     properties:
+      id:
+        type: "integer"
       firstName:
         type: "string"
 
