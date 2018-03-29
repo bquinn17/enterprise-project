@@ -54,7 +54,7 @@ public interface OrdersApi {
     
     @RequestMapping(value = "/orders/update/status",
         produces = { "application/json" }, 
-        method = RequestMethod.PUT)
+        method = RequestMethod.PATCH)
     ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 
@@ -85,6 +85,6 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/new/refund",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+    ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 }

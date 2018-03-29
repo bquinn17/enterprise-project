@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -29,8 +32,8 @@ public class OrdersApiController implements OrdersApi {
     WholesaleOrderRepository wholesaleOrderRepository;
 
     @Autowired
-    WholesaleAccountRepository wholesaleAccountRepository;        
-  
+    WholesaleAccountRepository wholesaleAccountRepository;
+
     @Autowired
     ModelCountRepository modelCountRepository;
 
@@ -115,7 +118,8 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        // do some magic!
+        //Plans to implement an actual order update
+        //Will require further/more precise definition of update.
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -152,9 +156,23 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    public ResponseEntity<Void> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
+    public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
+        // Create the Retail Order object with the info from body
+        RetailOrder retailOrder = new RetailOrder();
+        retailOrder.setCustomerEmail(body.getCustomerEmail());
+        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
+        retailOrder.setCustomerShippingStreetAddress(body.getCustomerShippingStreetAddress());
+        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
+        retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
+        retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setProducts(body.getProducts());
+
+        // Save Object into database
+        retailOrderRepository.save(retailOrder);
+
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.OK);
     }
 
 }
