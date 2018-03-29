@@ -45,8 +45,17 @@ public class WholesaleApiController implements WholesaleApi {
     @CrossOrigin
     public ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body) {
         String accept = request.getHeader("Accept");
+        // Set all fields
         WholesaleAccount wholesaleAccount = new WholesaleAccount();
-        return new ResponseEntity<WholesaleAccount>(HttpStatus.NOT_IMPLEMENTED);
+        wholesaleAccount.setEmail(body.getEmail());
+        wholesaleAccount.setShippingAddress(body.getShippingAddress());
+        wholesaleAccount.setShippingState(body.getShippingState());
+        wholesaleAccount.setShippingTown(body.getShippingTown());
+        wholesaleAccount.setShippingZip(body.getShippingZip());
+        // Save into database
+        wholesaleAccountRepository.save(wholesaleAccount);
+
+        return new ResponseEntity<WholesaleAccount>(wholesaleAccount, HttpStatus.CREATED);
     }
 
     @CrossOrigin
