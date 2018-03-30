@@ -31,6 +31,9 @@ public class WholesaleOrder   {
   @JsonProperty("wholesaleAccount")
   private WholesaleAccount wholesaleAccount = null;
 
+    @JsonIgnore
+    private Long wholeSaleAccountId = null;
+
   @JsonProperty("salesRep")
   @Transient
   private SalesRep salesRep = null;
@@ -61,6 +64,14 @@ public class WholesaleOrder   {
 
   public void setSalesRepId(Long salesRepId){
     this.salesRepId = salesRepId;
+  }
+
+  public Long getWholeSaleAccountId(){
+    return wholeSaleAccountId;
+  }
+
+  public void setWholeSaleAccountId(Long id){
+    this.wholeSaleAccountId = id;
   }
 
   /**

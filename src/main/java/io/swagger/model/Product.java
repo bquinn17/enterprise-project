@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -31,6 +33,10 @@ public class Product   {
   @JsonProperty("serialNumber")
   private String serialNumber = null;
 
+  @Column(name = "order_id")
+  @JsonIgnore
+  private Long order_id;
+
   @Column(name = "refurbished")
   @JsonProperty("refurbished")
   private Boolean refurbished = null;
@@ -41,6 +47,14 @@ public class Product   {
   public Product model(String model) {
     this.model = model;
     return this;
+  }
+
+  public Long getOrder_id(){
+    return this.order_id;
+  }
+
+  public void setOrder_id(Long id){
+    this.order_id = id;
   }
 
   /**

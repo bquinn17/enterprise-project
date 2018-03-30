@@ -43,6 +43,9 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     SalesRepRepository salesRepRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     @CrossOrigin
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
@@ -68,11 +71,14 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
         retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
-        retailOrder.setProducts(body.getProducts());
 
         // Save Object into database
         retailOrderRepository.save(retailOrder);
 
+        for (Product product: body.getProducts()) {
+            product.setOrder_id(retailOrder.getID());
+            productRepository.save(product);
+        }
         // Return status code
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
@@ -87,9 +93,20 @@ public class OrdersApiController implements OrdersApi {
 
         order.setOrderMap(body.getOrderMap());
 
-        for (ModelCount modelCount: body.getOrderMap()) {
-            modelCount.setOrder_id(order.getId());
-            modelCountRepository.save(modelCount);
+        // Get the ID from the database, do so by comparing until found, then grab its id
+        // Possible refactor, make this its own method.
+        WholesaleAccount givenWholesaleAccount = new WholesaleAccount();
+        givenWholesaleAccount.setEmail(body.getWholesaleAccount().getEmail());
+        givenWholesaleAccount.setShippingZip(body.getWholesaleAccount().getShippingZip());
+        givenWholesaleAccount.setShippingTown(body.getWholesaleAccount().getShippingTown());
+        givenWholesaleAccount.setShippingState(body.getWholesaleAccount().getShippingState());
+        givenWholesaleAccount.setShippingAddress(body.getWholesaleAccount().getShippingAddress());
+
+        List<WholesaleAccount> wholesaleAccountList = wholesaleAccountRepository.findAll();
+        for(WholesaleAccount wholesaleAccount : wholesaleAccountList){
+            if(givenWholesaleAccount.equals(wholesaleAccount)){
+                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getId()).getId());
+            }
         }
 
         // Create SalesRep associated with this wholesale, save into db
@@ -98,12 +115,16 @@ public class OrdersApiController implements OrdersApi {
         salesRep.setLastName(body.getSalesRep().getLastName());
         salesRep.setRegion(body.getSalesRep().getRegion());
         salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
+        salesRepRepository.save(salesRep);
 
         order.setSalesRep(salesRep);
         order.setSalesRepId(salesRep.getEmployeeId());
         wholesaleOrderRepository.save(order);
-        salesRepRepository.save(salesRep);
 
+        for (ModelCount modelCount: body.getOrderMap()) {
+            modelCount.setOrder_id(order.getId());
+            modelCountRepository.save(modelCount);
+        }
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
