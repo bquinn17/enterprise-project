@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,166 +20,244 @@ import javax.validation.Valid;
 
 @Entity
 @Table(name = "wholesale_order")
-public class WholesaleOrder {
+public class WholesaleOrder   {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
 
-    @Transient
-    @JsonProperty("wholesaleAccount")
-    private WholesaleAccount wholesaleAccount = null;
+    @Transient //TODO foreign key this
+  @JsonProperty("wholesaleAccount")
+  private WholesaleAccount wholesaleAccount = null;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    @JsonProperty("status")
-    private StatusEnum status = null;
+  @JsonProperty("salesRep")
+  @Transient
+  private SalesRep salesRep = null;
 
-    @JsonProperty("orderMap")
-    @OneToMany(mappedBy="order_id")
-    private List<ModelCount> orderMap = null;
+  @JsonIgnore
+  @Column(name = "sales_rep_id")
+  private Long salesRepId = null;
 
-    @JsonIgnore
-    public Long getId() {
-        return id;
-    }
+  @Column(name = "status")
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("status")
+  private StatusEnum status = null;
 
-    /**
-     * Gets or Sets status
-     */
-    public enum StatusEnum {
-        PLACED("placed"),
+  @JsonProperty("orderMap")
+  @OneToMany(mappedBy="order_id")
+  private List<ModelCount> orderMap = null;
 
-        PAID("paid"),
+  @JsonProperty("totalPrice")
+  private double totalPrice = 0.0;
 
-        FULLFILLED("fullfilled"),
+  public Long getId() {
+    return id;
+  }
 
-        SHIPPED("shipped"),
+  public Long getSalesRepId(){
+    return salesRepId;
+  }
 
-        ARRIVED("arrived");
+  public void setSalesRepId(Long salesRepId){
+    this.salesRepId = salesRepId;
+  }
 
-        private String value;
+  /**
+   * Gets or Sets status
+   */
+  public enum StatusEnum {
+    PLACED("placed"),
+    
+    PAID("paid"),
+    
+    FULLFILLED("fullfilled"),
+    
+    SHIPPED("shipped"),
+    
+    ARRIVED("arrived");
 
-        StatusEnum(String value) {
-            this.value = value;
-        }
+    private String value;
 
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static StatusEnum fromValue(String text) {
-            for (StatusEnum b : StatusEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
-    public WholesaleOrder wholesaleAccount(WholesaleAccount wholesaleAccount) {
-        this.wholesaleAccount = wholesaleAccount;
-        return this;
-    }
-
-    /**
-     * Get wholesaleAccount
-     *
-     * @return wholesaleAccount
-     **/
-    @ApiModelProperty(value = "")
-    @Valid
-    public WholesaleAccount getWholesaleAccount() {
-        return wholesaleAccount;
-    }
-
-    public void setWholesaleAccount(WholesaleAccount wholesaleAccount) {
-        this.wholesaleAccount = wholesaleAccount;
-    }
-
-    public WholesaleOrder status(StatusEnum status) {
-        this.status = status;
-        return this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return status
-     **/
-    @ApiModelProperty(value = "")
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
-
-    public WholesaleOrder orderMap(List<ModelCount> orderMap) {
-        this.orderMap = orderMap;
-        return this;
-    }
-
-    /**
-     * Get orderMap
-     *
-     * @return orderMap
-     **/
-    @ApiModelProperty(value = "")
-    public List<ModelCount> getOrderMap() {
-        return orderMap;
-    }
-
-    public void setOrderMap(List<ModelCount> orderMap) {
-        this.orderMap = orderMap;
-    }
-
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        WholesaleOrder wholesaleOrder = (WholesaleOrder) o;
-        return Objects.equals(this.wholesaleAccount, wholesaleOrder.wholesaleAccount) &&
-                Objects.equals(this.status, wholesaleOrder.status) &&
-                Objects.equals(this.orderMap, wholesaleOrder.orderMap);
+    StatusEnum(String value) {
+      this.value = value;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(wholesaleAccount, status, orderMap);
-    }
-
-    @Override
+    @JsonValue
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class WholesaleOrder {\n");
-
-        sb.append("    wholesaleAccount: ").append(toIndentedString(wholesaleAccount)).append("\n");
-        sb.append("    status: ").append(toIndentedString(status)).append("\n");
-        sb.append("    orderMap: ").append(toIndentedString(orderMap)).append("\n");
-        sb.append("}");
-        return sb.toString();
+      return String.valueOf(value);
     }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
+    @JsonCreator
+    public static StatusEnum fromValue(String text) {
+      for (StatusEnum b : StatusEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
         }
-        return o.toString().replace("\n", "\n    ");
+      }
+      return null;
     }
+  }
+
+
+  public WholesaleOrder wholesaleAccount(WholesaleAccount wholesaleAccount) {
+    this.wholesaleAccount = wholesaleAccount;
+    return this;
+  }
+
+  /**
+   * Get wholesaleAccount
+   * @return wholesaleAccount
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public WholesaleAccount getWholesaleAccount() {
+    return wholesaleAccount;
+  }
+
+  public void setWholesaleAccount(WholesaleAccount wholesaleAccount) {
+    this.wholesaleAccount = wholesaleAccount;
+  }
+
+  public WholesaleOrder salesRep(SalesRep salesRep) {
+    this.salesRep = salesRep;
+    return this;
+  }
+
+  /**
+   * Get salesRep
+   * @return salesRep
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public SalesRep getSalesRep() {
+    return salesRep;
+  }
+
+  public void setSalesRep(SalesRep salesRep) {
+    this.salesRep = salesRep;
+  }
+
+  public WholesaleOrder status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+
+  /**
+   * Get status
+   * @return status
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public StatusEnum getStatus() {
+    return status;
+  }
+
+  public void setStatus(StatusEnum status) {
+    this.status = status;
+  }
+
+  public WholesaleOrder orderMap(List<ModelCount> orderMap) {
+    this.orderMap = orderMap;
+    return this;
+  }
+
+  public WholesaleOrder addOrderMapItem(ModelCount orderMapItem) {
+    if (this.orderMap == null) {
+      this.orderMap = new ArrayList<ModelCount>();
+    }
+    this.orderMap.add(orderMapItem);
+    return this;
+  }
+
+  /**
+   * Get orderMap
+   * @return orderMap
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public List<ModelCount> getOrderMap() {
+    return orderMap;
+  }
+
+  public void setOrderMap(List<ModelCount> orderMap) {
+    this.orderMap = orderMap;
+  }
+
+  public WholesaleOrder totalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+    return this;
+  }
+
+  /**
+   * Get totalPrice
+   * @return totalPrice
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public double getTotalPrice() {
+    return totalPrice;
+  }
+
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    WholesaleOrder wholesaleOrder = (WholesaleOrder) o;
+    return Objects.equals(this.wholesaleAccount, wholesaleOrder.wholesaleAccount) &&
+        Objects.equals(this.salesRep, wholesaleOrder.salesRep) &&
+        Objects.equals(this.status, wholesaleOrder.status) &&
+        Objects.equals(this.orderMap, wholesaleOrder.orderMap) &&
+        Objects.equals(this.totalPrice, wholesaleOrder.totalPrice);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(wholesaleAccount, salesRep, status, orderMap, totalPrice);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class WholesaleOrder {\n");
+    
+    sb.append("    wholesaleAccount: ").append(toIndentedString(wholesaleAccount)).append("\n");
+    sb.append("    salesRep: ").append(toIndentedString(salesRep)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    orderMap: ").append(toIndentedString(orderMap)).append("\n");
+    sb.append("    totalPrice: ").append(toIndentedString(totalPrice)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
 

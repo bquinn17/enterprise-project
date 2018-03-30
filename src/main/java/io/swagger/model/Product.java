@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -13,7 +15,8 @@ import javax.validation.constraints.*;
 /**
  * Product
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @Entity
 @Table(name = "product")
@@ -32,12 +35,15 @@ public class Product   {
   @JsonProperty("refurbished")
   private Boolean refurbished = null;
 
+  @JsonProperty("priceSoldAt")
+  private double priceSoldAt = 0.0;
+
   public Product model(String model) {
     this.model = model;
     return this;
   }
 
-   /**
+  /**
    * Get model
    * @return model
   **/
@@ -57,7 +63,7 @@ public class Product   {
     return this;
   }
 
-   /**
+  /**
    * Get serialNumber
    * @return serialNumber
   **/
@@ -77,7 +83,7 @@ public class Product   {
     return this;
   }
 
-   /**
+  /**
    * Get refurbished
    * @return refurbished
   **/
@@ -92,6 +98,27 @@ public class Product   {
     this.refurbished = refurbished;
   }
 
+  public Product priceSoldAt(double priceSoldAt) {
+    this.priceSoldAt = priceSoldAt;
+    return this;
+  }
+
+  /**
+   * Get priceSoldAt
+   * @return priceSoldAt
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public double getPriceSoldAt() {
+    return priceSoldAt;
+  }
+
+  public void setPriceSoldAt(double priceSoldAt) {
+    this.priceSoldAt = priceSoldAt;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -104,12 +131,13 @@ public class Product   {
     Product product = (Product) o;
     return Objects.equals(this.model, product.model) &&
         Objects.equals(this.serialNumber, product.serialNumber) &&
-        Objects.equals(this.refurbished, product.refurbished);
+        Objects.equals(this.refurbished, product.refurbished) &&
+        Objects.equals(this.priceSoldAt, product.priceSoldAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(model, serialNumber, refurbished);
+    return Objects.hash(model, serialNumber, refurbished, priceSoldAt);
   }
 
   @Override
@@ -120,6 +148,7 @@ public class Product   {
     sb.append("    model: ").append(toIndentedString(model)).append("\n");
     sb.append("    serialNumber: ").append(toIndentedString(serialNumber)).append("\n");
     sb.append("    refurbished: ").append(toIndentedString(refurbished)).append("\n");
+    sb.append("    priceSoldAt: ").append(toIndentedString(priceSoldAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

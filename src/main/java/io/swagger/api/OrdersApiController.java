@@ -20,7 +20,10 @@ import java.util.ArrayList;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
 public class OrdersApiController implements OrdersApi {
@@ -36,6 +39,9 @@ public class OrdersApiController implements OrdersApi {
 
     @Autowired
     ModelCountRepository modelCountRepository;
+
+    @Autowired
+    SalesRepRepository salesRepRepository;
 
     @CrossOrigin
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
@@ -61,7 +67,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(body.getProducts());
 
         // Save Object into database
@@ -73,45 +79,30 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
-        // do some magic!
-        /*
-        {
-          "orderMap": [
-            {
-              "model": "string",
-              "quantity": 0
-            }
-          ],
-          "status": "placed",
-          "wholesaleAccount": {
-            "email": "string",
-            "salesRep": {
-              "firstName": "string",
-              "lastName": "string",
-              "region": "north"
-            },
-            "shippingAddress": "string",
-            "shippingState": "string",
-            "shippingTown": "string",
-            "shippingZip": "string"
-          }
-        }
-         */
         WholesaleOrder order = new WholesaleOrder();
 
-        // order.status(body.getStatus() != null ? body.getStatus() : WholesaleOrder.StatusEnum.PLACED);
         order.setStatus(WholesaleOrder.StatusEnum.PLACED);
 
         order.setWholesaleAccount(body.getWholesaleAccount()); // need to find a way to identify WholesaleAccountRepository.findOne();
 
         order.setOrderMap(body.getOrderMap());
 
-        wholesaleOrderRepository.save(order);
-
         for (ModelCount modelCount: body.getOrderMap()) {
             modelCount.setOrder_id(order.getId());
             modelCountRepository.save(modelCount);
         }
+
+        // Create SalesRep associated with this wholesale, save into db
+        SalesRep salesRep = new SalesRep();
+        salesRep.setFirstName(body.getSalesRep().getFirstName());
+        salesRep.setLastName(body.getSalesRep().getLastName());
+        salesRep.setRegion(body.getSalesRep().getRegion());
+        salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
+
+        order.setSalesRep(salesRep);
+        order.setSalesRepId(salesRep.getEmployeeId());
+        wholesaleOrderRepository.save(order);
+        salesRepRepository.save(salesRep);
 
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
@@ -138,7 +129,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingStreetAddress("1 Lomb Memorial Dr");
         retailOrder.setCustomerShippingTown("Rochester");
         retailOrder.setCustomerShippingZip("14623");
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(productList);
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
     }
@@ -166,7 +157,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(body.getProducts());
 
         // Save Object into database

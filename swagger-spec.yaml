@@ -242,8 +242,6 @@ definitions:
   SalesRep:
     type: "object"
     properties:
-      id:
-        type: "integer"
       firstName:
         type: "string"
 

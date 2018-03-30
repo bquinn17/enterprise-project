@@ -1,8 +1,10 @@
 package io.swagger.api;
 
+import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.repository.SalesRepRepository;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-28T15:47:58.543Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @Controller
 public class WholesaleApiController implements WholesaleApi {
