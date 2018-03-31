@@ -126,27 +126,12 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
-        /*Product product = new Product();
-        product.setModel("KennUWare Watch");
-        product.setRefurbished(false);
-        product.setSerialNumber("123456789");
-        List<Product> productList = new ArrayList<Product>();
-        productList.add(product);
-
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail("goodguy@gmail.com");
-        retailOrder.setCustomerShippingState("NY");
-        retailOrder.setCustomerShippingStreetAddress("1 Lomb Memorial Dr");
-        retailOrder.setCustomerShippingTown("Rochester");
-        retailOrder.setCustomerShippingZip("14623");
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(productList);*/
 
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
         for(RetailOrder ro : retailOrders) {
             for(Product p : ro.getProducts()){
                 if(p.getSerialNumber() == serialNum){
-                    return new ResponseEntity<>(ro, HttpStatus.FOUND);
+                    return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
                 }
 
             }
