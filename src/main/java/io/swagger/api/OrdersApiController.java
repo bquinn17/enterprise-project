@@ -7,6 +7,7 @@ import io.swagger.annotations.*;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -124,23 +125,30 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) {
-        Product product = new Product();
-        product.setModel("KennUWare Watch");
-        product.setRefurbished(false);
-        product.setSerialNumber("123456789");
-        List<Product> productList = new ArrayList<Product>();
-        productList.add(product);
+    public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
 
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail("goodguy@gmail.com");
-        retailOrder.setCustomerShippingState("NY");
-        retailOrder.setCustomerShippingStreetAddress("1 Lomb Memorial Dr");
-        retailOrder.setCustomerShippingTown("Rochester");
-        retailOrder.setCustomerShippingZip("14623");
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(productList);
-        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
+        List<RetailOrder> retailOrders = retailOrderRepository.findAll();
+        for(RetailOrder ro : retailOrders) {
+            for(Product p : ro.getProducts()){
+                if(p.getSerialNumber().equals(serialNum)){
+                    return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
+                }
+
+            }
+        }
+        throw new NotFoundException(404, "no orders containing serial number found");
+    }
+
+    @CrossOrigin
+    public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
+        List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
+        for(WholesaleAccount wa : wholesaleAccounts){
+            if (wa.getSalesRep().getId().toString().equals(salesRepId)){
+                return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
+            }
+        }
+        //Return empty list if
+        throw new NotFoundException(404, "no orders found for sales rep id");
     }
 
     @CrossOrigin

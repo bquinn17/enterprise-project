@@ -85,7 +85,8 @@ public class RetailOrder   {
   @JsonProperty("status")
   private StatusEnum status = null;
 
-  @Transient // TODO change to actually put products into the db
+  // TODO change to actually put products into the db
+  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
   @JsonProperty("products")
   private List<Product> products = null;
 

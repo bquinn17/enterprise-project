@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * WholesaleAccount
@@ -39,6 +41,9 @@ public class WholesaleAccount {
     @JsonProperty("shippingZip")
     private String shippingZip = null;
 
+    @OneToMany(targetEntity = WholesaleOrder.class, mappedBy = "orders", fetch = FetchType.EAGER)
+    private List<WholesaleOrder> orders = null;
+
     public WholesaleAccount salesRep(SalesRep salesRep) {
         this.salesRep = salesRep;
         return this;
@@ -63,6 +68,30 @@ public class WholesaleAccount {
 
     public WholesaleAccount email(String email) {
         this.email = email;
+        return this;
+    }
+
+    /**
+     * Get Set Orders, Add Order
+     * @return Orders
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public List<WholesaleOrder> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(List<Product> products) {
+        this.orders = orders;
+    }
+
+    public WholesaleAccount addOrder(WholesaleOrder order){
+        if (this.orders == null){
+            this.orders = new ArrayList<WholesaleOrder>();
+        }
+        orders.add(order);
         return this;
     }
 

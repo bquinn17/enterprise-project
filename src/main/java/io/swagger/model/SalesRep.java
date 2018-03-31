@@ -9,6 +9,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -18,6 +21,10 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 public class SalesRep {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @JsonProperty("firstName")
     private String firstName = null;
 
@@ -125,6 +132,14 @@ public class SalesRep {
         this.region = region;
     }
 
+    /**
+     * Get Id
+     *
+     * @return id
+     */
+    public Long getId() {
+        return id;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
