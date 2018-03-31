@@ -55,7 +55,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/update/status",
         produces = { "application/json" }, 
         method = RequestMethod.PATCH)
-    ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
+    ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status);
 
 
     @ApiOperation(value = "", notes = "Gets a completed Order", response = Void.class, tags={  })

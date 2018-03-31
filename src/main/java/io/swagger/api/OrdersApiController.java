@@ -116,7 +116,7 @@ public class OrdersApiController implements OrdersApi {
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
+    public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
         //Currently just return that everything is okay
         //Plans to implement an actual order update
         //Will require further/more precise definition of update.
@@ -155,21 +155,12 @@ public class OrdersApiController implements OrdersApi {
 
     @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        // Create the Retail Order object with the info from body
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail(body.getCustomerEmail());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingStreetAddress(body.getCustomerShippingStreetAddress());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
-        retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(body.getProducts());
+        //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
+        if(false) {
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+        }
 
-        // Save Object into database
-        retailOrderRepository.save(retailOrder);
-
-        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.OK);
+        return addRetailOrder(body);
     }
 
 }

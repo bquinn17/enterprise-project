@@ -86,7 +86,9 @@ paths:
           $ref: "#/definitions/RetailOrder"
       responses:
         200:
-          description: "Created"
+          description: "OK, the order has been Created"
+        400:
+          description: "Bad Request, covers usual RetailOrder Errors and if the price is not set to $0"
 
   /orders/completed:
     get:
@@ -104,7 +106,7 @@ paths:
           description: "Created"
 
   /orders/update/status:
-    put:
+    patch:
       description: "Update the status of an order"
       operationId: "changeOrderStatus"
       produces:
@@ -118,7 +120,10 @@ paths:
           $ref: "#/definitions/RetailOrder"
       responses:
         200:
-          description: "Created"
+          description: "OK, if the Status is set"
+        400:
+          description: "Bad Request if the status either doesn't exist, or isn't specified"
+
 definitions:
   RetailOrder:
     type: "object"
