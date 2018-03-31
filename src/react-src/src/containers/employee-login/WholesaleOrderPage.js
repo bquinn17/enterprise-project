@@ -2,7 +2,7 @@ import React from 'react'
 //
 import axios from 'axios'
 //
-import { Link } from 'react-static'
+import { Link } from 'react-router-dom'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
@@ -135,7 +135,7 @@ class WholesaleOrderPage extends React.Component {
     }
 
     // POST the request
-    axios.post('http://erpsales_api_1:8080/orders/wholesale/new',
+    axios.post('/api/orders/wholesale/new',
       request
     ).then(function(response) {
       alert("success!" + response)
