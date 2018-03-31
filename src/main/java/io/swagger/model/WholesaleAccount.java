@@ -13,7 +13,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
-/**
+/** TODO Add configured prices into DB. Seperate table with foreign key.
  * WholesaleAccount
  */
 @Validated

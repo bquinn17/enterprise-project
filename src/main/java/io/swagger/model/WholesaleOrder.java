@@ -27,7 +27,7 @@ public class WholesaleOrder   {
     @JsonIgnore
     private Long id;
 
-    @Transient //TODO foreign key this
+    @Transient
   @JsonProperty("wholesaleAccount")
   private WholesaleAccount wholesaleAccount = null;
 

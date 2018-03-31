@@ -90,7 +90,6 @@ public class RetailOrder   {
   @JsonProperty("totalPrice")
   private double totalPrice = 0.0;
 
-  // TODO store products into db
   @JsonProperty("products")
   @Valid
   @Transient
