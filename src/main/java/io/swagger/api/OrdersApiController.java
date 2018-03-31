@@ -130,13 +130,25 @@ public class OrdersApiController implements OrdersApi {
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
         for(RetailOrder ro : retailOrders) {
             for(Product p : ro.getProducts()){
-                if(p.getSerialNumber() == serialNum){
+                if(p.getSerialNumber().equals(serialNum)){
                     return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
                 }
 
             }
         }
         throw new NotFoundException(404, "no orders containing serial number found");
+    }
+
+    @CrossOrigin
+    public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
+        List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
+        for(WholesaleAccount wa : wholesaleAccounts){
+            if (wa.getSalesRep().getId().toString().equals(salesRepId)){
+                return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
+            }
+        }
+        //Return empty list if
+        throw new NotFoundException(404, "no orders found for sales rep id");
     }
 
     @CrossOrigin

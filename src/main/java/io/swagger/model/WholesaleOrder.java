@@ -25,8 +25,8 @@ public class WholesaleOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Transient
-    @JsonProperty("wholesaleAccount")
+    @ManyToOne
+    @JoinColumn(name="wholeSaleAccountId")
     private WholesaleAccount wholesaleAccount = null;
 
     @Column(name = "status")
