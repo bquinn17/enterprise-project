@@ -1,6 +1,6 @@
 import React from 'react'
 //
-import { Link } from 'react-static'
+import { Link } from 'react-router-dom'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'

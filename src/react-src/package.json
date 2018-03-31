@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "react-static start",
-    "build": "react-static build",
-    "serve": "serve dist -p 3000"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "axios": "^0.16.2",
@@ -16,10 +17,12 @@
     "react-dom": "^16.0.0",
     "react-loader": "^2.4.3",
     "react-router": "^4.2.0",
-    "react-static": "^5.3.4"
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.1"
   },
   "devDependencies": {
     "eslint-config-react-tools": "1.x.x",
     "serve": "^6.1.0"
-  }
+  },
+  "proxy": "http://erpsales_proxy:5000/"
 }

@@ -8,9 +8,6 @@ import App from './App'
 // Your Material UI Custom theme
 import theme from './theme'
 
-// Export your top level component as JSX (for static rendering)
-export default App
-
 // Render your app
 if (typeof document !== 'undefined') {
   const renderMethod = module.hot ? ReactDOM.render : ReactDOM.hydrate
