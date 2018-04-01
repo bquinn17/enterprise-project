@@ -106,7 +106,7 @@ public class OrdersApiController implements OrdersApi {
         List<WholesaleAccount> wholesaleAccountList = wholesaleAccountRepository.findAll();
         for(WholesaleAccount wholesaleAccount : wholesaleAccountList){
             if(givenWholesaleAccount.equals(wholesaleAccount)){
-                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getEmployeeId()).getEmployeeId());
+                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getId()).getId());
             }
         }
 
@@ -155,7 +155,7 @@ public class OrdersApiController implements OrdersApi {
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
         List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
         for(WholesaleAccount wa : wholesaleAccounts){
-            if (wa.getSalesRep().getId().toString().equals(salesRepId)){
+            if (wa.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
                 return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
             }
         }
