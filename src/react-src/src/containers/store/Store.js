@@ -2,9 +2,7 @@ import React, { PureComponent } from 'react'
 //
 import axios from 'axios'
 //
-import { withRouteData, Link } from 'react-static'
-//
-import { hot } from 'react-hot-loader'
+import { Link } from 'react-router-dom'
 //
 import AppBar from 'material-ui/AppBar'
 import Icon from 'material-ui/Icon'
@@ -92,8 +90,10 @@ class Store extends React.Component {
       "products": cartArr,
       "status": "fullfilled"
     }
+    // const response = fetch('/api/retail-order/new');
+    // const body = await response.json();
 
-    axios.post('http://erpsales_api_1:8080/orders/retail/new',
+    axios.post('/api/orders/retail/new',
       request
     ).then(function(response) {
       alert("success!" + response)
@@ -107,7 +107,7 @@ class Store extends React.Component {
 
     /* Determine which child page to render */
     var pageToShow
-    switch(this.props.data.storePage) {
+    switch(this.props.storePage) {
       case 'catalog':
         pageToShow = <CatalogPage
                         addItem={ this.addItem }
@@ -175,9 +175,7 @@ class Store extends React.Component {
   }
 }
 
-// Wrap with Component with data
-const withData = withRouteData(Store)
 // Wrap the Component with styles
-const StoreWithStyles = withStyles(styles)(withData)
+const StoreWithStyles = withStyles(styles)(Store)
 
-export default hot(module)(StoreWithStyles)
+export default (StoreWithStyles)

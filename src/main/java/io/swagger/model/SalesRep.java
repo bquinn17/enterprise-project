@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
 /**
  * SalesRep
  */
-@Validated
+<@Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @Entity
@@ -144,6 +144,15 @@ public class SalesRep   {
   public void setRegion(RegionEnum region) {
     this.region = region;
   }
+    /**
+     * Get Id
+     *
+     * @return id
+     */
+    public Long getId() {
+        return id;
+    }
+
 
 
   @Override

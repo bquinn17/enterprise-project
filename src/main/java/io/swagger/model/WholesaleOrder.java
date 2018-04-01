@@ -27,9 +27,10 @@ public class WholesaleOrder   {
     @JsonIgnore
     private Long id;
 
-    @Transient
-  @JsonProperty("wholesaleAccount")
-  private WholesaleAccount wholesaleAccount = null;
+
+    @ManyToOne
+    @JoinColumn(name="wholeSaleAccountId")
+    private WholesaleAccount wholesaleAccount = null;
 
     @JsonIgnore
     private Long wholeSaleAccountId = null;

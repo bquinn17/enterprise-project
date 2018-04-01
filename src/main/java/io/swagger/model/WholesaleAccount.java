@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,7 +12,11 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+
 import javax.validation.constraints.*;
+
+import java.util.List;
+
 
 /** TODO Add configured prices into DB. Seperate table with foreign key.
  * WholesaleAccount
@@ -21,6 +26,49 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name = "wholesale_account")
 public class WholesaleAccount   {
+    @Transient
+    @JsonProperty("salesRep")
+    private SalesRep salesRep = null;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @JsonProperty("email")
+    private String email = null;
+
+    @JsonProperty("shippingAddress")
+    private String shippingAddress = null;
+
+    @JsonProperty("shippingState")
+    private String shippingState = null;
+
+    @JsonProperty("shippingTown")
+    private String shippingTown = null;
+
+    @JsonProperty("shippingZip")
+    private String shippingZip = null;
+
+    @OneToMany(targetEntity = WholesaleOrder.class, mappedBy = "orders", fetch = FetchType.EAGER)
+    private List<WholesaleOrder> orders = null;
+
+    public WholesaleAccount salesRep(SalesRep salesRep) {
+        this.salesRep = salesRep;
+        return this;
+    }
+
+    /**
+     * Get salesRep
+     *
+     * @return salesRep
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public SalesRep getSalesRep() {
+        return salesRep;
+    }
 
   @Id
   @JsonIgnore
@@ -30,8 +78,30 @@ public class WholesaleAccount   {
   @JsonProperty("email")
   private String email = null;
 
-  @JsonProperty("shippingAddress")
-  private String shippingAddress = null;
+    /**
+     * Get Set Orders, Add Order
+     * @return Orders
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public List<WholesaleOrder> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(List<Product> products) {
+        this.orders = orders;
+    }
+
+    public WholesaleAccount addOrder(WholesaleOrder order){
+        if (this.orders == null){
+            this.orders = new ArrayList<WholesaleOrder>();
+        }
+        orders.add(order);
+        return this;
+    }
+    @ApiModelProperty(value = "")
 
   @JsonProperty("shippingState")
   private String shippingState = null;

@@ -44,6 +44,10 @@ public class Product   {
   @JsonProperty("priceSoldAt")
   private double priceSoldAt = 0.0;
 
+  @ManyToOne
+  @JoinColumn(name="retailOrderId")
+  private RetailOrder retailOrder = null;
+
   public Product model(String model) {
     this.model = model;
     return this;
@@ -133,6 +137,19 @@ public class Product   {
     this.priceSoldAt = priceSoldAt;
   }
 
+
+  /**
+   * Get Set retail order
+   * @return retailOrder
+   */
+
+  public RetailOrder getRetailOrder() {
+    return retailOrder;
+  }
+
+  public void setRetailOrder(RetailOrder r){
+    this.retailOrder = r;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {
