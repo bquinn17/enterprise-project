@@ -144,16 +144,6 @@ public class SalesRep   {
   public void setRegion(RegionEnum region) {
     this.region = region;
   }
-    /**
-     * Get Id
-     *
-     * @return id
-     */
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-
 
   @Override
   public boolean equals(java.lang.Object o) {
