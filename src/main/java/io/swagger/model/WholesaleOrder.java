@@ -27,25 +27,16 @@ public class WholesaleOrder   {
     @JsonIgnore
     private Long id;
 
-
-    @ManyToOne
-    @JoinColumn(name="wholeSaleAccountId")
+  @ManyToOne(cascade = {CascadeType.ALL})
     private WholesaleAccount wholesaleAccount = null;
 
-    @JsonIgnore
-    private Long wholeSaleAccountId = null;
-
   @JsonProperty("salesRep")
-  @Transient
+  @ManyToOne
   private SalesRep salesRep = null;
-
-  @JsonIgnore
-  @Column(name = "sales_rep_id")
-  private Long salesRepId = null;
 
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
-  @JsonProperty("status")
+  @JsonIgnore
   private StatusEnum status = null;
 
   @JsonProperty("orderMap")
@@ -57,22 +48,6 @@ public class WholesaleOrder   {
 
   public Long getId() {
     return id;
-  }
-
-  public Long getSalesRepId(){
-    return salesRepId;
-  }
-
-  public void setSalesRepId(Long salesRepId){
-    this.salesRepId = salesRepId;
-  }
-
-  public Long getWholeSaleAccountId(){
-    return wholeSaleAccountId;
-  }
-
-  public void setWholeSaleAccountId(Long id){
-    this.wholeSaleAccountId = id;
   }
 
   /**
@@ -251,7 +226,7 @@ public class WholesaleOrder   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WholesaleOrder {\n");
-    
+
     sb.append("    wholesaleAccount: ").append(toIndentedString(wholesaleAccount)).append("\n");
     sb.append("    salesRep: ").append(toIndentedString(salesRep)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

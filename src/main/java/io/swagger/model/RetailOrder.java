@@ -84,7 +84,7 @@ public class RetailOrder   {
 
   @Column(name = "order_status")
   @Enumerated(EnumType.STRING)
-  @JsonProperty("status")
+  @JsonIgnore
   private StatusEnum status = null;
 
   @JsonProperty("totalPrice")
@@ -94,7 +94,6 @@ public class RetailOrder   {
   @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
   @JsonProperty("products")
   @Valid
-  @Transient
   private List<Product> products = null;
 
   public RetailOrder customerEmail(String customerEmail) {

@@ -30,12 +30,8 @@ public class Product   {
 
   @Id
   @Column(name = "serial_number")
-  @JsonProperty("serialNumber")
-  private String serialNumber = null;
-
-  @Column(name = "order_id")
   @JsonIgnore
-  private Long order_id;
+  private String serialNumber = null;
 
   @Column(name = "refurbished")
   @JsonProperty("refurbished")
@@ -44,21 +40,14 @@ public class Product   {
   @JsonProperty("priceSoldAt")
   private double priceSoldAt = 0.0;
 
-  @ManyToOne
+  @JsonIgnore
+  @ManyToOne(cascade = {CascadeType.ALL})
   @JoinColumn(name="retailOrderId")
   private RetailOrder retailOrder = null;
 
   public Product model(String model) {
     this.model = model;
     return this;
-  }
-
-  public Long getOrder_id(){
-    return this.order_id;
-  }
-
-  public void setOrder_id(Long id){
-    this.order_id = id;
   }
 
   /**

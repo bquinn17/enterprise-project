@@ -26,9 +26,6 @@ import java.util.List;
 @Entity
 @Table(name = "wholesale_account")
 public class WholesaleAccount   {
-    @Transient
-    @JsonProperty("salesRep")
-    private SalesRep salesRep = null;
 
     @Id
     @JsonIgnore
@@ -50,50 +47,10 @@ public class WholesaleAccount   {
     @JsonProperty("shippingZip")
     private String shippingZip = null;
 
-    @OneToMany(targetEntity = WholesaleOrder.class, mappedBy = "orders", fetch = FetchType.EAGER)
-    private List<WholesaleOrder> orders = null;
-
-    public WholesaleAccount salesRep(SalesRep salesRep) {
-        this.salesRep = salesRep;
-        return this;
-    }
-
-    /**
-     * Get salesRep
-     *
-     * @return salesRep
-     **/
-    @ApiModelProperty(value = "")
-
-    @Valid
-
-    public SalesRep getSalesRep() {
-        return salesRep;
-    }
-
     /**
      * Get Set Orders, Add Order
      * @return Orders
      **/
-    @ApiModelProperty(value = "")
-
-    @Valid
-
-    public List<WholesaleOrder> getOrders() {
-        return this.orders;
-    }
-
-    public void setOrders(List<Product> products) {
-        this.orders = orders;
-    }
-
-    public WholesaleAccount addOrder(WholesaleOrder order){
-        if (this.orders == null){
-            this.orders = new ArrayList<WholesaleOrder>();
-        }
-        orders.add(order);
-        return this;
-    }
     @ApiModelProperty(value = "")
 
   public Long getId(){
