@@ -6,14 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * RetailOrder
@@ -50,7 +48,8 @@ public class RetailOrder   {
   /**
    * Gets or Sets status
    */
-  public enum StatusEnum {
+  public enum StatusEnum
+  {
     FULLFILLED("fullfilled"),
 
     SHIPPED("shipped"),

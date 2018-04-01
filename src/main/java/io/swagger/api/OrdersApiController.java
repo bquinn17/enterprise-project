@@ -117,11 +117,23 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
-        //Currently just return that everything is okay
-        //Plans to implement an actual order update
-        //Will require further/more precise definition of update.
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
+                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
+
+        RetailOrder retailOrder = retailOrderRepository.getOne(id);
+
+        if(retailOrder == null) {
+            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
+        }
+
+        if(status.isEmpty()) {
+            return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.NOT_MODIFIED);
+        }
+
+        retailOrder.setStatus(status);
+        retailOrderRepository.save(retailOrder);
+
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.ACCEPTED);
     }
 
     @CrossOrigin

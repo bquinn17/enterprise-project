@@ -46,7 +46,8 @@ public class WholesaleOrder {
     /**
      * Gets or Sets status
      */
-    public enum StatusEnum {
+    public enum StatusEnum
+    {
         PLACED("placed"),
 
         PAID("paid"),

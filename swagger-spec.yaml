@@ -140,11 +140,14 @@ paths:
       - "application/json"
       parameters:
       - in: "body"
-        name: "body"
+        name: "id"
         description: "Update the status of an order"
         required: true
-        schema:
-          $ref: "#/definitions/RetailOrder"
+        type: "integer"
+      - in: "body"
+        name: "status"
+        description: "Update the status of an order"
+        required: true
       responses:
         202:
           description: "Updated"
