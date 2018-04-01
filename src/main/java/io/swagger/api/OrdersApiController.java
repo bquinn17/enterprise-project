@@ -7,23 +7,15 @@ import io.swagger.annotations.*;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-
-import java.util.ArrayList;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
@@ -73,13 +65,27 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
         retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
-        // Save Object into database
-        retailOrderRepository.save(retailOrder);
+        //
+        double productPrice = 0.0;
+        double totalPrice = 0.0;
+        String serialNumber;
 
         for (Product product: body.getProducts()) {
-            product.setOrder_id(retailOrder.getID());
-            productRepository.save(product);
+
+            product.setRetailOrder(retailOrder);
+            serialNumber = "Fudge"; // TODO query Inventory for a serial number. For now it is random
+            product.setSerialNumber(serialNumber);
+
+            productPrice = 100.99; // TODO query Inventory for price. For now it is random
+
+            product.setPriceSoldAt(productPrice);
+            retailOrder.addProductsItem(product);
+
+            totalPrice += productPrice;
+            retailOrder.setTotalPrice(totalPrice);
+            productRepository.save(product); // This also saves the RetailOrder.
         }
+
         // Return status code
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
@@ -94,38 +100,24 @@ public class OrdersApiController implements OrdersApi {
 
         order.setOrderMap(body.getOrderMap());
 
-        // Get the ID from the database, do so by comparing until found, then grab its id
-        // Possible refactor, make this its own method.
-        WholesaleAccount givenWholesaleAccount = new WholesaleAccount();
-        givenWholesaleAccount.setEmail(body.getWholesaleAccount().getEmail());
-        givenWholesaleAccount.setShippingZip(body.getWholesaleAccount().getShippingZip());
-        givenWholesaleAccount.setShippingTown(body.getWholesaleAccount().getShippingTown());
-        givenWholesaleAccount.setShippingState(body.getWholesaleAccount().getShippingState());
-        givenWholesaleAccount.setShippingAddress(body.getWholesaleAccount().getShippingAddress());
-
-        List<WholesaleAccount> wholesaleAccountList = wholesaleAccountRepository.findAll();
-        for(WholesaleAccount wholesaleAccount : wholesaleAccountList){
-            if(givenWholesaleAccount.equals(wholesaleAccount)){
-                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getId()).getId());
-            }
-        }
-
         // Create SalesRep associated with this wholesale, save into db
         SalesRep salesRep = new SalesRep();
-        salesRep.setFirstName(body.getSalesRep().getFirstName());
+        salesRep.setFirstName(body.getSalesRep().getFirstName()); // need to find a way to identify SalesRep using repo
         salesRep.setLastName(body.getSalesRep().getLastName());
         salesRep.setRegion(body.getSalesRep().getRegion());
         salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
+        Long employeeID = new Long(123); // TODO query HR for employee ID
+        salesRep.setEmployeeId(employeeID);
         salesRepRepository.save(salesRep);
 
         order.setSalesRep(salesRep);
-        order.setSalesRepId(salesRep.getEmployeeId());
         wholesaleOrderRepository.save(order);
 
         for (ModelCount modelCount: body.getOrderMap()) {
             modelCount.setOrder_id(order.getId());
             modelCountRepository.save(modelCount);
         }
+
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
@@ -153,13 +145,14 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
-        List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
+        /*List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
         for(WholesaleAccount wa : wholesaleAccounts){
             if (wa.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
                 return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
             }
         }
         //Return empty list if
+        */
         throw new NotFoundException(404, "no orders found for sales rep id");
     }
 

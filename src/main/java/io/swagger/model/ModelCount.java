@@ -21,6 +21,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @Entity
+@Table(name="model_count")
 public class ModelCount   {
 
     @Id

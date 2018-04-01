@@ -33,7 +33,7 @@ public class SalesRep   {
   private String lastName = null;
 
   @Id
-  @JsonProperty("employeeId")
+  @JsonIgnore
   @Column(name = "employee_id")
   private Long employeeId;
 
