@@ -149,8 +149,8 @@ public class SalesRep   {
      *
      * @return id
      */
-    public Long getId() {
-        return id;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
 
