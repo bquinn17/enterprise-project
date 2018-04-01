@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.*;
@@ -145,15 +146,18 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
-        /*List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
-        for(WholesaleAccount wa : wholesaleAccounts){
-            if (wa.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
-                return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
+        List<WholesaleOrder> response = new ArrayList<>();
+        for(WholesaleOrder wo : wholesaleOrders){
+            if (wo.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
+                response.add(wo);
             }
         }
-        //Return empty list if
-        */
-        throw new NotFoundException(404, "no orders found for sales rep id");
+        if (response.size() != 0){
+            return new ResponseEntity<List<WholesaleOrder>>(response, HttpStatus.FOUND);
+        }else {
+            throw new NotFoundException(404, "no orders found for sales rep id");
+        }
     }
 
     @CrossOrigin
