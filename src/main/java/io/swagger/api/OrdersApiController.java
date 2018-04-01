@@ -106,7 +106,7 @@ public class OrdersApiController implements OrdersApi {
         List<WholesaleAccount> wholesaleAccountList = wholesaleAccountRepository.findAll();
         for(WholesaleAccount wholesaleAccount : wholesaleAccountList){
             if(givenWholesaleAccount.equals(wholesaleAccount)){
-                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getId()).getId());
+                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getEmployeeId()).getEmployeeId());
             }
         }
 
