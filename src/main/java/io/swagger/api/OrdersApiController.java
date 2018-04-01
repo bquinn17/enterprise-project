@@ -21,7 +21,10 @@ import java.util.ArrayList;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
 public class OrdersApiController implements OrdersApi {
@@ -37,6 +40,12 @@ public class OrdersApiController implements OrdersApi {
 
     @Autowired
     ModelCountRepository modelCountRepository;
+
+    @Autowired
+    SalesRepRepository salesRepRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @CrossOrigin
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
@@ -62,58 +71,61 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(body.getProducts());
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
         // Save Object into database
         retailOrderRepository.save(retailOrder);
 
+        for (Product product: body.getProducts()) {
+            product.setOrder_id(retailOrder.getID());
+            productRepository.save(product);
+        }
         // Return status code
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }
 
     @CrossOrigin
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
-        // do some magic!
-        /*
-        {
-          "orderMap": [
-            {
-              "model": "string",
-              "quantity": 0
-            }
-          ],
-          "status": "placed",
-          "wholesaleAccount": {
-            "email": "string",
-            "salesRep": {
-              "firstName": "string",
-              "lastName": "string",
-              "region": "north"
-            },
-            "shippingAddress": "string",
-            "shippingState": "string",
-            "shippingTown": "string",
-            "shippingZip": "string"
-          }
-        }
-         */
         WholesaleOrder order = new WholesaleOrder();
 
-        // order.status(body.getStatus() != null ? body.getStatus() : WholesaleOrder.StatusEnum.PLACED);
         order.setStatus(WholesaleOrder.StatusEnum.PLACED);
 
         order.setWholesaleAccount(body.getWholesaleAccount()); // need to find a way to identify WholesaleAccountRepository.findOne();
 
         order.setOrderMap(body.getOrderMap());
 
+        // Get the ID from the database, do so by comparing until found, then grab its id
+        // Possible refactor, make this its own method.
+        WholesaleAccount givenWholesaleAccount = new WholesaleAccount();
+        givenWholesaleAccount.setEmail(body.getWholesaleAccount().getEmail());
+        givenWholesaleAccount.setShippingZip(body.getWholesaleAccount().getShippingZip());
+        givenWholesaleAccount.setShippingTown(body.getWholesaleAccount().getShippingTown());
+        givenWholesaleAccount.setShippingState(body.getWholesaleAccount().getShippingState());
+        givenWholesaleAccount.setShippingAddress(body.getWholesaleAccount().getShippingAddress());
+
+        List<WholesaleAccount> wholesaleAccountList = wholesaleAccountRepository.findAll();
+        for(WholesaleAccount wholesaleAccount : wholesaleAccountList){
+            if(givenWholesaleAccount.equals(wholesaleAccount)){
+                order.setWholeSaleAccountId(wholesaleAccountRepository.findOne(wholesaleAccount.getId()).getId());
+            }
+        }
+
+        // Create SalesRep associated with this wholesale, save into db
+        SalesRep salesRep = new SalesRep();
+        salesRep.setFirstName(body.getSalesRep().getFirstName());
+        salesRep.setLastName(body.getSalesRep().getLastName());
+        salesRep.setRegion(body.getSalesRep().getRegion());
+        salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
+        salesRepRepository.save(salesRep);
+
+        order.setSalesRep(salesRep);
+        order.setSalesRepId(salesRep.getEmployeeId());
         wholesaleOrderRepository.save(order);
 
         for (ModelCount modelCount: body.getOrderMap()) {
             modelCount.setOrder_id(order.getId());
             modelCountRepository.save(modelCount);
         }
-
         return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
     }
 
@@ -143,7 +155,7 @@ public class OrdersApiController implements OrdersApi {
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
         List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
         for(WholesaleAccount wa : wholesaleAccounts){
-            if (wa.getSalesRep().getId().toString().equals(salesRepId)){
+            if (wa.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
                 return new ResponseEntity<List<WholesaleOrder>>(wa.getOrders(), HttpStatus.FOUND);
             }
         }
@@ -174,7 +186,7 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(body.getProducts());
 
         // Save Object into database
