@@ -31,6 +31,7 @@ public class WholesaleAccount   {
     private SalesRep salesRep = null;
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -70,14 +71,6 @@ public class WholesaleAccount   {
         return salesRep;
     }
 
-  @Id
-  @JsonIgnore
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
-
-  @JsonProperty("email")
-  private String email = null;
-
     /**
      * Get Set Orders, Add Order
      * @return Orders
@@ -102,15 +95,6 @@ public class WholesaleAccount   {
         return this;
     }
     @ApiModelProperty(value = "")
-
-  @JsonProperty("shippingState")
-  private String shippingState = null;
-
-  @JsonProperty("shippingTown")
-  private String shippingTown = null;
-
-  @JsonProperty("shippingZip")
-  private String shippingZip = null;
 
   public Long getId(){
     return this.id;
