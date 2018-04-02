@@ -46,11 +46,35 @@ public class MockedEndpointsController {
     @ApiOperation(value = "", nickname = "Order created", notes = "Send the information about a newly created order", tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created") })
-    @RequestMapping(value = "/accounting/createOrder",
+    @RequestMapping(value = "/accounting/retailOrder",
             produces = { "application/json" },
             method = RequestMethod.POST)
     @CrossOrigin
-    public ResponseEntity<RetailOrder> createOrder(@ApiParam(value = "The name of a product that the inventory should have on hand (eg Kenn-U-Flex)." ,required=true )  @Valid @RequestBody RetailOrder retailOrder) {
+    public ResponseEntity<RetailOrder> retailOrder(@ApiParam(value = "The json object representation of the order." ,required=true )  @Valid @RequestBody RetailOrder retailOrder) {
+
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "", nickname = "Order created", notes = "Send the information about a newly created order", tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created") })
+    @RequestMapping(value = "/inventory/wholesaleOrder",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    @CrossOrigin
+    public ResponseEntity<RetailOrder> wholesaleOrderInventory(@ApiParam(value = "The json object representation of the order." ,required=true )  @Valid @RequestBody RetailOrder retailOrder) {
+
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "", nickname = "Order created", notes = "Send the information about a newly created order", tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created") })
+    @RequestMapping(value = "/accounting/wholesaleOrder",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    @CrossOrigin
+    public ResponseEntity<RetailOrder> wholesaleOrderAccounting(@ApiParam(value = "The json object representation of the order." ,required=true )  @Valid @RequestBody RetailOrder retailOrder) {
 
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
     }

@@ -56,10 +56,7 @@ public class OrdersApiController implements OrdersApi {
         // Create the Retail Order object with the info from body
         body.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
-        //
-        double productPrice = 0.0;
-        double totalPrice = 0.0;
-        final String uri = "http://127.0.0.1:8080/inventory/getDeviceId";
+        String uri = "http://127.0.0.1:8080/inventory/getDeviceId";
 
         for (Product product: body.getProducts()) {
 
@@ -68,14 +65,31 @@ public class OrdersApiController implements OrdersApi {
             String productName = product.getModel();
 
             RestTemplate restTemplate = new RestTemplate();
-            String serialNumber = restTemplate.postForObject(uri, productName, String.class);
+            String serialNumber;
+            try {
+                serialNumber = restTemplate.postForObject(uri, productName, String.class);
+            } catch (Exception ex) {
+                return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+            }
 
             product.setSerialNumber(serialNumber);
             product.setPriceSoldAt(product.getPriceSoldAt());
 
-            totalPrice += productPrice;
-            body.setTotalPrice(totalPrice);
             productRepository.save(product); // This also saves the RetailOrder.
+        }
+
+        uri = "http://127.0.0.1:8080/accounting/retailOrder";
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            RetailOrder accountingResponse = restTemplate.postForObject(uri, body, RetailOrder.class);
+        } catch (Exception ex){
+            for (Product product: body.getProducts()) {
+                productRepository.delete(product);
+            }
+            retailOrderRepository.delete(body);
+            // TODO rollback endpoint call
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
         }
 
         // Return status code
@@ -101,6 +115,24 @@ public class OrdersApiController implements OrdersApi {
             body.getSalesRep().getEmployeeId() == 0) {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
+
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://127.0.0.1:8080/inventory/wholesaleOrder";
+
+        try {
+            WholesaleOrder inventoryResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+        } catch (Exception ex) {
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+        }
+
+        uri = "http://127.0.0.1:8080/accounting/wholesaleOrder";
+        try {
+            WholesaleOrder accountingResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+        } catch (Exception ex){
+            // TODO rollback endpoint call
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+        }
+
         salesRepRepository.save(body.getSalesRep());
 
         wholesaleOrderRepository.save(body);
