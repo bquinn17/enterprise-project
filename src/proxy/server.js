@@ -51,6 +51,7 @@ const apiUrl = "http://erpsales_api:8080";
 // Forward all requests prefacing with /api to the api
 app.use('/api', function(req, res) {
   var url = apiUrl + req.url;
+  console.log("Got me a request!")
   req.pipe(request(url)).pipe(res);
 });
 
