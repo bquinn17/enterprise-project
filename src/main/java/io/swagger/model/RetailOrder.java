@@ -90,7 +90,6 @@ public class RetailOrder   {
   @JsonProperty("totalPrice")
   private double totalPrice = 0.0;
 
-  // TODO change to actually put products into the db
   @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
   @JsonProperty("products")
   @Valid
