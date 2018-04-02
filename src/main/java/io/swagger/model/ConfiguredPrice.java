@@ -3,6 +3,7 @@ package io.swagger.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
@@ -28,14 +29,14 @@ public class ConfiguredPrice   {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @JsonIgnore
+  private Long account_id;
+
   @JsonProperty("model")
   private String model = null;
 
   @JsonProperty("price")
   private BigDecimal price = null;
-
-  @JsonIgnore
-  private Long account_id;
 
   public void setId(Long id){
     this.id = id;
@@ -45,10 +46,11 @@ public class ConfiguredPrice   {
     return id;
   }
 
-  public void setAccountId(Long id){
-    this.account_id = id;
+  @JsonIgnore
+  public void setAccountId(Long account_id){
+    this.account_id = account_id;
   }
-
+  @JsonIgnore
   public Long getAccountId(){
     return account_id;
   }
