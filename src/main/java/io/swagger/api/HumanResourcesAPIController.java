@@ -28,21 +28,21 @@ public class HumanResourcesAPIController {
                 break;
 
             case "South":
-                response.add(new MockedSalesRep(1, "Sandra", "Bullock", "South"));
-                response.add(new MockedSalesRep(2, "Jennifer", "Lawrence", "South"));
-                response.add(new MockedSalesRep(3, "Matthew", "McConaughey", "South"));
+                response.add(new MockedSalesRep(4, "Sandra", "Bullock", "South"));
+                response.add(new MockedSalesRep(5, "Jennifer", "Lawrence", "South"));
+                response.add(new MockedSalesRep(6, "Matthew", "McConaughey", "South"));
                 break;
 
             case "East":
-                response.add(new MockedSalesRep(1, "Chuck", "Norris", "East"));
-                response.add(new MockedSalesRep(2, "Carrie", "Underwood", "East"));
-                response.add(new MockedSalesRep(3, "Logan", "Paul", "East"));
+                response.add(new MockedSalesRep(7, "Chuck", "Norris", "East"));
+                response.add(new MockedSalesRep(8, "Carrie", "Underwood", "East"));
+                response.add(new MockedSalesRep(9, "Logan", "Paul", "East"));
                 break;
 
             case "West":
-                response.add(new MockedSalesRep(1, "Jon", "Stewart", "West"));
-                response.add(new MockedSalesRep(2, "Stephen", "Colbert", "West"));
-                response.add(new MockedSalesRep(3, "Samantha", "Bee", "West"));
+                response.add(new MockedSalesRep(10, "Jon", "Stewart", "West"));
+                response.add(new MockedSalesRep(11, "Stephen", "Colbert", "West"));
+                response.add(new MockedSalesRep(12, "Samantha", "Bee", "West"));
                 break;
         }
         MockedSalesRepList listResponse = new MockedSalesRepList(response);
