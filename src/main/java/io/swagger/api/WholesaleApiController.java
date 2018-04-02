@@ -22,6 +22,7 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
@@ -60,12 +61,13 @@ public class WholesaleApiController implements WholesaleApi {
         wholesaleAccount.setShippingState(body.getShippingState());
         wholesaleAccount.setShippingTown(body.getShippingTown());
         wholesaleAccount.setShippingZip(body.getShippingZip());
-        wholesaleAccount.setConfiguredPrice(body.getConfiguredPrice());
+
         // Save into database
         wholesaleAccountRepository.save(wholesaleAccount);
 
         for (ConfiguredPrice configuredPrice: body.getConfiguredPrice()) {
             configuredPrice.setAccountId(wholesaleAccount.getId());
+            wholesaleAccount.addConfiguredPriceItem(configuredPrice);
             configuredPriceRepository.save(configuredPrice);
         }
 
@@ -77,9 +79,20 @@ public class WholesaleApiController implements WholesaleApi {
         String accept = request.getHeader("Accept");
 
         // Get all the wholesale accounts in the database.
-        List wholesaleAccounts = wholesaleAccountRepository.findAll();
+        List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
+        List<WholesaleAccount> response = new ArrayList<>();
+        for(WholesaleAccount wholesaleAccount : wholesaleAccounts){
+            List<ConfiguredPrice> configuredPricesList = configuredPriceRepository.findAll();
+            for(ConfiguredPrice configuredPrice : configuredPricesList){
+                if(configuredPrice.getAccountId() == wholesaleAccount.getId()){
+                    wholesaleAccount.addConfiguredPriceItem(configuredPrice);
 
-        return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
+                }
+            }
+            response.add(wholesaleAccount);
+        }
+
+        return new ResponseEntity<List>(response, HttpStatus.FOUND);
     }
 
 }
