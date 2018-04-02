@@ -51,7 +51,7 @@ public class WholesaleAccount   {
     private String shippingZip = null;
 
     @JsonProperty("configuredPrice")
-    @Valid
+    @Transient
     private List<ConfiguredPrice> configuredPrice = null;
 
     @ApiModelProperty(value = "")

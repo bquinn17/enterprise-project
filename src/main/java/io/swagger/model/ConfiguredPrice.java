@@ -1,12 +1,16 @@
 package io.swagger.model;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -15,13 +19,39 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-04-02T13:59:56.175Z")
-
+@Entity
+@Table(name = "configured_price")
 public class ConfiguredPrice   {
+
+  @Id
+  @JsonIgnore
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
   @JsonProperty("model")
   private String model = null;
 
   @JsonProperty("price")
   private BigDecimal price = null;
+
+  @JsonIgnore
+  private Long account_id;
+
+  public void setId(Long id){
+    this.id = id;
+  }
+
+  public Long getId(){
+    return id;
+  }
+
+  public void setAccountId(Long id){
+    this.account_id = id;
+  }
+
+  public Long getAccountId(){
+    return account_id;
+  }
 
   public ConfiguredPrice model(String model) {
     this.model = model;
