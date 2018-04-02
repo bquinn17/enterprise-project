@@ -9,6 +9,7 @@ import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
+@Controller
 public class OrdersApiController implements OrdersApi {
 
     @Autowired
@@ -189,7 +191,7 @@ public class OrdersApiController implements OrdersApi {
     @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
-        if(false) {
+        if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0)) {
             return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
         }
 
