@@ -25,12 +25,11 @@ import javax.validation.constraints.*;
 public class ConfiguredPrice   {
 
   @Id
-  @JsonIgnore
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @JsonIgnore
-  private Long account_id;
+  @ManyToOne(cascade = {CascadeType.ALL})
+  private WholesaleAccount account;
 
   @JsonProperty("model")
   private String model = null;
@@ -38,6 +37,7 @@ public class ConfiguredPrice   {
   @JsonProperty("price")
   private BigDecimal price = null;
 
+  @JsonIgnore
   public void setId(Long id){
     this.id = id;
   }
@@ -47,12 +47,11 @@ public class ConfiguredPrice   {
   }
 
   @JsonIgnore
-  public void setAccountId(Long account_id){
-    this.account_id = account_id;
+  public void setAccount(WholesaleAccount account){
+    this.account = account;
   }
-  @JsonIgnore
-  public Long getAccountId(){
-    return account_id;
+  public WholesaleAccount getAccount(){
+    return account;
   }
 
   public ConfiguredPrice model(String model) {

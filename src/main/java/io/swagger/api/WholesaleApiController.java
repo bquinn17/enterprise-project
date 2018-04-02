@@ -62,13 +62,10 @@ public class WholesaleApiController implements WholesaleApi {
         wholesaleAccount.setShippingTown(body.getShippingTown());
         wholesaleAccount.setShippingZip(body.getShippingZip());
 
-        // Save into database
-        wholesaleAccountRepository.save(wholesaleAccount);
-
         for (ConfiguredPrice configuredPrice: body.getConfiguredPrice()) {
-            configuredPrice.setAccountId(wholesaleAccount.getId());
+            configuredPrice.setAccount(wholesaleAccount);
             wholesaleAccount.addConfiguredPriceItem(configuredPrice);
-            configuredPriceRepository.save(configuredPrice);
+            configuredPriceRepository.save(configuredPrice); // Also saves wholesale account
         }
 
         return new ResponseEntity<WholesaleAccount>(wholesaleAccount, HttpStatus.CREATED);
@@ -80,19 +77,8 @@ public class WholesaleApiController implements WholesaleApi {
 
         // Get all the wholesale accounts in the database.
         List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
-        List<WholesaleAccount> response = new ArrayList<>();
-        for(WholesaleAccount wholesaleAccount : wholesaleAccounts){
-            List<ConfiguredPrice> configuredPricesList = configuredPriceRepository.findAll();
-            for(ConfiguredPrice configuredPrice : configuredPricesList){
-                if(configuredPrice.getAccountId() == wholesaleAccount.getId()){
-                    wholesaleAccount.addConfiguredPriceItem(configuredPrice);
 
-                }
-            }
-            response.add(wholesaleAccount);
-        }
-
-        return new ResponseEntity<List>(response, HttpStatus.FOUND);
+        return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
     }
 
 }

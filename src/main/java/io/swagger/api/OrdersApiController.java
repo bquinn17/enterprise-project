@@ -138,7 +138,6 @@ public class OrdersApiController implements OrdersApi {
                 if(p.getSerialNumber().equals(serialNum)){
                     return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
                 }
-
             }
         }
         throw new NotFoundException(404, "no orders containing serial number found");

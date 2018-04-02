@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 
-/** TODO Add configured prices into DB. Seperate table with foreign key.
+/**
  * WholesaleAccount
  */
 @Validated
@@ -51,7 +51,7 @@ public class WholesaleAccount   {
     private String shippingZip = null;
 
     @JsonProperty("configuredPrice")
-    @Transient
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<ConfiguredPrice> configuredPrice = null;
 
     @ApiModelProperty(value = "")
