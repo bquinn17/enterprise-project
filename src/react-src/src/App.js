@@ -1,13 +1,19 @@
 import React, { PureComponent } from 'react'
-import { Router, Link } from 'react-static'
-import { hot } from 'react-hot-loader'
 //
-import Routes from 'react-static-routes'
-
-import Reboot from 'material-ui/Reboot'
+import CssBaseline from 'material-ui/CssBaseline'
 import AppBar from 'material-ui/AppBar'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import { withStyles } from 'material-ui/styles'
+//
+import { Switch, Route, Router } from 'react-router'
+//
+import HomePage from './containers/home/HomePage'
+import Employee from './containers/employee-login/Employee'
+import Store from './containers/store/Store'
+import PageNotFound from './containers/errors/PageNotFound'
+//
+import createBrowserHistory from 'history/createBrowserHistory'
+
 
 // Custom styles
 const styles = {
@@ -38,20 +44,52 @@ class App extends PureComponent {
 
   render () {
     const { classes } = this.props
-
+    const history = createBrowserHistory()
     return (
-      <Router>
         <div className={classes.container}>
-          <Reboot />
+          <CssBaseline />
           <div className={classes.content}>
-            <Routes />
+          <Router history={history}>
+            <Switch>
+              <Route exact path="/" component={ HomePage }/>
+              <Route
+                exact
+                path="/employee/login"
+                render={ (props) => (
+                  <Employee employeePage="login" />
+                )}
+              />
+              <Route
+                exact
+                path="/employee/dashboard"
+                render={ (props) => (
+                  <Employee employeePage="dashboard" />
+                )}
+              />
+              <Route
+                exact
+                path="/store/catalog"
+                render={ (props) => (
+                  <Store storePage="catalog" />
+                )}
+              />
+              <Route
+                exact
+                path="/store/contact-us"
+                render={ (props) => (
+                  <Store storePage="contact-us" />
+                )}
+              />
+
+              <Route component={PageNotFound} />
+            </Switch>
+          </Router>
           </div>
         </div>
-      </Router>
     )
   }
 }
 
 const AppWithStyles = withStyles(styles)(App)
 
-export default hot(module)(AppWithStyles)
+export default (AppWithStyles)

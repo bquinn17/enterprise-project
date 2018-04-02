@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react'
 //
-import { withRouteData } from 'react-static'
-//
 import EmployeeLoginPage from './EmployeeLoginPage'
 import WholesaleOrderPage from './WholesaleOrderPage'
 
@@ -15,7 +13,7 @@ class Employee extends PureComponent {
   render() {
     /* Determine which child page to render */
     var pageToShow
-    switch(this.props.data.employeePage) {
+    switch(this.props.employeePage) {
       case 'dashboard':
         console.log("Found dashboard")
         pageToShow = <WholesaleOrderPage />
@@ -32,4 +30,4 @@ class Employee extends PureComponent {
   }
 }
 
-export default withRouteData(Employee)
+export default Employee

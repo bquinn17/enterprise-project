@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
-
+import io.swagger.model.Product;
+import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -16,7 +17,8 @@ import javax.validation.Valid;
 /**
  * RetailOrder
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @Entity
 @Table(name = "retail_order")
@@ -48,9 +50,8 @@ public class RetailOrder   {
   /**
    * Gets or Sets status
    */
-  public enum StatusEnum
-  {
-    FULLFILLED("fullfilled"),
+  public enum StatusEnum {
+    FULFILLED("fulfilled"),
 
     SHIPPED("shipped"),
 
@@ -85,11 +86,16 @@ public class RetailOrder   {
 
   @Column(name = "order_status")
   @Enumerated(EnumType.STRING)
-  @JsonProperty("status")
+  @JsonIgnore
   private StatusEnum status = null;
 
-  @Transient // TODO change to actually put products into the db
+  @JsonProperty("totalPrice")
+  private double totalPrice = 0.0;
+
+  // TODO change to actually put products into the db
+  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
   @JsonProperty("products")
+  @Valid
   private List<Product> products = null;
 
   public RetailOrder customerEmail(String customerEmail) {
@@ -103,7 +109,7 @@ public class RetailOrder   {
     @JsonIgnore
     public Long getID() { return id; }
 
-   /**
+  /**
    * Get customerEmail
    * @return customerEmail
   **/
@@ -123,7 +129,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get customerShippingStreetAddress
    * @return customerShippingStreetAddress
   **/
@@ -143,7 +149,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get customerShippingZip
    * @return customerShippingZip
   **/
@@ -163,7 +169,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get customerShippingTown
    * @return customerShippingTown
   **/
@@ -183,7 +189,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get customerShippingState
    * @return customerShippingState
   **/
@@ -203,7 +209,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get status
    * @return status
   **/
@@ -216,6 +222,27 @@ public class RetailOrder   {
 
   public void setStatus(StatusEnum status) {
     this.status = status;
+  }
+
+  public RetailOrder totalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
+    return this;
+  }
+
+  /**
+   * Get totalPrice
+   * @return totalPrice
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public double getTotalPrice() {
+    return totalPrice;
+  }
+
+  public void setTotalPrice(double totalPrice) {
+    this.totalPrice = totalPrice;
   }
 
   public RetailOrder products(List<Product> products) {
@@ -231,7 +258,7 @@ public class RetailOrder   {
     return this;
   }
 
-   /**
+  /**
    * Get products
    * @return products
   **/
@@ -263,12 +290,13 @@ public class RetailOrder   {
         Objects.equals(this.customerShippingTown, retailOrder.customerShippingTown) &&
         Objects.equals(this.customerShippingState, retailOrder.customerShippingState) &&
         Objects.equals(this.status, retailOrder.status) &&
+        Objects.equals(this.totalPrice, retailOrder.totalPrice) &&
         Objects.equals(this.products, retailOrder.products);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerEmail, customerShippingStreetAddress, customerShippingZip, customerShippingTown, customerShippingState, status, products);
+    return Objects.hash(customerEmail, customerShippingStreetAddress, customerShippingZip, customerShippingTown, customerShippingState, status, totalPrice, products);
   }
 
   @Override
@@ -282,6 +310,7 @@ public class RetailOrder   {
     sb.append("    customerShippingTown: ").append(toIndentedString(customerShippingTown)).append("\n");
     sb.append("    customerShippingState: ").append(toIndentedString(customerShippingState)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    totalPrice: ").append(toIndentedString(totalPrice)).append("\n");
     sb.append("    products: ").append(toIndentedString(products)).append("\n");
     sb.append("}");
     return sb.toString();

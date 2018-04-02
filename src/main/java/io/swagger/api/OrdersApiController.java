@@ -11,16 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
+
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
 public class OrdersApiController implements OrdersApi {
@@ -36,6 +33,12 @@ public class OrdersApiController implements OrdersApi {
 
     @Autowired
     ModelCountRepository modelCountRepository;
+
+    @Autowired
+    SalesRepRepository salesRepRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @CrossOrigin
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
@@ -61,11 +64,28 @@ public class OrdersApiController implements OrdersApi {
         retailOrder.setCustomerShippingState(body.getCustomerShippingState());
         retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
         retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(body.getProducts());
+        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
-        // Save Object into database
-        retailOrderRepository.save(retailOrder);
+        //
+        double productPrice = 0.0;
+        double totalPrice = 0.0;
+        String serialNumber;
+
+        for (Product product: body.getProducts()) {
+
+            product.setRetailOrder(retailOrder);
+            serialNumber = "Fudge"; // TODO query Inventory for a serial number. For now it is random
+            product.setSerialNumber(serialNumber);
+
+            productPrice = 100.99; // TODO query Inventory for price. For now it is random
+
+            product.setPriceSoldAt(productPrice);
+            retailOrder.addProductsItem(product);
+
+            totalPrice += productPrice;
+            retailOrder.setTotalPrice(totalPrice);
+            productRepository.save(product); // This also saves the RetailOrder.
+        }
 
         // Return status code
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
@@ -73,39 +93,25 @@ public class OrdersApiController implements OrdersApi {
 
     @CrossOrigin
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
-        // do some magic!
-        /*
-        {
-          "orderMap": [
-            {
-              "model": "string",
-              "quantity": 0
-            }
-          ],
-          "status": "placed",
-          "wholesaleAccount": {
-            "email": "string",
-            "salesRep": {
-              "firstName": "string",
-              "lastName": "string",
-              "region": "north"
-            },
-            "shippingAddress": "string",
-            "shippingState": "string",
-            "shippingTown": "string",
-            "shippingZip": "string"
-          }
-        }
-         */
         WholesaleOrder order = new WholesaleOrder();
 
-        // order.status(body.getStatus() != null ? body.getStatus() : WholesaleOrder.StatusEnum.PLACED);
         order.setStatus(WholesaleOrder.StatusEnum.PLACED);
 
         order.setWholesaleAccount(body.getWholesaleAccount()); // need to find a way to identify WholesaleAccountRepository.findOne();
 
         order.setOrderMap(body.getOrderMap());
 
+        // Create SalesRep associated with this wholesale, save into db
+        SalesRep salesRep = new SalesRep();
+        salesRep.setFirstName(body.getSalesRep().getFirstName()); // need to find a way to identify SalesRep using repo
+        salesRep.setLastName(body.getSalesRep().getLastName());
+        salesRep.setRegion(body.getSalesRep().getRegion());
+        salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
+        Long employeeID = new Long(123); // TODO query HR for employee ID
+        salesRep.setEmployeeId(employeeID);
+        salesRepRepository.save(salesRep);
+
+        order.setSalesRep(salesRep);
         wholesaleOrderRepository.save(order);
 
         for (ModelCount modelCount: body.getOrderMap()) {
@@ -137,23 +143,34 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) {
-        Product product = new Product();
-        product.setModel("KennUWare Watch");
-        product.setRefurbished(false);
-        product.setSerialNumber("123456789");
-        List<Product> productList = new ArrayList<Product>();
-        productList.add(product);
+    public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
 
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail("goodguy@gmail.com");
-        retailOrder.setCustomerShippingState("NY");
-        retailOrder.setCustomerShippingStreetAddress("1 Lomb Memorial Dr");
-        retailOrder.setCustomerShippingTown("Rochester");
-        retailOrder.setCustomerShippingZip("14623");
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULLFILLED);
-        retailOrder.setProducts(productList);
-        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
+        List<RetailOrder> retailOrders = retailOrderRepository.findAll();
+        for(RetailOrder ro : retailOrders) {
+            for(Product p : ro.getProducts()){
+                if(p.getSerialNumber().equals(serialNum)){
+                    return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
+                }
+
+            }
+        }
+        throw new NotFoundException(404, "no orders containing serial number found");
+    }
+
+    @CrossOrigin
+    public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
+        List<WholesaleOrder> response = new ArrayList<>();
+        for(WholesaleOrder wo : wholesaleOrders){
+            if (wo.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
+                response.add(wo);
+            }
+        }
+        if (response.size() != 0){
+            return new ResponseEntity<List<WholesaleOrder>>(response, HttpStatus.FOUND);
+        }else {
+            throw new NotFoundException(404, "no orders found for sales rep id");
+        }
     }
 
     @CrossOrigin
