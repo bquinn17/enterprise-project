@@ -18,6 +18,7 @@ import ShoppingCart from 'material-ui-icons/ShoppingCart'
 import CatalogPage from './CatalogPage'
 import ContactUs from './ContactUs'
 import logoImg from '../../logo.jpg'
+import CheckoutPage from './CheckoutPage'
 //
 import styles from './StoreStyles'
 
@@ -36,6 +37,7 @@ class Store extends React.Component {
     }
     this.addItem = this.addItem.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.getCartData = this.getCartData.bind(this)
   }
 
   // Remove the server-side injected CSS.
@@ -47,6 +49,7 @@ class Store extends React.Component {
   }
 
   addItem(item) {
+    console.log(item)
     var addedTotalCost = this.state.totalCost + item.cost
     var roundedTotalCost = addedTotalCost.toFixed(2)
     var newTotalCost = parseFloat(roundedTotalCost)
@@ -68,6 +71,28 @@ class Store extends React.Component {
     })
   }
 
+  getCartData = () =>  {
+    var cartData = [
+    ]
+    this.state.itemsInCart.forEach(function(item) {
+      var model = item.model
+      var modelsWithNameArr = cartData.filter(e => e.modelName === item.model)
+      if (modelsWithNameArr.length > 0) {
+        modelsWithNameArr[0].quantity = modelsWithNameArr[0].quantity + 1
+        console.log("test")
+        console.log(cartData)
+      } else {
+        cartData.push({
+          cost: item.cost,
+          quantity: 1,
+          imgSrc: item.imgSrc,
+          modelName: item.model
+        })
+      }
+    })
+    return cartData
+  }
+
   handleSubmit() {
 
     var cartArr = []
@@ -76,7 +101,6 @@ class Store extends React.Component {
         {
           "model": item.model,
           "refurbished": "false",
-          "serialNumber": item.serialNumber
         }
       )
     })
@@ -118,6 +142,9 @@ class Store extends React.Component {
       case 'contact-us':
         pageToShow = <ContactUs />
         break;
+      case 'checkout':
+        pageToShow = <CheckoutPage cartData={ this.getCartData() }/>
+        break;
     }
 
     const itemsInCart = this.state.itemsInCart
@@ -157,10 +184,10 @@ class Store extends React.Component {
                 className={ classes.cartMenu }
               >
                 { itemsInCart.map(item => (
-                    <MenuItem value={ item.serialNumber }>
+                    <MenuItem value={ 1 }>
                       <img
                        className={ classes.productImg }
-                       src={ "../../" + item.imgSrc }
+                       src={ item.imgSrc }
                       />
                     { item.model } ${ item.cost }
                     </MenuItem>

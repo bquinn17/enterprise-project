@@ -14,8 +14,8 @@ export default {
   },
 
   gridList: {
-    maxWidth: 1200,
-    height: 450,
+    maxWidth: 1250,
+    height: 350,
   },
 
   imgWrapper: {

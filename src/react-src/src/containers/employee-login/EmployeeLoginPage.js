@@ -53,7 +53,6 @@ class LoginForm extends React.Component {
   }
 
   render(){
-    console.log(this.state.password)
     const { classes } = this.props
     return (
       <div>

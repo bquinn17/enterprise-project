@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react'
 //
 import EmployeeLoginPage from './EmployeeLoginPage'
 import WholesaleOrderPage from './WholesaleOrderPage'
-
+import EmployeeDashboard from './EmployeeDashboard'
+import WholesaleAccountPage from './WholesaleAccountPage'
 /**
  * Employee represents a wrapper class
  * for the employee's web pages.
@@ -15,11 +16,16 @@ class Employee extends PureComponent {
     var pageToShow
     switch(this.props.employeePage) {
       case 'dashboard':
-        console.log("Found dashboard")
-        pageToShow = <WholesaleOrderPage />
+        pageToShow = <EmployeeDashboard />
         break;
       case 'login':
         pageToShow = <EmployeeLoginPage />
+        break;
+      case 'order':
+        pageToShow = <WholesaleOrderPage />
+        break;
+      case 'account':
+        pageToShow = <WholesaleAccountPage />
         break;
     }
     return (
