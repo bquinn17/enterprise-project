@@ -16,9 +16,29 @@ import getWholeSaleAccounts from '../../stubbed-data/dataFromFutureReleases'
  * Author: Brendan Jones, bpj1651@rit.edu
  */
 class WholesaleOrderAccountDropDown extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      loading: false,
+      accounts: []
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      loading: true
+    })
+    fetch("/api/wholesale/accounts")
+      .then(response => response.json())
+      .then(data => this.setState({ accounts: data, loading: false }))
+      .catch(error => console.log("error!!! " + error));
+  }
   render() {
     const accounts = getWholeSaleAccounts()
     const { classes } = this.props
+    if(this.state.loading){
+      return <h1>Loading...</h1>
+    }
     return (
       <div>
         <Typography
@@ -32,7 +52,7 @@ class WholesaleOrderAccountDropDown extends React.Component {
           onChange={ this.props.onSelect }
           className={ classes.region }
         >
-          { accounts.map(acc => (
+          { this.state.accounts.map(acc => (
               <MenuItem value={ acc.email }>{ acc.name }</MenuItem>
           )) }
         </Select>
