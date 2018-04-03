@@ -241,7 +241,7 @@ public class RetailOrder   {
     return totalPrice;
   }
 
-  public void setTotalPrice(double totalPrice) {
+  public void setTotalPrice(Double totalPrice) {
     this.totalPrice = totalPrice;
   }
 
