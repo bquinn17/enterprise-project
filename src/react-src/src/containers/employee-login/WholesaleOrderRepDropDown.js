@@ -54,7 +54,7 @@ class WholesaleOrderRepDropDown extends React.Component {
           className={ classes.region }
         >
           { this.state.reps.map(rep => (
-              <MenuItem value={ rep.id }>{ rep.firstName + " " + rep.lastName }</MenuItem>
+              <MenuItem value={ rep }>{ rep.firstName + " " + rep.lastName }</MenuItem>
           ))}
         </Select>
       </div>

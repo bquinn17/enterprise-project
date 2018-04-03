@@ -53,7 +53,7 @@ class WholesaleOrderAccountDropDown extends React.Component {
           className={ classes.region }
         >
           { this.state.accounts.map(acc => (
-              <MenuItem value={ acc.email }>{ acc.name }</MenuItem>
+              <MenuItem value={ acc }>{ acc.name }</MenuItem>
           )) }
         </Select>
       </div>
