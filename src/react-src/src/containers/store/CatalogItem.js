@@ -1,10 +1,7 @@
 import React from 'react'
 //
-import Button from 'material-ui/Button'
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
+import { GridListTile, GridListTileBar } from 'material-ui/GridList'
 import IconButton from 'material-ui/IconButton'
-import Subheader from 'material-ui/List/ListSubheader'
-import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 //
 import AddCircle from 'material-ui-icons/AddCircle'

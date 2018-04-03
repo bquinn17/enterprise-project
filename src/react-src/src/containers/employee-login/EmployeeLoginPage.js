@@ -1,27 +1,26 @@
 import React from 'react'
 //
-import { Link } from 'react-router-dom'
 import axios from 'axios'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
-import FormControl from 'material-ui/Form'
-import FormControlLabel from 'material-ui/Form'
 import IconButton from 'material-ui/IconButton'
 import TextField from 'material-ui/Input'
 import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
 //
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
-import { withStyles } from 'material-ui/styles'
-//
-import componentStyles from './employeeLoginPageStyles'
-//
 import Loader from 'react-loader'
 //
+import { Link } from 'react-router-dom'
+//
 import logoImg from '../../logo.jpg'
+import componentStyles from './employeeLoginPageStyles'
+
 /**
  * LoginForm represents the login page the employees of KennUWare Corp Sales ERP
+ * On successful login, user is redirected to the EmployeeDashboard
  *
  * Author: Brendan Jones, bpj1651@rit.edu
  */
@@ -29,12 +28,12 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props)
 
+    // Initially, no userId entered, no password entered, and no loading
     this.state = {
       userId: '',
       password: '',
       loading: false
     }
-
     this.handleFormChange = this.handleFormChange.bind(this)
   }
 
@@ -43,34 +42,27 @@ class LoginForm extends React.Component {
   }
 
   handleSubmit() {
-    console.log("submit")
+
+    // Begin loading
     this.setState({ loading: true} )
 
+    // Create request
     const request = {
       "username": this.state.userId,
       "password": this.state.password
     }
 
+    // Send Request
     axios.post('/api/mocked/hr/login',
       request
     ).then(function(response){
-      this.setState({loading:false})
+      // Stop loading
+      this.setState({ loading: false })
+      // Redirect to new link
       window.location.assign("/employee/dashboard")
     }.bind(this)).catch(function(error) {
       alert("error!" + error)
     })
-
-    // axios.post('/api/wholesale/account/new',
-    //   request
-    // ).then(function(response) {
-    //   alert("success!" + response)
-    // }).catch(function(error) {
-    //   alert("error!" + error)
-    // })
-    // setTimeout(function(){
-    //         this.setState({loading:false})
-    //         window.location.assign("/employee/dashboard")
-    //    }.bind(this),1000)
 
   }
 
@@ -92,7 +84,7 @@ class LoginForm extends React.Component {
               <ArrowBack />
             </IconButton>
           </Link>
-          <img src={ logoImg} className={ classes.logoImg } />
+          <img src={ logoImg } className={ classes.logoImg } />
           <TextField
             required="true"
             placeholder="User ID"
@@ -114,9 +106,8 @@ class LoginForm extends React.Component {
             Log in
           </Button>
           <Loader
-
              loaded={ !this.state.loading }
-             className={ classes.loadWheel}
+             className={ classes.loadWheel }
           >
           </Loader>
         </Card>

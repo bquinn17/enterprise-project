@@ -20,12 +20,12 @@ services:
     restart: always
     ports:
       - "8080:8080"
-  ui:
-    container_name: erpsales_ui
-    build: ./src/react-src
-    ports:
-      - "80:3000"
-    restart: always
+  # ui:
+  #   container_name: erpsales_ui
+  #   build: ./src/react-src
+  #   ports:
+  #     - "80:3000"
+  #   restart: always
   proxy:
     container_name: erpsales_proxy
     build: ./src/proxy

@@ -2,13 +2,9 @@ import React from 'react'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
-import IconButton from 'material-ui/IconButton'
-import Subheader from 'material-ui/List/ListSubheader'
+import GridList from 'material-ui/GridList'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
-//
-import AddCircle from 'material-ui-icons/AddCircle'
 //
 import { Redirect } from 'react-router'
 //

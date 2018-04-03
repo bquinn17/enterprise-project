@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react'
 //
-import EmployeeLoginPage from './EmployeeLoginPage'
-import WholesaleOrderPage from './WholesaleOrderPage'
 import EmployeeDashboard from './EmployeeDashboard'
+import EmployeeLoginPage from './EmployeeLoginPage'
+import PageNotFound from '../errors/PageNotFound'
 import WholesaleAccountPage from './WholesaleAccountPage'
+import WholesaleOrderPage from './WholesaleOrderPage'
+
 /**
  * Employee represents a wrapper class
  * for the employee's web pages.
@@ -26,6 +28,9 @@ class Employee extends PureComponent {
         break;
       case 'account':
         pageToShow = <WholesaleAccountPage />
+        break;
+      default:
+        pageToShow = <PageNotFound />
         break;
     }
     return (
