@@ -10,9 +10,18 @@ team_sales
 
 - Bryan Quinn - bquinn17
 - Peter Howard - peterhoward45
-- Aaron Stadler - aaron13michael 
+- Aaron Stadler - aaron13michael
 - Kevin Barnett - pdfkpb
 - Brendan Jones - BrendanJones44
+
+## Docker Instructions ##
+
+- Prerequisite: have Docker installed.
+- At the root level of the project repo run: `docker-compose build`
+- Then run `docker-compose up`
+
+## Live URL ##
+- http://54.242.81.38/
 
 ## Prerequisites ##
 
@@ -42,7 +51,7 @@ https://wiki.gandi.net/en/hosting/using-linux/tutorials/ubuntu/createdatabase
  - `cd src/react-src/`
 
  - `yarn install`
- 
+
  - `yarn start`
 
 ### Back end ###
