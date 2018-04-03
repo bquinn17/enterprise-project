@@ -24,7 +24,7 @@ import java.util.List;
 @WebMvcTest(OrdersApiController.class)
 @SpringBootTest
 @EnableWebMvc
-public class ZeroDollarOrderStepDefs
+public class SpringIntegrationStepDefs
 {
     private RetailOrder retailOrder;
     private ResultActions apiResult;

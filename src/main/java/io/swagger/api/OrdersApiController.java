@@ -43,6 +43,7 @@ public class OrdersApiController implements OrdersApi {
     ProductRepository productRepository;
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
         // Check if the order contains at least one product.
@@ -94,6 +95,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
         WholesaleOrder order = new WholesaleOrder();
 
@@ -125,6 +127,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
     public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
                                                   @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
 
@@ -145,6 +148,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
 
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
@@ -160,6 +164,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
         List<WholesaleOrder> response = new ArrayList<>();
@@ -176,6 +181,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/salesre"})
     public ResponseEntity<SalesRep> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo) {
