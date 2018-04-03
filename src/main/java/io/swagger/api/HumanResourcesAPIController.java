@@ -48,4 +48,12 @@ public class HumanResourcesAPIController {
         MockedSalesRepList listResponse = new MockedSalesRepList(response);
         return new ResponseEntity<MockedSalesRepList>(listResponse, HttpStatus.FOUND);
     }
+
+    @RequestMapping(value = "/mocked/hr/login",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    @CrossOrigin
+    public ResponseEntity<String> login(){
+        return new ResponseEntity<>("Authenticated", HttpStatus.CREATED);
+    }
 }
