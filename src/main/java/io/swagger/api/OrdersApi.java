@@ -49,12 +49,13 @@ public interface OrdersApi {
 
 
     @ApiOperation(value = "", nickname = "changeOrderStatus", notes = "Update the status of an order", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 202, message = "Updated") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Updated") })
     @RequestMapping(value = "/orders/update/status",
-        produces = { "application/json" }, 
-        method = RequestMethod.PATCH)
-    ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Update the status of an order" ,required=true )  @Valid @RequestBody RetailOrder body);
+            produces = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
+                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status);
 
 
     @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })
@@ -85,11 +86,10 @@ public interface OrdersApi {
 
 
     @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Created") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/orders/new/refund",
-        produces = { "application/json" }, 
-        method = RequestMethod.POST)
+            produces = { "application/json" },
+            method = RequestMethod.POST)
     ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Support submitting of $0 orders" ,required=true )  @Valid @RequestBody RetailOrder body);
-
 }
