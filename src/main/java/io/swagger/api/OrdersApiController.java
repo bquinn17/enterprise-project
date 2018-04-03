@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,84 +47,106 @@ public class OrdersApiController implements OrdersApi {
     @RequestMapping(method={RequestMethod.POST},value={"/orders/retail/new"})
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
-        // Check if the order contains at least one product.
-        if(body.getProducts().isEmpty()){
-            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
-        }
-
         // Check to see if any fields are empty
         if(body.getCustomerEmail().isEmpty() || body.getCustomerShippingState().isEmpty() ||
                 body.getCustomerShippingStreetAddress().isEmpty() ||
                 body.getCustomerShippingTown().isEmpty() ||
-                body.getCustomerShippingZip().isEmpty()){
+                body.getCustomerShippingZip().isEmpty() ||
+                body.getProducts().isEmpty()){
             return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
         // Create the Retail Order object with the info from body
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail(body.getCustomerEmail());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingStreetAddress(body.getCustomerShippingStreetAddress());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
-        retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
+        body.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
-        //
-        double productPrice = 0.0;
-        double totalPrice = 0.0;
-        String serialNumber;
+        String uri = "http://127.0.0.1:8080/inventory/getDeviceId";
 
         for (Product product: body.getProducts()) {
 
-            product.setRetailOrder(retailOrder);
-            serialNumber = "Fudge"; // TODO query Inventory for a serial number. For now it is random
+            product.setRetailOrder(body);
+
+            String productName = product.getModel();
+
+            RestTemplate restTemplate = new RestTemplate();
+            String serialNumber;
+            try {
+                serialNumber = restTemplate.postForObject(uri, productName, String.class);
+            } catch (Exception ex) {
+                return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+            }
+
             product.setSerialNumber(serialNumber);
+            product.setPriceSoldAt(product.getPriceSoldAt());
 
-            productPrice = 100.99; // TODO query Inventory for price. For now it is random
-
-            product.setPriceSoldAt(productPrice);
-            retailOrder.addProductsItem(product);
-
-            totalPrice += productPrice;
-            retailOrder.setTotalPrice(totalPrice);
             productRepository.save(product); // This also saves the RetailOrder.
         }
 
+        uri = "http://127.0.0.1:8080/accounting/retailOrder";
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            RetailOrder accountingResponse = restTemplate.postForObject(uri, body, RetailOrder.class);
+        } catch (Exception ex){
+            for (Product product: body.getProducts()) {
+                productRepository.delete(product);
+            }
+            retailOrderRepository.delete(body);
+            // TODO rollback endpoint call
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+        }
+
         // Return status code
-        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.CREATED);
+        return new ResponseEntity<RetailOrder>(body, HttpStatus.CREATED);
     }
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/orders/wholesale/new"})
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
-        WholesaleOrder order = new WholesaleOrder();
 
-        order.setStatus(WholesaleOrder.StatusEnum.PLACED);
+        // Check to see if any fields are empty
+        if(body.getSalesRep() == null || body.getOrderMap().isEmpty() ||
+                body.getWholesaleAccount() == null ||
+                body.getTotalPrice() == 0.0){
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
+        }
 
-        order.setWholesaleAccount(body.getWholesaleAccount()); // need to find a way to identify WholesaleAccountRepository.findOne();
-
-        order.setOrderMap(body.getOrderMap());
+        body.setStatus(WholesaleOrder.StatusEnum.PLACED);
 
         // Create SalesRep associated with this wholesale, save into db
-        SalesRep salesRep = new SalesRep();
-        salesRep.setFirstName(body.getSalesRep().getFirstName()); // need to find a way to identify SalesRep using repo
-        salesRep.setLastName(body.getSalesRep().getLastName());
-        salesRep.setRegion(body.getSalesRep().getRegion());
-        salesRep.setEmployeeId(body.getSalesRep().getEmployeeId());
-        Long employeeID = new Long(123); // TODO query HR for employee ID
-        salesRep.setEmployeeId(employeeID);
-        salesRepRepository.save(salesRep);
+        if(body.getSalesRep().getFirstName().isEmpty() ||
+            body.getSalesRep().getLastName().isEmpty() ||
+            body.getSalesRep().getRegion() == null ||
+            body.getSalesRep().getEmployeeId() == 0) {
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
+        }
 
-        order.setSalesRep(salesRep);
-        wholesaleOrderRepository.save(order);
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://127.0.0.1:8080/inventory/wholesaleOrder";
+
+        try {
+            WholesaleOrder inventoryResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+        } catch (Exception ex) {
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+        }
+
+        uri = "http://127.0.0.1:8080/accounting/wholesaleOrder";
+        try {
+            WholesaleOrder accountingResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+        } catch (Exception ex){
+            // TODO rollback endpoint call
+            return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
+        }
+
+        salesRepRepository.save(body.getSalesRep());
+
+        wholesaleOrderRepository.save(body);
 
         for (ModelCount modelCount: body.getOrderMap()) {
-            modelCount.setOrder_id(order.getId());
+            modelCount.setOrder_id(body.getId());
             modelCountRepository.save(modelCount);
         }
 
-        return new ResponseEntity<WholesaleOrder>(order, HttpStatus.CREATED);
+        return new ResponseEntity<WholesaleOrder>(body, HttpStatus.CREATED);
     }
 
     @CrossOrigin
@@ -152,12 +175,11 @@ public class OrdersApiController implements OrdersApi {
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
 
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
-        for(RetailOrder ro : retailOrders) {
-            for(Product p : ro.getProducts()){
-                if(p.getSerialNumber().equals(serialNum)){
-                    return new ResponseEntity<RetailOrder>(ro, HttpStatus.FOUND);
+        for(RetailOrder retailOrder : retailOrders) {
+            for(Product product : retailOrder.getProducts()){
+                if(product.getSerialNumber().equals(serialNum)){
+                    return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.FOUND);
                 }
-
             }
         }
         throw new NotFoundException(404, "no orders containing serial number found");
@@ -166,15 +188,10 @@ public class OrdersApiController implements OrdersApi {
     @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/orders/byrep"})
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
-        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
-        List<WholesaleOrder> response = new ArrayList<>();
-        for(WholesaleOrder wo : wholesaleOrders){
-            if (wo.getSalesRep().getEmployeeId().toString().equals(salesRepId)){
-                response.add(wo);
-            }
-        }
-        if (response.size() != 0){
-            return new ResponseEntity<List<WholesaleOrder>>(response, HttpStatus.FOUND);
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(salesRepId));
+
+        if (wholesaleOrders.size() != 0){
+            return new ResponseEntity<List<WholesaleOrder>>(wholesaleOrders, HttpStatus.FOUND);
         }else {
             throw new NotFoundException(404, "no orders found for sales rep id");
         }

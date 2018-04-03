@@ -80,7 +80,27 @@ class App extends PureComponent {
                   <Store storePage="contact-us" />
                 )}
               />
-
+              <Route
+                exact
+                path="/store/checkout"
+                render={ (props) => (
+                  <Store storePage="checkout" />
+                )}
+              />
+              <Route
+                exact
+                path="/employee/wholesale/order"
+                render={ (props) => (
+                  <Employee employeePage="order" />
+                )}
+              />
+              <Route
+                exact
+                path="/employee/wholesale/account"
+                render={ (props) => (
+                  <Employee employeePage="account" />
+                )}
+              />
               <Route component={PageNotFound} />
             </Switch>
           </Router>

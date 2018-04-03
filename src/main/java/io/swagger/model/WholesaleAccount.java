@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 
-/** TODO Add configured prices into DB. Seperate table with foreign key.
+/**
  * WholesaleAccount
  */
 @Validated
@@ -31,6 +31,9 @@ public class WholesaleAccount   {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @JsonProperty("name")
+    private String name = null;
 
     @JsonProperty("email")
     private String email = null;
@@ -47,14 +50,34 @@ public class WholesaleAccount   {
     @JsonProperty("shippingZip")
     private String shippingZip = null;
 
-    /**
-     * Get Set Orders, Add Order
-     * @return Orders
-     **/
+    @JsonProperty("configuredPrice")
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<ConfiguredPrice> configuredPrice = null;
+
     @ApiModelProperty(value = "")
 
   public Long getId(){
     return this.id;
+  }
+
+  public WholesaleAccount name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   * @return name
+   **/
+  @ApiModelProperty(value = "")
+
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public WholesaleAccount email(String email) {
@@ -157,6 +180,35 @@ public class WholesaleAccount   {
     this.shippingZip = shippingZip;
   }
 
+  public WholesaleAccount configuredPrice(List<ConfiguredPrice> configuredPrice) {
+    this.configuredPrice = configuredPrice;
+    return this;
+  }
+
+  public WholesaleAccount addConfiguredPriceItem(ConfiguredPrice configuredPriceItem) {
+    if (this.configuredPrice == null) {
+      this.configuredPrice = new ArrayList<ConfiguredPrice>();
+    }
+    this.configuredPrice.add(configuredPriceItem);
+    return this;
+  }
+
+  /**
+   * Get configuredPrice
+   * @return configuredPrice
+   **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public List<ConfiguredPrice> getConfiguredPrice() {
+    return configuredPrice;
+  }
+
+  public void setConfiguredPrice(List<ConfiguredPrice> configuredPrice) {
+    this.configuredPrice = configuredPrice;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -168,27 +220,30 @@ public class WholesaleAccount   {
     }
     WholesaleAccount wholesaleAccount = (WholesaleAccount) o;
     return Objects.equals(this.email, wholesaleAccount.email) &&
+            Objects.equals(this.name, wholesaleAccount.name) &&
         Objects.equals(this.shippingAddress, wholesaleAccount.shippingAddress) &&
         Objects.equals(this.shippingState, wholesaleAccount.shippingState) &&
         Objects.equals(this.shippingTown, wholesaleAccount.shippingTown) &&
-        Objects.equals(this.shippingZip, wholesaleAccount.shippingZip);
+        Objects.equals(this.shippingZip, wholesaleAccount.shippingZip) &&
+            Objects.equals(this.configuredPrice, wholesaleAccount.configuredPrice);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, shippingAddress, shippingState, shippingTown, shippingZip);
+    return Objects.hash(email,name, configuredPrice, shippingAddress, shippingState, shippingTown, shippingZip);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class WholesaleAccount {\n");
-    
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    shippingAddress: ").append(toIndentedString(shippingAddress)).append("\n");
     sb.append("    shippingState: ").append(toIndentedString(shippingState)).append("\n");
     sb.append("    shippingTown: ").append(toIndentedString(shippingTown)).append("\n");
     sb.append("    shippingZip: ").append(toIndentedString(shippingZip)).append("\n");
+    sb.append("    configuredPrice: ").append(toIndentedString(configuredPrice)).append("\n");
     sb.append("}");
     return sb.toString();
   }

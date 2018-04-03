@@ -195,7 +195,7 @@ definitions:
         enum:
         - "placed"
         - "paid"
-        - "fullfilled"
+        - "fulfilled"
         - "shipped"
         - "arrived"
 
@@ -250,6 +250,9 @@ definitions:
       shippingZip:
         type: "string"
 
+      configuredPrice:
+        $ref: "#/definitions/ConfiguredPrice"
+
   SalesRep:
     type: "object"
     properties:
@@ -266,6 +269,14 @@ definitions:
         - "south"
         - "east"
         - "west"
+  ConfiguredPrice:
+    type: "object"
+    properties:
+      model:
+        type: "string"
+      price:
+        type: "number"
+
 
 externalDocs:
   description: "Find out more about Swagger"

@@ -1,9 +1,11 @@
 package io.swagger.api;
 
+import io.swagger.model.ConfiguredPrice;
 import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.repository.ConfiguredPriceRepository;
 import io.swagger.repository.SalesRepRepository;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
@@ -20,6 +22,7 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
@@ -38,6 +41,9 @@ public class WholesaleApiController implements WholesaleApi {
     @Autowired
     WholesaleAccountRepository wholesaleAccountRepository;
 
+    @Autowired
+    ConfiguredPriceRepository configuredPriceRepository;
+
     @org.springframework.beans.factory.annotation.Autowired
     public WholesaleApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -50,13 +56,18 @@ public class WholesaleApiController implements WholesaleApi {
         String accept = request.getHeader("Accept");
         // Set all fields
         WholesaleAccount wholesaleAccount = new WholesaleAccount();
+        wholesaleAccount.setName(body.getName());
         wholesaleAccount.setEmail(body.getEmail());
         wholesaleAccount.setShippingAddress(body.getShippingAddress());
         wholesaleAccount.setShippingState(body.getShippingState());
         wholesaleAccount.setShippingTown(body.getShippingTown());
         wholesaleAccount.setShippingZip(body.getShippingZip());
-        // Save into database
-        wholesaleAccountRepository.save(wholesaleAccount);
+
+        for (ConfiguredPrice configuredPrice: body.getConfiguredPrice()) {
+            configuredPrice.setAccount(wholesaleAccount);
+            wholesaleAccount.addConfiguredPriceItem(configuredPrice);
+            configuredPriceRepository.save(configuredPrice); // Also saves wholesale account
+        }
 
         return new ResponseEntity<WholesaleAccount>(wholesaleAccount, HttpStatus.CREATED);
     }
@@ -67,7 +78,7 @@ public class WholesaleApiController implements WholesaleApi {
         String accept = request.getHeader("Accept");
 
         // Get all the wholesale accounts in the database.
-        List wholesaleAccounts = wholesaleAccountRepository.findAll();
+        List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
 
         return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
     }

@@ -227,7 +227,7 @@ class WholesaleOrderPage extends React.Component {
           Report a Wholesale Order
         </Typography>
         <Card className={ classes.card }>
-          <Link to="/">
+          <Link to="/employee/dashboard">
             <IconButton>
               <ArrowBack />
             </IconButton>

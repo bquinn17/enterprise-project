@@ -11,8 +11,9 @@ export default {
   },
 
   appBar: {
-    flexGrow: 1
+    flexGrow: 1,
     // flexWrap: 'wrap',
+    marginBottom: 30
   },
 
   content: {
