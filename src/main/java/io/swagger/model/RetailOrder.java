@@ -80,6 +80,10 @@ public class RetailOrder   {
       }
       return null;
     }
+
+    public boolean isEmpty() {
+      return value.isEmpty();
+    }
   }
 
   @Column(name = "order_status")
