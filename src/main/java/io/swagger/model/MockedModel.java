@@ -3,7 +3,7 @@ package io.swagger.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MockedModel {
-    @JsonProperty("name")
+    @JsonProperty("model")
     private String name;
 
     @JsonProperty("quantity")

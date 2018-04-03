@@ -61,7 +61,8 @@ class CatalogPage extends React.Component {
                        "leading smartphone, this watch will make you want to " +
                        "forget your cellphone even existed."
       }],
-      redirect: false
+      redirect: false,
+      loading: false
     }
     this.getImg = this.getImg.bind(this)
     this.getPrice = this.getPrice.bind(this)
@@ -80,6 +81,7 @@ class CatalogPage extends React.Component {
   }
 
   getPrice(model) {
+    console.log("getting model! " + model)
     switch(model) {
       case "Kenn-U-Active":
         return 69.99
@@ -93,7 +95,19 @@ class CatalogPage extends React.Component {
   routeToCheckout() {
     this.setState({redirect: true})
   }
+
+  componentDidMount() {
+    this.setState({
+      loading: true
+    })
+    fetch("/api/mocked/inventory/products")
+      .then(response => response.json())
+      .then(data => this.setState({ products: data, loading: false }))
+      .catch(error => console.log("error!!! " + error));
+  }
   render() {
+    console.log("debug state")
+    console.log(this.state)
     const { classes } = this.props
     var productList = this.state.products.map(function(product) {
       return <CatalogItem
@@ -106,6 +120,10 @@ class CatalogPage extends React.Component {
 
     if (this.state.redirect) {
       return <Redirect push to="/store/checkout" />
+    }
+
+    if (this.state.loading){
+      return <h1>Loading...</h1>
     }
 
     return (
