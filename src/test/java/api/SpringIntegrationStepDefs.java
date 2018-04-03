@@ -5,10 +5,10 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.swagger.api.OrdersApiController;
+import io.swagger.api.WholesaleApiController;
 import io.swagger.model.Product;
 import io.swagger.model.RetailOrder;
 import io.swagger.model.WholesaleOrder;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -25,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-@WebMvcTest(OrdersApiController.class)
+@WebMvcTest({OrdersApiController.class, WholesaleApiController.class})
 @SpringBootTest
 @EnableWebMvc
 public class SpringIntegrationStepDefs
@@ -160,5 +159,25 @@ public class SpringIntegrationStepDefs
         retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(productList);
         retailOrder.setTotalPrice(0.0);
+    }
+
+    @Given("^an valid wholesale account$")
+    public void anValidWholesaleAccount() throws Throwable
+    {
+        throw new PendingException();
+    }
+
+    @Given("^there are no orders by a rep$")
+    public void thereAreNoOrdersByARep() throws Throwable
+    {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @Given("^there is at least one order$")
+    public void thereIsAtLeastOneOrder() throws Throwable
+    {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
     }
 }
