@@ -1,6 +1,7 @@
 import React from 'react'
 //
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
@@ -45,10 +46,31 @@ class LoginForm extends React.Component {
     console.log("submit")
     this.setState({ loading: true} )
 
-    setTimeout(function(){
-            this.setState({loading:false})
-            window.location.assign("/employee/dashboard")
-       }.bind(this),1000)
+    const request = {
+      "username": this.state.userId,
+      "password": this.state.password
+    }
+
+    axios.post('/api/mocked/hr/login',
+      request
+    ).then(function(response){
+      this.setState({loading:false})
+      window.location.assign("/employee/dashboard")
+    }.bind(this)).catch(function(error) {
+      alert("error!" + error)
+    })
+
+    // axios.post('/api/wholesale/account/new',
+    //   request
+    // ).then(function(response) {
+    //   alert("success!" + response)
+    // }).catch(function(error) {
+    //   alert("error!" + error)
+    // })
+    // setTimeout(function(){
+    //         this.setState({loading:false})
+    //         window.location.assign("/employee/dashboard")
+    //    }.bind(this),1000)
 
   }
 
