@@ -43,7 +43,7 @@ public class OrdersApiController implements OrdersApi {
     ProductRepository productRepository;
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
+    @RequestMapping(method={RequestMethod.POST},value={"/orders/retail/new"})
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
 
         // Check if the order contains at least one product.
@@ -95,7 +95,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
+    @RequestMapping(method={RequestMethod.POST},value={"/orders/wholesale/new"})
     public ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody WholesaleOrder body) {
         WholesaleOrder order = new WholesaleOrder();
 
@@ -148,7 +148,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/completed"})
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
 
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
@@ -164,7 +164,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/byrep"})
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
         List<WholesaleOrder> response = new ArrayList<>();
@@ -181,7 +181,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/salesre"})
+    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
     public ResponseEntity<SalesRep> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom,
          @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo) {
@@ -194,7 +194,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
+    @RequestMapping(method={RequestMethod.POST},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
         if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0)) {
