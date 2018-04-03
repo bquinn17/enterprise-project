@@ -33,7 +33,6 @@ public class SalesRep   {
   private String lastName = null;
 
   @Id
-  @JsonIgnore
   @Column(name = "employee_id")
   private Long employeeId;
 
