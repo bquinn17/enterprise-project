@@ -41,15 +41,17 @@ class WholesaleOrderPage extends React.Component {
     this.state = {
       region: "",
       reps: [],
+      productsArr: [],
       repId: null,
       wholesaleAccountId: null,
-      numFlex: 0,
-      numStyle: 0,
-      numActive: 0
     }
     this.handleRegionSelect = this.handleRegionSelect.bind(this)
     this.handleRepSelect = this.handleRepSelect.bind(this)
     this.handleWholesaleSelect = this.handleWholesaleSelect.bind(this)
+    this.getCost = this.getCost.bind(this)
+    this.getImgFromModel = this.getImgFromModel.bind(this)
+    this.increaseQuantity = this.increaseQuantity.bind(this)
+    this.getTotalCost = this.getTotalCost.bind(this)
   }
 
   handleRegionSelect = event => {
@@ -64,84 +66,97 @@ class WholesaleOrderPage extends React.Component {
   }
 
   handleWholesaleSelect = event => {
+    var productsArr = event.target.value.configuredPrice
+    var modifiedArr = productsArr.map(function(product){
+      return({
+        model: product.model,
+        price: product.price,
+        quantity: 0
+      })
+    })
     this.setState({
-      wholesaleAccountId: event.target.value
+      wholesaleAccountId: event.target.value,
+      productsArr: modifiedArr
     })
   }
-
-  handleProductOneNum = event => {
-    this.setState({
-      numFlex: event.target.value
-    })
-  }
-
-  handleProductTwoNum = event => {
-    this.setState({
-      numStyle: event.target.value
-    })
-  }
-
-  handleProductThreeNum = event => {
-    this.setState({
-      numActive: event.target.value
-    })
-  }
-
   handleSubmit(){
-
-    // Find the wholesale data object
-    var wholesalers = getWholeSaleAccounts()
-    var wholesale = wholesalers.find(function(wholesaleAcc) {
-                      return wholesaleAcc.email === this.state.wholesaleAccountId
-                    }, this)
-
-    // Find the sales rep data object
-    var reps = getRepsFromRegion(this.state.region)
-    var rep = reps.find(function(repObj) {
-                return repObj.id === this.state.repId
-    }, this)
-
+    console.log(this.state)
+    var orderMap = this.state.productsArr.map(function(product){
+      return({
+        "model": product.model,
+        "quantity": product.quantity
+      })
+    })
     // Create the post request
     const request = {
-      "orderMap": [
-          {
-            "model": "Kenn-U-Active",
-            "quantity": this.state.numActive
-          },
-          {
-            "model": "Kenn-U-Flex",
-            "quantity": this.state.numFlex
-          },
-          {
-            "model": "Kenn-U-Style",
-            "quantity": this.state.numStyle
-          }
-          // { "Kenn-U-Flex": this.state.numFlex },
-          // { "Kenn-U-Style": this.state.numStyle },
-        ],
-      "status": "placed",
-      "wholesaleAccount": {
-        "email": wholesale.email,
-        "shippingAddress": wholesale.shippingAddress,
-        "shippingState": wholesale.shippingState,
-        "shippingTown": wholesale.shippingTown,
-        "shippingZip": wholesale.shippingZip
-      },
+      "orderMap": orderMap,
       "salesRep": {
-        "firstName": rep.lastName,
-        "lastName": rep.firstName
+        "firstName": this.state.repId.firstName,
+        "lastName": this.state.repId.lastName,
+        "region": this.state.repId.regionName.toLowerCase(),
+        "employeeId": this.state.repId.id
       },
-      "region": this.state.region
+      "totalPrice": this.getTotalCost(),
+      "wholesaleAccount": this.state.wholesaleAccountId
     }
 
-    // POST the request
+    console.log(JSON.stringify(request))
+    //POST the request
     axios.post('/api/orders/wholesale/new',
       request
     ).then(function(response) {
       alert("success!" + response)
     }).catch(function(error) {
       alert("error!" + error)
+      console.log(error)
     })
+  }
+
+  getCost(model){
+    var arr = this.state.wholesaleAccountId.configuredPrice.filter(
+      e => e.model === model)
+    return arr[0].price
+  }
+
+  getImgFromModel(model){
+    switch(model) {
+      case "Kenn-U-Active":
+        return activeImg
+      case "Kenn-U-Style":
+        return styleImg
+      case "Kenn-U-Flex":
+        return flexImg
+    }
+  }
+
+  increaseQuantity(event) {
+    const model = event.target.name
+    var modifiedArr = this.state.productsArr.map(function(product){
+      if(model === product.model){
+        return({
+          model: product.model,
+          price: product.price,
+          quantity: parseFloat(event.target.value)
+        })
+      }else{
+        return({
+          model: product.model,
+          price: product.price,
+          quantity: parseFloat(product.quantity)
+        })
+      }
+    })
+    this.setState({
+      productsArr: modifiedArr
+    })
+  }
+
+  getTotalCost() {
+    var total = 0
+    this.state.productsArr.forEach(function(product){
+      total += (product.price * product.quantity)
+    }, total)
+    return total
   }
 
   render() {
@@ -173,41 +188,34 @@ class WholesaleOrderPage extends React.Component {
         >
           Product purchases
         </Typography>
-        <img
-         className={ classes.productImg }
-         src={flexImg}
-        />
-        <TextField
-          label="Kenn-U-Flex"
-          value={ this.state.numFlex }
-          type="number"
-          onChange={ this.handleProductOneNum }
-          className={ classes.productQuant }
-        />
-        <br />
-        <img
-         className={ classes.productImg }
-         src={ styleImg }
-        />
-        <TextField
-          label="Kenn-U-Style"
-          value={ this.state.numStyle }
-          type="number"
-          onChange={ this.handleProductTwoNum }
-          className={ classes.productQuant }
-        />
-        <br />
-        <img
-         className={ classes.productImg }
-         src={activeImg}
-        />
-        <TextField
-          label="Kenn-U-Active"
-          value={ this.state.numActive }
-          type="number"
-          onChange={ this.handleProductThreeNum }
-          className={ classes.productQuant }
-        />
+        {this.state.productsArr.map(function(cp){
+          return(
+            <span>
+              <img
+               className={ classes.productImg }
+               src={this.getImgFromModel(cp.model)}
+              />
+              <TextField
+                label={cp.model}
+                value={ cp.quantity }
+                type="number"
+                name={cp.model}
+                onChange={ this.increaseQuantity }
+                className={ classes.productQuant }
+              />
+              { "x " + cp.price}
+              <br />
+            </span>
+          )
+        }, this)}
+        <Typography
+          type="subheading"
+          variant="subheading"
+          align="center"
+          className={ classes.title }
+        >
+          Total Price: ${ this.getTotalCost().toFixed(2) }
+        </Typography>
         <Button
           className={ classes.submitButton }
           onClick={ this.handleSubmit.bind(this) }
