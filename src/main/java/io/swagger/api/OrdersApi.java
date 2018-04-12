@@ -47,8 +47,8 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/update/status",
         produces = { "application/json" }, 
         method = RequestMethod.PATCH)
-    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
-                                           @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status);
+    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
+                                           @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status);
 
 
     @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })

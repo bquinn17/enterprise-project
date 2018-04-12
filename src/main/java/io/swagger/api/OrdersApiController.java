@@ -53,6 +53,7 @@ public class OrdersApiController implements OrdersApi {
                 body.getCustomerShippingTown().isEmpty() ||
                 body.getCustomerShippingZip().isEmpty() ||
                 body.getProducts().isEmpty()){
+            System.out.println(body.toString());
             return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
@@ -150,21 +151,28 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
-    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
-                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
-
-        RetailOrder retailOrder = retailOrderRepository.getOne(id);
+    @RequestMapping(method={RequestMethod.PATCH},value={"/orders/update/status"})
+    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
+                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status) {
+        RetailOrder retailOrder;
+        Long intId = Long.valueOf(id);
+        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.valueOf(status);
+        if(intId.toString().equals(id)) {
+            retailOrder = retailOrderRepository.getOne(intId);
+        }
+        else {
+            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.BAD_REQUEST);
+        }
 
         if(retailOrder == null) {
             return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
         }
 
-        if(status.isEmpty()) {
+        if(statusEnum == null) {
             return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.NOT_MODIFIED);
         }
 
-        retailOrder.setStatus(status);
+        retailOrder.setStatus(statusEnum);
         retailOrderRepository.save(retailOrder);
 
         return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.ACCEPTED);
