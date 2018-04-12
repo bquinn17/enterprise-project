@@ -11,8 +11,10 @@ import org.springframework.web.client.RestTemplate;
 
 import org.junit.Assert;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootTest
 public class SpringIntegrationStepDefs
@@ -26,15 +28,7 @@ public class SpringIntegrationStepDefs
     private ResponseEntity apiResult;
     private ResponseEntity<SalesRep> salesRepResponse;
 
-    @Given("^a retail order with price of the order not set$")
-    public void aRetailOrderWithPriceOfTheOrderNotSet() throws Throwable
-    {
-        createMockOrder();
-
-        retailOrder.setTotalPrice(null);
-    }
-
-    @Given("^a retail order with the price set to (\\d+) dollars$")
+    @Given("^a retail order with the price set to (-*\\d+) dollars$")
     public void aRetailOrderWithThePriceSetToDollars(double dollarValue) throws Throwable
     {
         createMockOrder();
@@ -59,12 +53,12 @@ public class SpringIntegrationStepDefs
             }
         }
         catch(Exception e){
-            throw new PendingException();
+            Assert.assertNotNull(null);
         }
     }
 
     @When("^a user gets a \"([^\"]*)\" \"([^\"]*)\"$")
-    public void aUserGetsA(String orderType, String endpoint) throws Throwable
+    public void aUserGetsA(String queryType, String endpoint) throws Throwable
     {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -72,15 +66,18 @@ public class SpringIntegrationStepDefs
         uri += endpoint;
 
         try {
-            if(orderType.equals("retailOrder")) {
+            if(queryType.equals("retailOrder")) {
                 apiResult = restTemplate.getForEntity(uri, RetailOrder.class, orderId);
             }
-            else if(orderType.equals("wholesaleOrder")) {
-                throw new PendingException();
+            else if(queryType.equals("wholesaleOrder")) {
+                apiResult = restTemplate.getForEntity(uri, WholesaleOrder.class, orderId);
+            }
+            else if(queryType.equals("wholesaleAccount")) {
+                apiResult = restTemplate.getForEntity(uri, WholesaleAccount.class);
             }
         }
         catch(Exception e){
-            throw new PendingException();
+            Assert.assertNotNull(null);
         }
     }
 
@@ -101,7 +98,7 @@ public class SpringIntegrationStepDefs
             }
         }
         catch(Exception e){
-            throw new PendingException();
+            Assert.assertNotNull(null);
         }
     }
 
@@ -117,7 +114,7 @@ public class SpringIntegrationStepDefs
             apiResult = restTemplate.getForEntity(uri, SalesRep.class, salesRepId, startDate, endDate);
         }
         catch(Exception e){
-            throw new PendingException();
+            Assert.assertNotNull(null);
         }
     }
 
@@ -133,7 +130,6 @@ public class SpringIntegrationStepDefs
             apiResult = restTemplate.postForEntity(uri, wholesaleAccount, WholesaleAccount.class);
         }
         catch(Exception e){
-            throw new PendingException();
         }
     }
 
@@ -149,7 +145,7 @@ public class SpringIntegrationStepDefs
     {
         createMockOrder();
 
-        retailOrder.setProducts(null);
+        retailOrder.setProducts(new ArrayList<>());
     }
 
     @Given("^an order without an email$")
@@ -157,7 +153,7 @@ public class SpringIntegrationStepDefs
     {
         createMockOrder();
 
-        retailOrder.setCustomerEmail(null);
+        retailOrder.setCustomerEmail("");
     }
 
     @Given("^an order without an address$")
@@ -165,10 +161,10 @@ public class SpringIntegrationStepDefs
     {
         createMockOrder();
 
-        retailOrder.setCustomerShippingStreetAddress(null);
-        retailOrder.setCustomerShippingZip(null);
-        retailOrder.setCustomerShippingState(null);
-        retailOrder.setCustomerShippingTown(null);
+        retailOrder.setCustomerShippingStreetAddress("");
+        retailOrder.setCustomerShippingZip("");
+        retailOrder.setCustomerShippingState("");
+        retailOrder.setCustomerShippingTown("");
     }
 
     @Given("^a valid order$")
@@ -246,6 +242,14 @@ public class SpringIntegrationStepDefs
     public void anValidWholesaleAccount() throws Throwable
     {
         wholesaleAccount = new WholesaleAccount();
+        List<ConfiguredPrice> configuredPrice = new ArrayList<>();
+        ConfiguredPrice tempConfigPrice = new ConfiguredPrice();
+        tempConfigPrice.setAccount(wholesaleAccount);
+        tempConfigPrice.setId(11L);
+        tempConfigPrice.setModel("Te One");
+        tempConfigPrice.setPrice(new BigDecimal(5));
+        configuredPrice.add(tempConfigPrice);
+
 
         wholesaleAccount.setName("Greg");
         wholesaleAccount.setEmail("greg@greg.greg");
@@ -253,6 +257,7 @@ public class SpringIntegrationStepDefs
         wholesaleAccount.setShippingAddress("1 Lomb Memorial Dr");
         wholesaleAccount.setShippingTown("Rochester");
         wholesaleAccount.setShippingZip("14623");
+        wholesaleAccount.configuredPrice(configuredPrice);
     }
 
     @Given("^there are no orders by a rep$")

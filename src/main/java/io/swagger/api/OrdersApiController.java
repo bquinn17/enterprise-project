@@ -53,7 +53,6 @@ public class OrdersApiController implements OrdersApi {
                 body.getCustomerShippingTown().isEmpty() ||
                 body.getCustomerShippingZip().isEmpty() ||
                 body.getProducts().isEmpty()){
-            System.out.println(body.toString());
             return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
