@@ -47,6 +47,18 @@ public class RetailOrder   {
   @JsonProperty("customerShippingState")
   private String customerShippingState = null;
 
+  @Column(name = "order_status")
+  @Enumerated(EnumType.STRING)
+  private StatusEnum status = null;
+
+  @JsonProperty("totalPrice")
+  private double totalPrice = 0.0;
+
+  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
+  @JsonProperty("products")
+  @Valid
+  private List<Product> products = null;
+
   /**
    * Gets or Sets status
    */
@@ -83,19 +95,6 @@ public class RetailOrder   {
       return value.isEmpty();
     }
   }
-
-  @Column(name = "order_status")
-  @Enumerated(EnumType.STRING)
-  @JsonIgnore
-  private StatusEnum status = null;
-
-  @JsonProperty("totalPrice")
-  private double totalPrice = 0.0;
-
-  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
-  @JsonProperty("products")
-  @Valid
-  private List<Product> products = null;
 
   public RetailOrder customerEmail(String customerEmail) {
     this.customerEmail = customerEmail;

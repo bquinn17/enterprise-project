@@ -7,6 +7,8 @@ import cucumber.api.java.en.When;
 import io.swagger.model.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import org.junit.Assert;
@@ -14,7 +16,6 @@ import org.junit.Assert;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootTest
 public class SpringIntegrationStepDefs
@@ -26,7 +27,10 @@ public class SpringIntegrationStepDefs
     private String salesRepId;
     private RetailOrder.StatusEnum orderStatus;
     private ResponseEntity apiResult;
+    private RestClientException apiError;
     private ResponseEntity<SalesRep> salesRepResponse;
+    private String serial_num;
+    private String uri = "http://127.0.0.1:8080";
 
     @Given("^a retail order with the price set to (-*\\d+) dollars$")
     public void aRetailOrderWithThePriceSetToDollars(double dollarValue) throws Throwable
@@ -41,20 +45,19 @@ public class SpringIntegrationStepDefs
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://127.0.0.1:8080";
-        uri += endpoint;
+        endpoint = uri + endpoint;
+
+        boolean returnedError = false;
 
         try {
-            if(orderType.equals("retailOrder")) {
-                apiResult = restTemplate.postForEntity(uri, retailOrder, RetailOrder.class);
+            if (orderType.equals("retailOrder")) {
+                apiResult = restTemplate.postForEntity(endpoint, retailOrder, RetailOrder.class);
             }
-            else if(orderType.equals("wholesaleOrder")) {
-                throw new PendingException();
-            }
+        } catch (RestClientException ex) {
+            apiError = ex;
         }
-        catch(Exception e){
-            Assert.assertNotNull(null);
-        }
+
+
     }
 
     @When("^a user gets a \"([^\"]*)\" \"([^\"]*)\"$")
@@ -62,22 +65,25 @@ public class SpringIntegrationStepDefs
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://127.0.0.1:8080";
-        uri += endpoint;
+        endpoint = uri + endpoint;
 
         try {
             if(queryType.equals("retailOrder")) {
-                apiResult = restTemplate.getForEntity(uri, RetailOrder.class, orderId);
+                if (serial_num != null) {
+                    apiResult = restTemplate.getForEntity(endpoint + "?serial_num=" + serial_num, String.class, "");
+                } else {
+                    apiResult = restTemplate.getForEntity(endpoint, RetailOrder.class, orderId);
+                }
             }
             else if(queryType.equals("wholesaleOrder")) {
-                apiResult = restTemplate.getForEntity(uri, WholesaleOrder.class, orderId);
+                apiResult = restTemplate.getForEntity(endpoint, WholesaleOrder.class, orderId);
             }
             else if(queryType.equals("wholesaleAccount")) {
-                apiResult = restTemplate.getForEntity(uri, WholesaleAccount.class);
+                apiResult = restTemplate.getForEntity(endpoint, WholesaleAccount.class);
             }
         }
-        catch(Exception e){
-            Assert.assertNotNull(null);
+        catch(RestClientException e){
+            apiError = e;
         }
     }
 
@@ -86,19 +92,18 @@ public class SpringIntegrationStepDefs
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://127.0.0.1:8080";
-        uri += endpoint;
+        endpoint = uri + endpoint;
 
         try {
             if(orderType.equals("retailOrder")) {
-                apiResult = restTemplate.postForEntity(uri, null, RetailOrder.class);
+                apiResult = restTemplate.postForEntity(endpoint, null, RetailOrder.class);
             }
             else if(orderType.equals("wholesaleOrder")) {
                 throw new PendingException();
             }
         }
-        catch(Exception e){
-            Assert.assertNotNull(null);
+        catch(RestClientException e){
+            apiError = e;
         }
     }
 
@@ -107,14 +112,13 @@ public class SpringIntegrationStepDefs
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://127.0.0.1:8080";
-        uri += endpoint;
+        endpoint = uri + endpoint;
 
         try {
-            apiResult = restTemplate.getForEntity(uri, SalesRep.class, salesRepId, startDate, endDate);
+            apiResult = restTemplate.getForEntity(endpoint, SalesRep.class, salesRepId, startDate, endDate);
         }
-        catch(Exception e){
-            Assert.assertNotNull(null);
+        catch(RestClientException e){
+            apiError = e;
         }
     }
 
@@ -123,21 +127,35 @@ public class SpringIntegrationStepDefs
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        String uri = "http://127.0.0.1:8080";
-        uri += endpoint;
+        endpoint = uri + endpoint;
 
         try {
-            apiResult = restTemplate.postForEntity(uri, wholesaleAccount, WholesaleAccount.class);
+            apiResult = restTemplate.postForEntity(endpoint, wholesaleAccount, WholesaleAccount.class);
         }
-        catch(Exception e){
+        catch(RestClientException e){
+            apiError = e;
         }
     }
 
     @Then("^the api will return (\\d+)$")
     public void theApiWillReturnCreated(int expectedReturnCode) throws Throwable
     {
-        Assert.assertNotNull(apiResult.getBody());
-        Assert.assertEquals(apiResult.getStatusCode().value(), expectedReturnCode);
+        if (apiResult == null) {
+            Assert.assertNotNull(apiError);
+            Integer statusCode = null;
+            try {
+                statusCode = ((HttpClientErrorException) apiError).getRawStatusCode();
+                Assert.assertEquals(expectedReturnCode, statusCode.intValue());
+            } catch (ClassCastException ex) {
+                Assert.assertNotNull(statusCode);
+            }
+        } else {
+            Assert.assertNotNull(apiResult.getBody());
+            Assert.assertEquals(expectedReturnCode, apiResult.getStatusCode().value());
+        }
+        apiResult = null;
+        apiError = null;
+        serial_num = null;
     }
 
     @Given("^an order without products$")
@@ -194,10 +212,14 @@ public class SpringIntegrationStepDefs
         orderStatus = RetailOrder.StatusEnum.FULFILLED;
     }
 
-    @Given("^an order id in the database$")
+    @Given("^a serial number is in the database$")
     public void anOrderIdInTheDatabase() throws Throwable
     {
-        orderId = "1";
+        createMockOrder();
+        RestTemplate restTemplate = new RestTemplate();
+        String endpoint = uri + "/orders/retail/new";
+        ResponseEntity<RetailOrder> responseEntity = restTemplate.postForEntity(endpoint, retailOrder, RetailOrder.class);
+        serial_num = responseEntity.getBody().getProducts().get(0).getSerialNumber();
     }
 
     @Given("^an invalid sales rep id$")
@@ -224,6 +246,7 @@ public class SpringIntegrationStepDefs
         product.setModel("KennUWare Watch");
         product.setRefurbished(false);
         product.setSerialNumber("123456789");
+        product.priceSoldAt(100.0);
         List<Product> productList = new ArrayList<Product>();
         productList.add(product);
 
@@ -235,7 +258,7 @@ public class SpringIntegrationStepDefs
         retailOrder.setCustomerShippingZip("14623");
         retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
         retailOrder.setProducts(productList);
-        retailOrder.setTotalPrice(0.0);
+        retailOrder.setTotalPrice(100.0);
     }
 
     @Given("^an valid wholesale account$")
