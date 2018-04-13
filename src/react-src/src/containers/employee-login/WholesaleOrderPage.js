@@ -81,11 +81,10 @@ class WholesaleOrderPage extends React.Component {
   }
   handleSubmit(){
     console.log(this.state)
-
     var orderMap = this.state.productsArr.map(function(product){
       return({
         "model": product.model,
-        "quantity": product.quantity,
+        "quantity": product.quantity
       })
     })
     // Create the post request
@@ -94,12 +93,14 @@ class WholesaleOrderPage extends React.Component {
       "salesRep": {
         "firstName": this.state.repId.firstName,
         "lastName": this.state.repId.lastName,
-        "region": this.state.repId.regionName
+        "region": this.state.repId.regionName.toLowerCase(),
+        "employeeId": this.state.repId.id
       },
       "totalPrice": this.getTotalCost(),
       "wholesaleAccount": this.state.wholesaleAccountId
     }
 
+    console.log(JSON.stringify(request))
     //POST the request
     axios.post('/api/orders/wholesale/new',
       request
@@ -107,6 +108,7 @@ class WholesaleOrderPage extends React.Component {
       alert("success!" + response)
     }).catch(function(error) {
       alert("error!" + error)
+      console.log(error)
     })
   }
 
@@ -134,13 +136,13 @@ class WholesaleOrderPage extends React.Component {
         return({
           model: product.model,
           price: product.price,
-          quantity: event.target.value
+          quantity: parseFloat(event.target.value)
         })
       }else{
         return({
           model: product.model,
           price: product.price,
-          quantity: product.quantity
+          quantity: parseFloat(product.quantity)
         })
       }
     })
