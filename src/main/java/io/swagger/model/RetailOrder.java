@@ -92,7 +92,7 @@ public class RetailOrder   {
   private StatusEnum status = null;
 
   @JsonProperty("totalPrice")
-  private Double totalPrice = 0.0;
+  private double totalPrice = 0.0;
 
   @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
   @JsonProperty("products")
@@ -238,11 +238,11 @@ public class RetailOrder   {
 
   @Valid
 
-  public Double getTotalPrice() {
+  public double getTotalPrice() {
     return totalPrice;
   }
 
-  public void setTotalPrice(Double totalPrice) {
+  public void setTotalPrice(double totalPrice) {
     this.totalPrice = totalPrice;
   }
 
