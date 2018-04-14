@@ -39,6 +39,9 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+      # Boot up the server with an in-memory db
+      - run: java -jar target/swagger-spring-1.0.0.jar -Dspring.profiles.active=test
+
       # run tests!
       - run: mvn integration-test
 
