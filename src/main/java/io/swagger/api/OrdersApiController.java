@@ -146,11 +146,26 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    public ResponseEntity<Void> changeOrderStatus(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        //Plans to implement an actual order update
-        //Will require further/more precise definition of update.
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
+    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
+                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
+
+        RetailOrder retailOrder = retailOrderRepository.getOne(id);
+
+        if(retailOrder == null) {
+            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
+        }
+
+        if(status.isEmpty()) {
+            return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.NOT_MODIFIED);
+        }
+
+        retailOrder.setStatus(status);
+        retailOrderRepository.save(retailOrder);
+
+        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.ACCEPTED);
     }
+
 
     @CrossOrigin
     public ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException {
@@ -190,23 +205,14 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/new/refund"})
+    @RequestMapping(method={RequestMethod.POST},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
-        // Create the Retail Order object with the info from body
-        RetailOrder retailOrder = new RetailOrder();
-        retailOrder.setCustomerEmail(body.getCustomerEmail());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingStreetAddress(body.getCustomerShippingStreetAddress());
-        retailOrder.setCustomerShippingState(body.getCustomerShippingState());
-        retailOrder.setCustomerShippingTown(body.getCustomerShippingTown());
-        retailOrder.setCustomerShippingZip(body.getCustomerShippingZip());
-        retailOrder.setStatus(RetailOrder.StatusEnum.FULFILLED);
-        retailOrder.setProducts(body.getProducts());
+        //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
+        if(body.getTotalPrice() != 0) {
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+        }
 
-        // Save Object into database
-        retailOrderRepository.save(retailOrder);
-
-        return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.OK);
+        return addRetailOrder(body);
     }
 
 }
