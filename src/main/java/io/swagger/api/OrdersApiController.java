@@ -221,7 +221,7 @@ public class OrdersApiController implements OrdersApi {
     @RequestMapping(method={RequestMethod.POST},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
-        if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0)) {
+        if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0.0)) {
             return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
         }
 

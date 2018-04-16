@@ -47,8 +47,6 @@ public class SpringIntegrationStepDefs
 
         endpoint = uri + endpoint;
 
-        boolean returnedError = false;
-
         try {
             if (orderType.equals("retailOrder")) {
                 apiResult = restTemplate.postForEntity(endpoint, retailOrder, RetailOrder.class);
