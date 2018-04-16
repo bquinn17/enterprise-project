@@ -79,7 +79,7 @@ public class SpringIntegrationStepDefs
                 apiResult = restTemplate.getForEntity(endpoint, WholesaleOrder.class, orderId);
             }
             else if(queryType.equals("wholesaleAccount")) {
-                apiResult = restTemplate.getForEntity(endpoint, WholesaleAccount.class);
+                apiResult = restTemplate.getForEntity(endpoint, ArrayList.class);
             }
         }
         catch(RestClientException e){
@@ -115,7 +115,7 @@ public class SpringIntegrationStepDefs
         endpoint = uri + endpoint;
 
         try {
-            apiResult = restTemplate.getForEntity(endpoint, SalesRep.class, salesRepId, startDate, endDate);
+            apiResult = restTemplate.getForEntity(endpoint + "?sales_rep_id=" + salesRepId, String.class);
         }
         catch(RestClientException e){
             apiError = e;
