@@ -2,7 +2,7 @@ Feature: Support for getting a sales rep by id
   Scenario: The sales rep id is not found
     Given an invalid sales rep id
     When a user gets a salesRep "/orders" "" ""
-    Then the api will return 404
+    Then the api will return 400
 
 #  TODO need to get valid sales rep
 #  Scenario: The sales rep id is found
