@@ -22,7 +22,6 @@ import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
 @RestController
-@Controller
 public class OrdersApiController implements OrdersApi {
 
     @Autowired
@@ -150,12 +149,13 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.PATCH},value={"/orders/update/status"})
-    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
-                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status) {
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
+    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
+                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
+
         RetailOrder retailOrder;
         Long intId = Long.valueOf(id);
-        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.valueOf(status);
+        RetailOrder.StatusEnum statusEnum = status;
         if(intId.toString().equals(id)) {
             retailOrder = retailOrderRepository.getOne(intId);
         }

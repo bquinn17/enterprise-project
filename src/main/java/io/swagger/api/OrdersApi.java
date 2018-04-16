@@ -10,14 +10,21 @@ import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-03T19:46:44.474Z")
 
 @Api(value = "orders", description = "the orders API")
@@ -42,13 +49,13 @@ public interface OrdersApi {
 
 
     @ApiOperation(value = "", nickname = "changeOrderStatus", notes = "Update the status of an order", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 202, message = "Updated") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Updated") })
     @RequestMapping(value = "/orders/update/status",
-        produces = { "application/json" }, 
-        method = RequestMethod.PATCH)
-    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
-                                           @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status);
+            produces = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
+                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status);
 
 
     @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })
@@ -57,7 +64,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/completed",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-
+  
     ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException;
 
     @ApiOperation(value = "", notes = "Gets all orders for a given sales rep", response = Void.class, tags={  })
@@ -70,7 +77,7 @@ public interface OrdersApi {
     ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException;
 
     @ApiOperation(value = "", nickname = "getSalesRep", notes = "HR Endpoint for getting information about sales rep", tags={  })
-    @ApiResponses(value = {
+    @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/orders",
         produces = { "application/json" }, 
@@ -79,11 +86,10 @@ public interface OrdersApi {
 
 
     @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Created") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/orders/new/refund",
-        produces = { "application/json" }, 
-        method = RequestMethod.POST)
+            produces = { "application/json" },
+            method = RequestMethod.POST)
     ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Support submitting of $0 orders" ,required=true )  @Valid @RequestBody RetailOrder body);
-
 }
