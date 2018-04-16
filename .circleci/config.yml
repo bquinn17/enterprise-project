@@ -48,7 +48,7 @@ jobs:
           background: true
 
       # wait for spring to come up
-      - run: sleep 5
+      - run: sleep 20
 
       # run tests!
       - run: mvn integration-test
