@@ -194,6 +194,7 @@ public class SpringIntegrationStepDefs
     @Given("^an order id not in the database$")
     public void anOrderIdNotInTheDatabase() throws Throwable
     {
+        serial_num = "100";
         orderId = "999999999";
         orderStatus = RetailOrder.StatusEnum.FULFILLED;
     }

@@ -189,7 +189,7 @@ public class OrdersApiController implements OrdersApi {
                 }
             }
         }
-        throw new NotFoundException(404, "no orders containing serial number found");
+        return new ResponseEntity<RetailOrder>(HttpStatus.NOT_FOUND);
     }
 
     @CrossOrigin
