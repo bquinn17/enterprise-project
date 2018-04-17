@@ -51,6 +51,7 @@ public class WholesaleApiController implements WholesaleApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.POST},value={"/wholesale/account/new"})
     public ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body) {
         String accept = request.getHeader("Accept");
         // Set all fields
@@ -72,6 +73,7 @@ public class WholesaleApiController implements WholesaleApi {
     }
 
     @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/wholesale/accounts"})
     public ResponseEntity<List> getWholesaleAccounts() {
         String accept = request.getHeader("Accept");
 
