@@ -166,6 +166,21 @@ paths:
         200:
           description: "OK"
 
+  /revenue/region/{region}:
+    get:
+      description: "Get total revenue from a region"
+      operationId: "getRevenueFromRegion"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "region"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+
   /revenue/{sales_rep_id}:
       get:
         description: "Gets total revenue made by a sales rep"
@@ -176,9 +191,8 @@ paths:
         - in: "path"
           name: "sales_rep_id"
           required: true
-          schema:
-            type: "string"
-            minimum: 1
+          type: "string"
+          minimum: 1
 
         - in: "query"
           name: "date_from"
