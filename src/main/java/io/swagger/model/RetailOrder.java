@@ -1,5 +1,7 @@
 package io.swagger.model;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +30,10 @@ public class RetailOrder   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "date")
+  private Date dateCreated = new Date();
 
   @Column(name = "customer_email")
   @JsonProperty("customerEmail")
@@ -109,6 +115,10 @@ public class RetailOrder   {
      **/
     @JsonIgnore
     public Long getID() { return id; }
+
+    public Date getDateCreated(){
+      return dateCreated;
+    }
 
   /**
    * Get customerEmail
