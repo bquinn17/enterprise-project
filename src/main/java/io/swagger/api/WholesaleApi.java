@@ -33,14 +33,4 @@ public interface WholesaleApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<List> getWholesaleAccounts();
-
-    @ApiOperation(value = "", nickname = "getRevenueForSalesRep", notes = "Gets total revenue made by a sales rep", tags={  })
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK") })
-    @RequestMapping(value = "/revenue/{sales_rep_id}",
-            produces = { "application/json" },
-            method = RequestMethod.GET)
-    ResponseEntity<Double> getRevenueForSalesRep(@NotNull @ApiParam(value = "", required = true) @PathVariable(value = "the sales rep's ID") String sales_rep_id, @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_to", required = false) String dateTo);
-
-
 }

@@ -78,19 +78,4 @@ public class WholesaleApiController implements WholesaleApi {
 
         return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
     }
-
-    @CrossOrigin
-    public ResponseEntity<Double> getRevenueForSalesRep(@PathVariable(value = "the sales rep's ID") String sales_rep_id,
-                                                        @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_from", required = false) String dateFrom,
-                                                        @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
-        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(sales_rep_id));
-        double revenue = 0.0;
-
-        for(WholesaleOrder order : wholesaleOrders) {
-
-            revenue += order.getTotalPrice();
-        }
-        return null;
-    }
-
 }
