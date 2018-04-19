@@ -61,34 +61,23 @@ public class RevenueApiController implements RevenueApi {
                                                         @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_from", required = false) String dateFrom,
                                                         @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(sales_rep_id));
-        double revenue = 0.0;
-        Date to;
-        Date from;
-
-        try{
-            to = dateFormat.parse(dateTo);
-            from = dateFormat.parse(dateFrom);
-        } catch (ParseException e) {
-            return new ResponseEntity<Double>(0.0, HttpStatus.BAD_REQUEST);
+        double revenue;
+        if(dateFrom != null && dateTo != null){
+            revenue = getWholeSaleRevenueDateRange(dateTo, dateFrom, wholesaleOrders);
         }
-        for(WholesaleOrder order : wholesaleOrders) {
-            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
-                revenue += order.getTotalPrice();
-            }
+        else{
+            revenue = getWholeSaleRevenueNoDate(wholesaleOrders);
         }
 
-        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
+        ResponseEntity<Double> response = revenue >= 0 ? new ResponseEntity<Double>(revenue, HttpStatus.OK) : new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
+        return response;
     }
 
     public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
 
         SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepRegion(regionEnum);
-        double revenue = 0.0;
-
-        for (WholesaleOrder order: wholesaleOrders){
-            revenue += order.getTotalPrice();
-        }
+        double revenue = getWholeSaleRevenueNoDate(wholesaleOrders);
 
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
@@ -96,31 +85,58 @@ public class RevenueApiController implements RevenueApi {
     public ResponseEntity<Double> getTotalRevenue(@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
+        double revenue;
+        if(dateTo != null && dateFrom != null){
+            revenue = getWholeSaleRevenueDateRange(dateTo, dateFrom, wholesaleOrders) + getRetailRevenueDateRange(dateTo, dateFrom, retailOrders);
+        }
+        else{
+            revenue = getWholeSaleRevenueNoDate(wholesaleOrders) + getRetailRevenueNoDate(retailOrders);
+        }
 
-        double revenue = 0.0;
+        ResponseEntity<Double> response = revenue >= 0 ? new ResponseEntity<Double>(revenue, HttpStatus.OK) : new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
+        return response;
+    }
+
+    private double getWholeSaleRevenueDateRange(String dateTo, String dateFrom, List<WholesaleOrder> wholesaleOrders){
         Date to;
         Date from;
+        double result = 0.0;
 
         try{
             to = dateFormat.parse(dateTo);
             from = dateFormat.parse(dateFrom);
         } catch (ParseException e) {
-            return new ResponseEntity<Double>(0.0, HttpStatus.BAD_REQUEST);
+            return -1;
         }
+        wholesaleOrders.stream().filter(order -> order.getDateCreated().after(from) && order.getDateCreated().before(to)).mapToDouble(WholesaleOrder::getTotalPrice).sum();
+        return result;
+    }
 
-        for(WholesaleOrder order : wholesaleOrders) {
-            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
-                revenue += order.getTotalPrice();
-            }
+    private double  getWholeSaleRevenueNoDate(List<WholesaleOrder> wholesaleOrders){
+        double result = 0.0;
+        wholesaleOrders.stream().mapToDouble(WholesaleOrder::getTotalPrice).sum();
+        return result;
+    }
+
+    private double getRetailRevenueDateRange(String dateTo, String dateFrom, List<RetailOrder> retailOrders){
+        Date to;
+        Date from;
+        double result;
+
+        try{
+            to = dateFormat.parse(dateTo);
+            from = dateFormat.parse(dateFrom);
+        } catch (ParseException e) {
+            return -1;
         }
-        for(RetailOrder order : retailOrders) {
+        result = retailOrders.stream().filter(order -> order.getDateCreated().after(from) && order.getDateCreated().before(to)).mapToDouble(RetailOrder::getTotalPrice).sum();
+        return result;
+    }
 
-            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
-                revenue += order.getTotalPrice();
-            }
-        }
-
-        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
+    private double getRetailRevenueNoDate(List<RetailOrder> retailOrders){
+        double result = 0.0;
+        retailOrders.stream().mapToDouble(RetailOrder::getTotalPrice).sum();
+        return result;
     }
 
 }
