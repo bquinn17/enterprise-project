@@ -6,12 +6,6 @@
 
 > [React](https://reactjs.org/) is a JavaScript library for building user interfaces
 
-> [React Static](https://github.com/nozzle/react-static) is a way to build static react code.
-
->> [API Reference](https://nozzle-react-static.netlify.com/api/)
-
->> [Sample App](https://github.com/nozzle/react-static/tree/master/examples/material-ui)
-
 ## System Requirements
 
 > [Yarn](https://yarnpkg.com/lang/en/docs/install/)
@@ -32,18 +26,6 @@
 >    ```yarn start```
 >
 >    This will start the server at localhost:3000 (or another port if 3000 is taken)
-
-> 3. To build the static content run:
-
->    ```yarn build```
->
->    This will build to dist/
-
-### About React Static
-
-> All data loading and routes are defined in src/static.config.js
->
-> [Config API](https://nozzle-react-static.netlify.com/api#staticconfigjs)
 
 ### About Styling & Material UI
 

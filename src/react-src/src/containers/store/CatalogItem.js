@@ -13,6 +13,20 @@ class CatalogItem extends React.Component {
   constructor(props) {
     super(props)
     this.addItemToCart = this.addItemToCart.bind(this)
+    this.disabled = this.disabled.bind(this)
+  }
+
+  disabled() {
+    switch(this.props.model) {
+      case "Kenn-U-Active":
+        return false
+      case "Kenn-U-Style":
+        return false
+      case "Kenn-U-Flex":
+        return false
+      default:
+        return true
+    }
   }
 
   addItemToCart() {
@@ -32,21 +46,29 @@ class CatalogItem extends React.Component {
   render() {
     const { classes } = this.props
 
+    // Only load a tileBar with buttons if the model is recognized
+    const tileBar = this.disabled() ? (
+      <GridListTileBar
+        title={ this.props.model }
+      />
+    ) : (
+      <GridListTileBar
+        title={ this.props.model }
+        subtitle={ <span>Starting at ${ this.props.cost }</span> }
+        actionIcon={
+          <IconButton
+            className={ classes.icon }
+            onClick={ this.addItemToCart }
+          >
+            <AddCircle />
+          </IconButton>
+        }
+      />
+    )
     return(
       <GridListTile className={ classes.imgWrapper }>
         <img src={ this.props.imgSrc } />
-        <GridListTileBar
-          title={ this.props.model }
-          subtitle={ <span>Starting at ${ this.props.cost }</span> }
-          actionIcon={
-            <IconButton
-              className={ classes.icon }
-              onClick={ this.addItemToCart }
-            >
-              <AddCircle />
-            </IconButton>
-          }
-        />
+        { tileBar }
       </GridListTile>
     )
   }
