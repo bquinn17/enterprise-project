@@ -34,13 +34,13 @@ public interface RevenueApi {
     ResponseEntity<Double> getRevenueForSalesRep(@DecimalMin("1") @ApiParam(value = "", required = true) @PathVariable("sales_rep_id") String salesRepId, @ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
 
 
-    @ApiOperation(value = "", nickname = "getRevenueFromRegion", notes = "Get total revenue from a region", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK") })
+    @ApiOperation(value = "", nickname = "getRevenueFromRegion", notes = "Get total revenue from a region (regions are 'north', 'south', 'east', 'west'", tags={  })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/revenue/region/{region}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Void> getRevenueFromRegion(@ApiParam(value = "", required = true) @PathVariable("region") String region);
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<Void> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
 
 
     @ApiOperation(value = "", nickname = "getTotalRevenue", notes = "Gets total revenue made by the organization", tags={  })

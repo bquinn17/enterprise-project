@@ -168,7 +168,7 @@ paths:
 
   /revenue/region/{region}:
     get:
-      description: "Get total revenue from a region"
+      description: "Get total revenue from a region (regions are 'north', 'south', 'east', 'west')"
       operationId: "getRevenueFromRegion"
       produces:
       - "application/json"
@@ -177,6 +177,16 @@ paths:
         name: "region"
         required: true
         type: "string"
+
+      - in: "query"
+        name: "date_from"
+        type: "string"
+        required: false
+
+      - in: "query"
+        name: "date_to"
+        type: "string"
+        required: false
       responses:
         200:
           description: "OK"
