@@ -2,17 +2,24 @@ package io.swagger.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.model.SalesRep;
 import io.swagger.model.RetailOrder;
 import io.swagger.model.WholesaleOrder;
 import io.swagger.repository.RetailOrderRepository;
+import io.swagger.repository.SalesRepRepository;
+import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.security.sasl.Sasl;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +40,14 @@ public class RevenueApiController implements RevenueApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
     private WholesaleOrderRepository wholesaleOrderRepository;
 
+    @Autowired
     private RetailOrderRepository retailOrderRepository;
+
+    @Autowired
+    private SalesRepRepository salesRepRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public RevenueApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -65,9 +77,17 @@ public class RevenueApiController implements RevenueApi {
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
+
+        SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepRegion(regionEnum);
+        double revenue = 0.0;
+
+        for (WholesaleOrder order: wholesaleOrders){
+            revenue += order.getTotalPrice();
+        }
+
+        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
     public ResponseEntity<Double> getTotalRevenue(@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
