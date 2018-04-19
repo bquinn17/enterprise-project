@@ -1,4 +1,5 @@
 package io.swagger.repository;
+import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleOrder;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ public interface WholesaleOrderRepository extends JpaRepository<WholesaleOrder, 
     //Nothing is needed here. save(), findAll(), findOne(), delete() are provided by JpaRepository
 
     List<WholesaleOrder> findBySalesRepEmployeeId(Long EmployeeId);
+
+    List<WholesaleOrder> findBySalesRepRegion(SalesRep.RegionEnum region);
 }

@@ -60,10 +60,17 @@ public class RevenueApiController implements RevenueApi {
         return null;
     }
 
-    public ResponseEntity<Void> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
+    public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
 
         SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepRegion(regionEnum);
+        double revenue = 0.0;
+
+        for (WholesaleOrder order: wholesaleOrders){
+            revenue += order.getTotalPrice();
+        }
+
+        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> getTotalRevenue(@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {

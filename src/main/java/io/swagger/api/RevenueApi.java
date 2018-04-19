@@ -40,7 +40,7 @@ public interface RevenueApi {
     @RequestMapping(value = "/revenue/region/{region}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Void> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
+    ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
 
 
     @ApiOperation(value = "", nickname = "getTotalRevenue", notes = "Gets total revenue made by the organization", tags={  })
