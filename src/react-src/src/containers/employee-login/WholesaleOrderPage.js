@@ -49,7 +49,9 @@ class WholesaleOrderPage extends React.Component {
   }
 
   handleRegionSelect = event => {
-    this.setState({ region: event.target.value })
+    this.setState({ region: event.target.value,
+       wholesaleAccountId: null,
+        selectedRep: null })
   }
 
   handleRepSelect = event => {

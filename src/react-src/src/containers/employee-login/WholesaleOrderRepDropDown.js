@@ -42,6 +42,23 @@ class WholesaleOrderRepDropDown extends React.Component {
     )
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.region != this.props.region) {
+      // Show loading wheel
+      this.setState({
+        loading: true
+      })
+
+      // Get the data
+      fetch("/api/mocked/hr/salesreps?region=" + nextProps.region)
+        .then(response => response.json())
+        // Update the component with data, and stop loading
+        .then(data => this.setState({ reps: data.data, loading: false }))
+        .catch(error => console.log("error!!! " + error)
+      )
+    }
+  }
+
   render() {
     const { classes } = this.props
     if(this.state.loading){
