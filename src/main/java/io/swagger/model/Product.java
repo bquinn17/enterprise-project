@@ -30,7 +30,6 @@ public class Product   {
 
   @Id
   @Column(name = "serial_number")
-  @JsonIgnore
   private String serialNumber = null;
 
   @Column(name = "refurbished")
