@@ -1,15 +1,14 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 //
 import axios from 'axios'
 //
 import { Link } from 'react-router-dom'
 //
 import AppBar from 'material-ui/AppBar'
-import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import { withStyles } from 'material-ui/styles'
-import Tabs, { Tab } from 'material-ui/Tabs'
+import { Tab } from 'material-ui/Tabs'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
 //
@@ -17,7 +16,6 @@ import ShoppingCart from 'material-ui-icons/ShoppingCart'
 //
 import CatalogPage from './CatalogPage'
 import ContactUs from './ContactUs'
-import logoImg from '../../logo.jpg'
 import CheckoutPage from './CheckoutPage'
 //
 import styles from './StoreStyles'
@@ -49,7 +47,6 @@ class Store extends React.Component {
   }
 
   addItem(item) {
-    console.log(item)
     var addedTotalCost = this.state.totalCost + item.cost
     var roundedTotalCost = addedTotalCost.toFixed(2)
     var newTotalCost = parseFloat(roundedTotalCost)
@@ -75,7 +72,6 @@ class Store extends React.Component {
     var cartData = [
     ]
     this.state.itemsInCart.forEach(function(item) {
-      var model = item.model
       var modelsWithNameArr = cartData.filter(e => e.modelName === item.model)
       if (modelsWithNameArr.length > 0) {
         modelsWithNameArr[0].quantity = modelsWithNameArr[0].quantity + 1

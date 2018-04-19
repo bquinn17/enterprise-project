@@ -6,37 +6,43 @@ import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 //
 import styles from './WholesaleOrderPageStyles'
-import getWholeSaleAccounts from '../../stubbed-data/dataFromFutureReleases'
 
 /**
  * WholesaleOrderAccountDropDown represents the drop down
  * for the WholesaleAccount selection on the parent component,
  * WholesaleOrderPage
  *
- * Author: Brendan Jones, bpj1651@rit.edu
+ * Author: Brendan Jones, bpj1651@rit.edu, GitHub: brendanjones44
  */
 class WholesaleOrderAccountDropDown extends React.Component {
   constructor(props){
     super(props)
+
+    // Initially not loading, and no accounts loaded
     this.state = {
       loading: false,
       accounts: []
     }
   }
 
+  // Load data from API to component once it's mounted
   componentDidMount() {
+
+    // Begin loading
     this.setState({
       loading: true
     })
+
+    // Get the data
     fetch("/api/wholesale/accounts")
       .then(response => response.json())
+      // On success, set the data to the accounts array and stop loading
       .then(data => this.setState({ accounts: data, loading: false }))
       .catch(error => console.log("error!!! " + error));
   }
   render() {
-    const accounts = getWholeSaleAccounts()
     const { classes } = this.props
-    if(this.state.loading){
+    if(this.state.loading) {
       return <h1>Loading...</h1>
     }
     return (
