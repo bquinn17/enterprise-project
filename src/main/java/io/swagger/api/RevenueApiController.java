@@ -62,16 +62,19 @@ public class RevenueApiController implements RevenueApi {
                                                         @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(sales_rep_id));
         double revenue = 0.0;
+        Date to;
+        Date from;
 
         try{
-            Date to = dateFormat.parse(dateTo);
-            Date from = dateFormat.parse(dateFrom);
+            to = dateFormat.parse(dateTo);
+            from = dateFormat.parse(dateFrom);
         } catch (ParseException e) {
             return new ResponseEntity<Double>(0.0, HttpStatus.BAD_REQUEST);
         }
         for(WholesaleOrder order : wholesaleOrders) {
-
-            revenue += order.getTotalPrice();
+            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
+                revenue += order.getTotalPrice();
+            }
         }
 
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
@@ -95,21 +98,26 @@ public class RevenueApiController implements RevenueApi {
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
 
         double revenue = 0.0;
+        Date to;
+        Date from;
 
         try{
-            Date to = dateFormat.parse(dateTo);
-            Date from = dateFormat.parse(dateFrom);
+            to = dateFormat.parse(dateTo);
+            from = dateFormat.parse(dateFrom);
         } catch (ParseException e) {
             return new ResponseEntity<Double>(0.0, HttpStatus.BAD_REQUEST);
         }
 
         for(WholesaleOrder order : wholesaleOrders) {
-
-            revenue += order.getTotalPrice();
+            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
+                revenue += order.getTotalPrice();
+            }
         }
         for(RetailOrder order : retailOrders) {
 
-            revenue += order.getTotalPrice();
+            if(order.getDateCreated().after(from) && order.getDateCreated().before(to)){
+                revenue += order.getTotalPrice();
+            }
         }
 
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
