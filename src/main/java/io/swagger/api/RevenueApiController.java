@@ -53,7 +53,7 @@ public class RevenueApiController implements RevenueApi {
     public RevenueApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
-        this.dateFormat = new SimpleDateFormat("yyyy-dd-MM");
+        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     @CrossOrigin
@@ -73,6 +73,7 @@ public class RevenueApiController implements RevenueApi {
         return response;
     }
 
+    @CrossOrigin
     public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
 
         SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
@@ -82,6 +83,7 @@ public class RevenueApiController implements RevenueApi {
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
+    @CrossOrigin
     public ResponseEntity<Double> getTotalRevenue(@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
