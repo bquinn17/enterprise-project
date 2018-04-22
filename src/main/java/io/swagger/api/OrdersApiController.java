@@ -202,19 +202,6 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders"})
-    public ResponseEntity<SalesRep> getSalesRep( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId,
-         @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_from", required = true) String dateFrom,
-         @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "date_to", required = true) String dateTo) {
-
-        SalesRep rep = new SalesRep();
-        rep.setFirstName("Selly");
-        rep.setLastName("McSellsit");
-        rep.setRegion(SalesRep.RegionEnum.EAST);
-        return new ResponseEntity<SalesRep>(rep, HttpStatus.OK);
-    }
-
-    @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/orders/all"})
     public ResponseEntity<List<BasicOrder>> getAllOrders() {
 
