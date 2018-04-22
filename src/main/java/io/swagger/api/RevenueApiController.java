@@ -72,6 +72,7 @@ public class RevenueApiController implements RevenueApi {
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
+    @CrossOrigin
     public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepRegion(regionEnum);
@@ -87,6 +88,7 @@ public class RevenueApiController implements RevenueApi {
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
+    @CrossOrigin
     public ResponseEntity<Double> getTotalRevenue(@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findAll();
         List<RetailOrder> retailOrders = retailOrderRepository.findAll();
