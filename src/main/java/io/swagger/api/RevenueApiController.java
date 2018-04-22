@@ -7,7 +7,6 @@ import io.swagger.model.RetailOrder;
 import io.swagger.model.WholesaleOrder;
 import io.swagger.repository.RetailOrderRepository;
 import io.swagger.repository.SalesRepRepository;
-import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +17,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.security.sasl.Sasl;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 import java.util.Date;
+import java.util.Locale;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-04-19T15:57:43.975Z")
 
 @Controller
@@ -34,7 +34,7 @@ public class RevenueApiController implements RevenueApi {
 
     private static final Logger log = LoggerFactory.getLogger(RevenueApiController.class);
 
-    private SimpleDateFormat dateFormat;
+    private DateTimeFormatter fmt;
 
     private final ObjectMapper objectMapper;
 
@@ -53,7 +53,7 @@ public class RevenueApiController implements RevenueApi {
     public RevenueApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.fmt = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.US);
     }
 
     @CrossOrigin
@@ -69,16 +69,21 @@ public class RevenueApiController implements RevenueApi {
             revenue = getWholeSaleRevenueNoDate(wholesaleOrders);
         }
 
-        ResponseEntity<Double> response = revenue >= 0 ? new ResponseEntity<Double>(revenue, HttpStatus.OK) : new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
-        return response;
+        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
     @CrossOrigin
     public ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
-
         SalesRep.RegionEnum regionEnum = SalesRep.RegionEnum.fromValue(region);
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepRegion(regionEnum);
-        double revenue = getWholeSaleRevenueNoDate(wholesaleOrders);
+        double revenue;
+
+        if(dateTo != null && dateFrom != null){
+            revenue = getWholeSaleRevenueDateRange(dateTo, dateFrom, wholesaleOrders);
+        }
+        else{
+            revenue = getWholeSaleRevenueNoDate(wholesaleOrders);
+        }
 
         return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
@@ -95,8 +100,7 @@ public class RevenueApiController implements RevenueApi {
             revenue = getWholeSaleRevenueNoDate(wholesaleOrders) + getRetailRevenueNoDate(retailOrders);
         }
 
-        ResponseEntity<Double> response = revenue >= 0 ? new ResponseEntity<Double>(revenue, HttpStatus.OK) : new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
-        return response;
+        return new ResponseEntity<Double>(revenue, HttpStatus.OK);
     }
 
     private double getWholeSaleRevenueDateRange(String dateTo, String dateFrom, List<WholesaleOrder> wholesaleOrders){
@@ -104,12 +108,9 @@ public class RevenueApiController implements RevenueApi {
         Date from;
         double result = 0.0;
 
-        try{
-            to = dateFormat.parse(dateTo);
-            from = dateFormat.parse(dateFrom);
-        } catch (ParseException e) {
-            return -1;
-        }
+        to = fmt.parseDateTime(dateTo).toDate();
+        from = fmt.parseDateTime(dateFrom).toDate();
+
         wholesaleOrders.stream().filter(order -> order.getDateCreated().after(from) && order.getDateCreated().before(to)).mapToDouble(WholesaleOrder::getTotalPrice).sum();
         return result;
     }
@@ -123,14 +124,11 @@ public class RevenueApiController implements RevenueApi {
     private double getRetailRevenueDateRange(String dateTo, String dateFrom, List<RetailOrder> retailOrders){
         Date to;
         Date from;
-        double result;
+        double result = 0.0;
 
-        try{
-            to = dateFormat.parse(dateTo);
-            from = dateFormat.parse(dateFrom);
-        } catch (ParseException e) {
-            return -1;
-        }
+        to = fmt.parseDateTime(dateTo).toDate();
+        from = fmt.parseDateTime(dateFrom).toDate();
+
         result = retailOrders.stream().filter(order -> order.getDateCreated().after(from) && order.getDateCreated().before(to)).mapToDouble(RetailOrder::getTotalPrice).sum();
         return result;
     }
