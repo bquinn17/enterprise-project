@@ -231,10 +231,10 @@ public class OrdersApiController implements OrdersApi {
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
         if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0.0)) {
-            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
         }
-
-        return addRetailOrder(body);
+        retailOrderRepository.save(body);
+        return new ResponseEntity<RetailOrder>(body, HttpStatus.CREATED);
     }
 
 }
