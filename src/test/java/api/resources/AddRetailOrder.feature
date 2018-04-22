@@ -18,3 +18,5 @@ Feature: Support for adding new retail orders
     Given a valid order
     When a user adds a new "retailOrder" "/orders/retail/new"
     Then the api will return 201
+
+  # The Following Tests Are Unit Tests

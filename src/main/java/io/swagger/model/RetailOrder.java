@@ -235,7 +235,7 @@ public class RetailOrder   {
 
   @Valid
 
-  public Double getTotalPrice() {
+  public double getTotalPrice() {
     return totalPrice;
   }
 

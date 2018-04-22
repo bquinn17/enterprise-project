@@ -42,6 +42,9 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     ProductRepository productRepository;
 
+    public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
+    public void setProductRepository(ProductRepository productRepository){this.productRepository = productRepository;}
+
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/orders/retail/new"})
     public ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
@@ -149,22 +152,21 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
-    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
-                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
-
+    @RequestMapping(method={RequestMethod.PATCH},value={"/orders/update/status"})
+    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
+                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status) {
         RetailOrder retailOrder;
         Long intId = Long.valueOf(id);
-        RetailOrder.StatusEnum statusEnum = status;
+        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.fromValue(status);
         if(intId.toString().equals(id)) {
             retailOrder = retailOrderRepository.getOne(intId);
         }
         else {
-            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
         }
 
         if(retailOrder == null) {
-            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RetailOrder>(HttpStatus.NOT_FOUND);
         }
 
         if(statusEnum == null) {
@@ -214,14 +216,14 @@ public class OrdersApiController implements OrdersApi {
         rep.setFirstName("Selly");
         rep.setLastName("McSellsit");
         rep.setRegion(SalesRep.RegionEnum.EAST);
-        return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
+        return new ResponseEntity<SalesRep>(rep, HttpStatus.NOT_FOUND);
     }
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
-        if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0.0)) {
+        if(body.getTotalPrice() != 0.0) {
             return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
         }
 
