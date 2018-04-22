@@ -205,7 +205,6 @@ public class OrdersApiController implements OrdersApi {
         SalesRep rep = new SalesRep();
         rep.setFirstName("Selly");
         rep.setLastName("McSellsit");
-        rep.setRegion(SalesRep.RegionEnum.EAST);
         return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
     }
 
