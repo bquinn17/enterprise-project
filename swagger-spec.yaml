@@ -129,22 +129,27 @@ paths:
           description: "OK"
 
   /orders/update/status:
-    put:
-      description: "Update the status of an order"
-      operationId: "changeOrderStatus"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Update the status of an order"
-        required: true
-        schema:
-          $ref: "#/definitions/RetailOrder"
-      responses:
-        202:
-          description: "Updated"
+    patch:
+       description: "Update the status of an order"
+       operationId: "changeOrderStatus"
+       produces:
+       - "application/json"
+       parameters:
+       - in: "query"
+         name: "id"
+         type: "string"
+         required: true
+         description: "ID of the order"
 
+       - in: "query"
+         name: "status"
+         type: "string"
+         required: true
+         description: "New status of the order"
+
+       responses:
+         202:
+           description: "Updated"
   /revenue/:
     get:
       description: "Gets total revenue made by the organization"
@@ -217,6 +222,7 @@ paths:
         responses:
           200:
             description: "OK"
+
 definitions:
   RetailOrder:
     type: "object"

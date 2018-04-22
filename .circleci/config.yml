@@ -39,6 +39,17 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+      # Build the jar file
+      - run: mvn install -DskipTests
+
+      # Boot up the server with an in-memory db
+      - run:
+          command: java -jar target/swagger-spring-1.0.0.jar
+          background: true
+
+      # wait for spring to come up
+      - run: sleep 20
+
       # run tests!
       - run: mvn integration-test
 

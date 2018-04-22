@@ -6,10 +6,8 @@ import { Link } from 'react-router-dom'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
-import { FormControl, FormHelperText } from 'material-ui/Form'
+import { FormControl } from 'material-ui/Form'
 import IconButton from 'material-ui/IconButton'
-import Input, { InputLabel } from 'material-ui/Input'
-import { MenuItem } from 'material-ui/Menu'
 import TextField from 'material-ui/TextField'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
@@ -17,10 +15,6 @@ import { withStyles } from 'material-ui/styles'
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
 import styles from './WholesaleOrderPageStyles'
-
-//
-import getRepsFromRegion from '../../stubbed-data/dataFromHR'
-import getWholeSaleAccounts from '../../stubbed-data/dataFromFutureReleases'
 import WholesaleOrderAccountDropDown from './WholesaleOrderAccountDropDown'
 import WholesaleOrderRegionDropDown from './WholesaleOrderRegionDropDown'
 import WholesaleOrderRepDropDown from './WholesaleOrderRepDropDown'
@@ -33,7 +27,7 @@ import activeImg from '../../active.jpg'
  * WholesaleOrderPage is used to wrap and respond to the form
  * that Sales Rep Managers use to report and make a wholesale order.
  *
- * Author: Brendan Jones, bpj1651@rit.edu
+ * Author: Brendan Jones, bpj1651@rit.edu, GitHub: brendanjones44
  */
 class WholesaleOrderPage extends React.Component {
   constructor(props) {
@@ -42,7 +36,7 @@ class WholesaleOrderPage extends React.Component {
       region: "",
       reps: [],
       productsArr: [],
-      repId: null,
+      selectedRep: null,
       wholesaleAccountId: null,
     }
     this.handleRegionSelect = this.handleRegionSelect.bind(this)
@@ -55,13 +49,14 @@ class WholesaleOrderPage extends React.Component {
   }
 
   handleRegionSelect = event => {
-    const reps = getRepsFromRegion(event.target.value)
-    this.setState({ region: event.target.value })
+    this.setState({ region: event.target.value,
+       wholesaleAccountId: null,
+        selectedRep: null })
   }
 
   handleRepSelect = event => {
     this.setState({
-      repId: event.target.value
+      selectedRep: event.target.value
     })
   }
 
@@ -80,27 +75,28 @@ class WholesaleOrderPage extends React.Component {
     })
   }
   handleSubmit(){
-    console.log(this.state)
+
+    // Create the orderMap part of the request
     var orderMap = this.state.productsArr.map(function(product){
       return({
         "model": product.model,
         "quantity": product.quantity
       })
     })
+
     // Create the post request
     const request = {
       "orderMap": orderMap,
       "salesRep": {
-        "firstName": this.state.repId.firstName,
-        "lastName": this.state.repId.lastName,
-        "region": this.state.repId.regionName.toLowerCase(),
-        "employeeId": this.state.repId.id
+        "firstName": this.state.selectedRep.firstName,
+        "lastName": this.state.selectedRep.lastName,
+        "region": this.state.selectedRep.regionName.toLowerCase(),
+        "employeeId": this.state.selectedRep.id
       },
       "totalPrice": this.getTotalCost(),
       "wholesaleAccount": this.state.wholesaleAccountId
     }
 
-    console.log(JSON.stringify(request))
     //POST the request
     axios.post('/api/orders/wholesale/new',
       request
@@ -165,14 +161,14 @@ class WholesaleOrderPage extends React.Component {
     // Only render the repsDropDown if a region has been selected
     const repsDropDown = this.state.region === "" ? null : (
       <WholesaleOrderRepDropDown
-        selectedValue={ this.state.repId }
+        selectedValue={ this.state.selectedRep }
         onSelect={ this.handleRepSelect }
         region={ this.state.region }
       />
     )
 
     // Only render the wholeSaleDropDown if a rep has been selected
-    const wholeSaleAccountDropDown = this.state.repId === null ? null : (
+    const wholeSaleAccountDropDown = this.state.selectedRep === null ? null : (
       <WholesaleOrderAccountDropDown
         selectedValue={ this.state.wholesaleAccountId }
         onSelect={ this.handleWholesaleSelect }

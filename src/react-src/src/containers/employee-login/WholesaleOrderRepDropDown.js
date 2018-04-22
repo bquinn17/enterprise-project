@@ -5,9 +5,7 @@ import Select from 'material-ui/Select'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 //
-import axios from 'axios'
 import styles from './WholesaleOrderPageStyles'
-import getRepsFromRegion from '../../stubbed-data/dataFromHR'
 
 /**
  * WholesaleOrderRepDropDown represents the drop down
@@ -19,27 +17,53 @@ import getRepsFromRegion from '../../stubbed-data/dataFromHR'
 class WholesaleOrderRepDropDown extends React.Component {
   constructor(props){
     super(props)
+
+    // Initially not loading, and no reps in array
     this.state = {
       loading: false,
       reps: []
     }
   }
+
+  // Load data to the component once mounted
   componentDidMount() {
+
+    // Show loading wheel
     this.setState({
       loading: true
     })
+
+    // Get the data
     fetch("/api/mocked/hr/salesreps?region=" + this.props.region)
       .then(response => response.json())
+      // Update the component with data, and stop loading
       .then(data => this.setState({ reps: data.data, loading: false }))
-      .catch(error => console.log("error!!! " + error));
+      .catch(error => console.log("error!!! " + error)
+    )
   }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.region != this.props.region) {
+      // Show loading wheel
+      this.setState({
+        loading: true
+      })
+
+      // Get the data
+      fetch("/api/mocked/hr/salesreps?region=" + nextProps.region)
+        .then(response => response.json())
+        // Update the component with data, and stop loading
+        .then(data => this.setState({ reps: data.data, loading: false }))
+        .catch(error => console.log("error!!! " + error)
+      )
+    }
+  }
+
   render() {
-    //const reps = getRepsFromRegion(this.props.region)
     const { classes } = this.props
     if(this.state.loading){
       return <h1>Loading...</h1>
     }
-    console.log(this.state.reps)
     return(
       <div>
         <Typography
@@ -54,7 +78,9 @@ class WholesaleOrderRepDropDown extends React.Component {
           className={ classes.region }
         >
           { this.state.reps.map(rep => (
-              <MenuItem value={ rep }>{ rep.firstName + " " + rep.lastName }</MenuItem>
+              <MenuItem value={ rep }>
+                { rep.firstName + " " + rep.lastName }
+              </MenuItem>
           ))}
         </Select>
       </div>

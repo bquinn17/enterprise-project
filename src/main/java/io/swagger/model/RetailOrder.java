@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Product;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * RetailOrder
@@ -55,14 +53,26 @@ public class RetailOrder   {
   @JsonProperty("customerShippingState")
   private String customerShippingState = null;
 
+  @Column(name = "order_status")
+  @Enumerated(EnumType.STRING)
+  private StatusEnum status = null;
+
+  @JsonProperty("totalPrice")
+  private double totalPrice = 0.0;
+
+  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
+  @JsonProperty("products")
+  @Valid
+  private List<Product> products = null;
+
   /**
    * Gets or Sets status
    */
   public enum StatusEnum {
     FULFILLED("fulfilled"),
-    
+
     SHIPPED("shipped"),
-    
+
     ARRIVED("arrived");
 
     private String value;
@@ -91,19 +101,7 @@ public class RetailOrder   {
       return value.isEmpty();
     }
   }
-
-  @Column(name = "order_status")
-  @Enumerated(EnumType.STRING)
-  private StatusEnum status = null;
-
-  @JsonProperty("totalPrice")
-  private double totalPrice = 0.0;
-
-  @OneToMany(targetEntity = Product.class, mappedBy = "retailOrder", fetch = FetchType.EAGER)
-  @JsonProperty("products")
-  @Valid
-  private List<Product> products = null;
-
+  
   public RetailOrder customerEmail(String customerEmail) {
     this.customerEmail = customerEmail;
     return this;
@@ -246,11 +244,11 @@ public class RetailOrder   {
 
   @Valid
 
-  public double getTotalPrice() {
+  public Double getTotalPrice() {
     return totalPrice;
   }
 
-  public void setTotalPrice(double totalPrice) {
+  public void setTotalPrice(Double totalPrice) {
     this.totalPrice = totalPrice;
   }
 
@@ -312,7 +310,7 @@ public class RetailOrder   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class RetailOrder {\n");
-    
+
     sb.append("    customerEmail: ").append(toIndentedString(customerEmail)).append("\n");
     sb.append("    customerShippingStreetAddress: ").append(toIndentedString(customerShippingStreetAddress)).append("\n");
     sb.append("    customerShippingZip: ").append(toIndentedString(customerShippingZip)).append("\n");

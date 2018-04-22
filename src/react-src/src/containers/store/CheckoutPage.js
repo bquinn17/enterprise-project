@@ -117,7 +117,7 @@ class CheckoutPage extends React.Component {
                   className={classes.itemText}
                 >
                   <div className={classes.priceTile}>
-                    {item.modelName + " = " + (item.quantity * item.cost) + " "}
+                    {item.modelName + " = " + (item.quantity * item.cost).toFixed(2) + " "}
                   </div>
                 </Typography>
               </GridListTile>
@@ -125,6 +125,8 @@ class CheckoutPage extends React.Component {
         )
       }
     }
+
+    var displayTotal = totalCost.toFixed(2)
     return(
       <Card className={ classes.card }>
         <Link to="/store/catalog">
@@ -150,7 +152,7 @@ class CheckoutPage extends React.Component {
               className={classes.totalCost}
             >
               <span className={classes.priceTile}>
-                Total: ${totalCost}
+                Total: ${displayTotal}
               </span>
             </Typography>
           </CardContent>

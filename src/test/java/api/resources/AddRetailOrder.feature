@@ -1,4 +1,20 @@
-Feature: Tests Related to AddRetailOrder  Endpoint: /orders/retail/new
-  Scenario: Client creates new order without products and is expecting a 400 Bad Request
-    Given a client submits an order without a product
-    Then we expect to receive a 400 Bad Request response
+Feature: Support for adding new retail orders
+  Scenario: The products list is empty
+    Given an order without products
+    When a user adds a new "retailOrder" "/orders/retail/new"
+    Then the api will return 400
+
+  Scenario: The customer email is empty
+    Given an order without an email
+    When a user adds a new "retailOrder" "/orders/retail/new"
+    Then the api will return 400
+
+  Scenario: The customer address is empty
+    Given an order without an address
+    When a user adds a new "retailOrder" "/orders/retail/new"
+    Then the api will return 400
+
+  Scenario: A new retail order is created
+    Given a valid order
+    When a user adds a new "retailOrder" "/orders/retail/new"
+    Then the api will return 201

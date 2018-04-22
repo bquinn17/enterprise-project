@@ -58,13 +58,13 @@ public class WholesaleOrder   {
    */
   public enum StatusEnum {
     PLACED("placed"),
-    
+
     PAID("paid"),
-    
+
     FULLFILLED("fullfilled"),
-    
+
     SHIPPED("shipped"),
-    
+
     ARRIVED("arrived");
 
     private String value;
