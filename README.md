@@ -64,6 +64,9 @@ https://wiki.gandi.net/en/hosting/using-linux/tutorials/ubuntu/createdatabase
 
 4. Go to `http://127.0.0.1:8080`
 
+## Information for testing ##
+
+1. The admin that can login to the employee page has a username: salesRepManager and a password:password
 
 ## License ##
 MIT License

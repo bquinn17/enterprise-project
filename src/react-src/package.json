@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "jsrsasign": "^8.0.12",
     "material-ui": "^1.0.0-beta.27",
     "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.0.0",
