@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,20 +150,12 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.GET},value={"/orders/update/status"})
-    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody Long id,
-                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody RetailOrder.StatusEnum status) {
+    public ResponseEntity<RetailOrder> changeOrderStatus(@NotNull @ApiParam(value = "ID of the order", required = true) @Valid @RequestParam(value = "id", required = true) String id, @NotNull @ApiParam(value = "New status of the order", required = true) @Valid @RequestParam(value = "status", required = true) String status) {
 
         RetailOrder retailOrder;
-        Long intId = Long.valueOf(id);
-        RetailOrder.StatusEnum statusEnum = status;
-        if(intId.toString().equals(id)) {
-            retailOrder = retailOrderRepository.getOne(intId);
-        }
-        else {
-            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.BAD_REQUEST);
-        }
-
+        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.fromValue(status);
+        Long longId = new Long(id);
+        retailOrder = retailOrderRepository.findOne(longId);
         if(retailOrder == null) {
             return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
         }
