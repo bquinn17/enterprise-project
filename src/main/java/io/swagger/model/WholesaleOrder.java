@@ -241,6 +241,7 @@ public class WholesaleOrder   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    orderMap: ").append(toIndentedString(orderMap)).append("\n");
     sb.append("    totalPrice: ").append(toIndentedString(totalPrice)).append("\n");
+    sb.append("    dateCreated: ").append(toIndentedString(dateCreated)).append("\n");
     sb.append("}");
     return sb.toString();
   }
