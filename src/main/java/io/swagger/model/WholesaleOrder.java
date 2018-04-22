@@ -25,7 +25,6 @@ public class WholesaleOrder   {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -41,7 +40,6 @@ public class WholesaleOrder   {
 
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
-  @JsonIgnore
   private StatusEnum status = null;
 
   @JsonProperty("orderMap")

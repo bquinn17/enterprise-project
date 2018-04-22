@@ -94,7 +94,6 @@ public class RetailOrder   {
 
   @Column(name = "order_status")
   @Enumerated(EnumType.STRING)
-  @JsonIgnore
   private StatusEnum status = null;
 
   @JsonProperty("totalPrice")
@@ -113,7 +112,6 @@ public class RetailOrder   {
      * Get ID
      * @return id of order
      **/
-    @JsonIgnore
     public Long getID() { return id; }
 
     public Date getDateCreated(){
