@@ -10,11 +10,15 @@ import Typography from 'material-ui/Typography'
 import TextField from 'material-ui/Input'
 import GridList, { GridListTile } from 'material-ui/GridList'
 //
+import { Redirect } from 'react-router'
+//
 import { Link } from 'react-router-dom'
 //
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
 import styles from './checkoutPageStyles'
+//
+import OrderPlaced from './OrderPlaced'
 
 class CheckoutPage extends React.Component {
   constructor(props) {
@@ -25,7 +29,8 @@ class CheckoutPage extends React.Component {
       shippingState: '',
       shippingStreetAddress :'',
       shippingTown: '',
-      shippingZip :''
+      shippingZip :'',
+      redirectToFinalize: false
     }
     this.handleFormChange = this.handleFormChange.bind(this)
     this.shouldDisableSubmit = this.shouldDisableSubmit.bind(this)
@@ -79,12 +84,19 @@ class CheckoutPage extends React.Component {
     axios.post('/api/orders/retail/new',
       request
     ).then(function(response) {
-      alert("success! " + response)
-    }).catch(function(error) {
+
+      this.setState({
+        redirectToFinalize: true
+      })
+      this.props.clearCart()
+    }.bind(this)).catch(function(error) {
       alert("error! " + error)
     })
   }
   render() {
+    if(this.state.redirectToFinalize) {
+      return <OrderPlaced />
+    }
     const { classes } = this.props
     var itemsList = []
     var totalCost = 0
