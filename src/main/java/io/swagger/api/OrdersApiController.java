@@ -9,7 +9,6 @@ import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -208,6 +207,23 @@ public class OrdersApiController implements OrdersApi {
         rep.setLastName("McSellsit");
         rep.setRegion(SalesRep.RegionEnum.EAST);
         return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
+    }
+
+    @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/all"})
+    public ResponseEntity<List<BasicOrder>> getAllOrders() {
+
+        List<RetailOrder> retailOrders = retailOrderRepository.findAll();
+        ArrayList<BasicOrder> orders = new ArrayList<>();
+        for (RetailOrder retailOrder: retailOrders) {
+            BasicOrder basicOrder = new BasicOrder();
+            basicOrder.setID(retailOrder.getID());
+            basicOrder.setStatus(retailOrder.getStatus());
+            basicOrder.setProducts(retailOrder.getProducts());
+            orders.add(basicOrder);
+        }
+
+        return new ResponseEntity<List<BasicOrder>>(orders, HttpStatus.FOUND);
     }
 
     @CrossOrigin
