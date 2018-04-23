@@ -141,10 +141,12 @@ public class OrdersApiController implements OrdersApi {
         }
 
         RestTemplate restTemplate = new RestTemplate();
-        String uri = INVENTORY_ENDPOINT + "/inventory/wholesaleOrder";
+        String uri = INVENTORY_ENDPOINT + "/api/Products/order/";
 
         try {
-            WholesaleOrder inventoryResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+            for (ModelCount modelCount: body.getOrderMap()){
+                restTemplate.postForObject(uri + modelCount.getModel() + "/" + modelCount.getQuantity(), "", String.class);
+            }
         } catch (Exception ex) {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
         }
