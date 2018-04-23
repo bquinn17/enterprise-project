@@ -1,15 +1,12 @@
 package io.swagger.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Product;
 import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,8 @@ import javax.validation.Valid;
 
 @Entity
 @Table(name = "retail_order")
-public class RetailOrder   {
+public class RetailOrder
+{
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -244,7 +242,7 @@ public class RetailOrder   {
 
   @Valid
 
-  public Double getTotalPrice() {
+  public double getTotalPrice() {
     return totalPrice;
   }
 

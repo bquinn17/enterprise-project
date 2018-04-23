@@ -1,11 +1,10 @@
 Feature: Support for getting list of orders by a rep
-#  TODO implement order by rep
-#  Scenario: The sales rep id is not found
-#    Given there are no orders by a rep
-#    When a user calls "/orders/byrep"
-#    Then the api will return 404
-#
-#  Scenario: The sales rep id is found
-#    Given there is at least one order
-#    When a user calls "/orders/byrep"
-#    Then the api will return 302
+  Scenario: a user attempts to get a list of orders by an invalid sales rep id
+    Given an incorrect sales rep id
+    When getOrdersByRep is called
+    Then getOrdersByRep will return nothing
+
+  Scenario: a user attempts to get a list of orders with a valid sales rep id
+    Given a valid sales rep id
+    When getOrdersByRep is called
+    Then getOrdersByRep will return a list of wholesaleOrders

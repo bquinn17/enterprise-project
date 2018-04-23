@@ -32,5 +32,5 @@ public interface WholesaleApi {
     @RequestMapping(value = "/wholesale/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List> getWholesaleAccounts();
+    ResponseEntity<List<WholesaleAccount>> getWholesaleAccounts();
 }

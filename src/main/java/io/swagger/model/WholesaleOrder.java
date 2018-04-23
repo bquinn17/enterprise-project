@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -21,7 +20,8 @@ import javax.validation.Valid;
 
 @Entity
 @Table(name = "wholesale_order")
-public class WholesaleOrder   {
+public class WholesaleOrder
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

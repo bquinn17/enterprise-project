@@ -38,6 +38,9 @@ public class WholesaleApiController implements WholesaleApi {
     @Autowired
     ConfiguredPriceRepository configuredPriceRepository;
 
+    public void setWholesaleAccountRepository(WholesaleAccountRepository wholesaleAccountRepository){this.wholesaleAccountRepository = wholesaleAccountRepository;}
+    public void setConfiguredPriceRepository(ConfiguredPriceRepository configuredPriceRepository){this.configuredPriceRepository = configuredPriceRepository;}
+
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/wholesale/account/new"})
     public ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body) {
@@ -61,11 +64,10 @@ public class WholesaleApiController implements WholesaleApi {
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/wholesale/accounts"})
-    public ResponseEntity<List> getWholesaleAccounts() {
-
+    public ResponseEntity<List<WholesaleAccount>> getWholesaleAccounts() {
         // Get all the wholesale accounts in the database.
         List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
 
-        return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
+        return new ResponseEntity<>(wholesaleAccounts, HttpStatus.FOUND);
     }
 }

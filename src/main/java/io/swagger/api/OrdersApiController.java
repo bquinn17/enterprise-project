@@ -6,7 +6,6 @@ import io.swagger.annotations.*;
 
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
-import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -46,9 +45,16 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     ProductRepository productRepository;
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     public static final String ACCCOUNTING_ENDPOINT = "http://127.0.0.1:8080";
     public static final String INVENTORY_ENDPOINT = "https://inventory343.azurewebsites.net";
 
+
+    public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
+    public void setWholesaleOrderRepository(WholesaleOrderRepository wholesaleOrderRepository){this.wholesaleOrderRepository = wholesaleOrderRepository;}
+    public void setProductRepository(ProductRepository productRepository){this.productRepository = productRepository;}
+    public void setRestTemplate(RestTemplate restTemplate){this.restTemplate = restTemplate;}
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/orders/retail/new"})
@@ -79,7 +85,6 @@ public class OrdersApiController implements OrdersApi {
                 return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
             }
 
-            RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters()
                     .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
             HttpHeaders headers = new HttpHeaders();
@@ -100,7 +105,6 @@ public class OrdersApiController implements OrdersApi {
         }
 
         uri = ACCCOUNTING_ENDPOINT + "/accounting/retailOrder";
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             RetailOrder accountingResponse = restTemplate.postForObject(uri, body, RetailOrder.class);
@@ -141,7 +145,6 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
-        RestTemplate restTemplate = new RestTemplate();
         String uri = INVENTORY_ENDPOINT + "/api/Products/order/";
 
         try {
@@ -180,11 +183,11 @@ public class OrdersApiController implements OrdersApi {
         Long longId = new Long(id);
         retailOrder = retailOrderRepository.findOne(longId);
         if(retailOrder == null) {
-            return new ResponseEntity<RetailOrder>(new RetailOrder(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RetailOrder>(HttpStatus.NOT_FOUND);
         }
 
         if(statusEnum == null) {
-            return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<RetailOrder>(HttpStatus.NOT_MODIFIED);
         }
 
         retailOrder.setStatus(statusEnum);
@@ -211,12 +214,12 @@ public class OrdersApiController implements OrdersApi {
     @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/orders/byrep"})
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
-        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(salesRepId));
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.valueOf(salesRepId));
 
         if (wholesaleOrders.size() != 0){
             return new ResponseEntity<List<WholesaleOrder>>(wholesaleOrders, HttpStatus.OK);
         }else {
-            throw new NotFoundException(404, "no orders found for sales rep id");
+            return new ResponseEntity<List<WholesaleOrder>>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -242,11 +245,11 @@ public class OrdersApiController implements OrdersApi {
     @RequestMapping(method={RequestMethod.POST},value={"/orders/new/refund"})
     public ResponseEntity<RetailOrder> zeroDollarOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body) {
         //When Pricing is added to the RetailOrder model then it will check for $0 in the pricing
-        if(body.getTotalPrice() == null || !body.getTotalPrice().equals(0.0)) {
-            return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
+        if(body.getTotalPrice() != 0.0) {
+            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
         }
-        retailOrderRepository.save(body);
-        return new ResponseEntity<RetailOrder>(body, HttpStatus.CREATED);
+
+        return addRetailOrder(body);
     }
 
 }

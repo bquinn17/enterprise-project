@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import io.swagger.model.SalesRep;
 import io.swagger.model.RetailOrder;
+import io.swagger.model.WholesaleAccount;
 import io.swagger.model.WholesaleOrder;
 import io.swagger.repository.RetailOrderRepository;
 import io.swagger.repository.SalesRepRepository;
@@ -42,6 +43,10 @@ public class RevenueApiController implements RevenueApi {
 
     @Autowired
     private SalesRepRepository salesRepRepository;
+
+    public void setWholesaleOrderRepository(WholesaleOrderRepository wholesaleOrderRepository){this.wholesaleOrderRepository = wholesaleOrderRepository;}
+    public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
+    public void setSalesRepRepository(SalesRepRepository salesRepRepository){this.salesRepRepository = salesRepRepository;}
 
     @CrossOrigin
     public ResponseEntity<Double> getRevenueForSalesRep(@PathVariable(value = "sales_rep_id") String sales_rep_id,
@@ -108,7 +113,7 @@ public class RevenueApiController implements RevenueApi {
 
     private double  getWholeSaleRevenueNoDate(List<WholesaleOrder> wholesaleOrders){
         double result = 0.0;
-        wholesaleOrders.stream().mapToDouble(WholesaleOrder::getTotalPrice).sum();
+        result = wholesaleOrders.stream().mapToDouble(WholesaleOrder::getTotalPrice).sum();
         return result;
     }
 
@@ -129,7 +134,7 @@ public class RevenueApiController implements RevenueApi {
 
     private double getRetailRevenueNoDate(List<RetailOrder> retailOrders){
         double result = 0.0;
-        retailOrders.stream().mapToDouble(RetailOrder::getTotalPrice).sum();
+        result = retailOrders.stream().mapToDouble(RetailOrder::getTotalPrice).sum();
         return result;
     }
 

@@ -62,9 +62,9 @@ public interface OrdersApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/orders/completed",
-        produces = { "application/json" }, 
+        produces = { "application/json" },
         method = RequestMethod.GET)
-  
+
     ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException;
 
     @ApiOperation(value = "", notes = "Gets all orders for a given sales rep. This endpoint is used to help track employee performance (seeing how many wholesale orders are made by a rep), and is used by the HR silo", response = Void.class, tags={  })

@@ -1,4 +1,4 @@
 Feature: Support for getting all wholesale accounts
-  Scenario: The user is requesting the list of wholesale accounts
-    When a user gets a "wholesaleAccount" "/wholesale/accounts"
-    Then the api will return 302
+  Scenario: attempting to get a list of wholesale accounts
+    When getWholesaleAccounts is called
+    Then getWholesaleAccounts will return a list of all wholesale accounts
