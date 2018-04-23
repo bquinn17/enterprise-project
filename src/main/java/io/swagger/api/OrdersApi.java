@@ -59,12 +59,12 @@ public interface OrdersApi {
 
 
     @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/orders/completed",
-        produces = { "application/json" }, 
+        produces = { "application/json" },
         method = RequestMethod.GET)
-  
+
     ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException;
 
     @ApiOperation(value = "", notes = "Gets all orders for a given sales rep", response = Void.class, tags={  })
@@ -75,15 +75,6 @@ public interface OrdersApi {
             produces = { "application/json" },
             method = RequestMethod.GET)
     ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException;
-
-    @ApiOperation(value = "", nickname = "getSalesRep", notes = "HR Endpoint for getting information about sales rep", tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK") })
-    @RequestMapping(value = "/orders",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<SalesRep> getSalesRep(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "sales_rep_id", required = true) String salesRepId, @NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "date_from", required = true) String dateFrom, @NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "date_to", required = true) String dateTo);
-
 
     @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders", tags={  })
     @ApiResponses(value = {
