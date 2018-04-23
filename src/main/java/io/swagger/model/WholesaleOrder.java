@@ -31,7 +31,7 @@ public class WholesaleOrder
   @Column(name = "date")
   private Date dateCreated = new Date();
 
-  @ManyToOne(cascade = {CascadeType.ALL})
+  @ManyToOne
     private WholesaleAccount wholesaleAccount = null;
 
   @JsonProperty("salesRep")

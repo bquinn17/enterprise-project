@@ -1,6 +1,5 @@
 package io.swagger.api;
 
-import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.model.*;
 import io.swagger.repository.*;
 import io.swagger.annotations.*;
@@ -8,11 +7,15 @@ import io.swagger.annotations.*;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +48,7 @@ public class OrdersApiController implements OrdersApi {
     private RestTemplate restTemplate = new RestTemplate();
 
     public static final String ACCCOUNTING_ENDPOINT = "http://127.0.0.1:8080";
-    public static final String INVENTORY_ENDPOINT = "http://127.0.0.1:8080";
+    public static final String INVENTORY_ENDPOINT = "https://inventory343.azurewebsites.net";
 
 
     public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
@@ -69,17 +72,28 @@ public class OrdersApiController implements OrdersApi {
         // Create the Retail Order object with the info from body
         body.setStatus(RetailOrder.StatusEnum.FULFILLED);
 
-        String uri = INVENTORY_ENDPOINT + "/inventory/getDeviceId";
+        String uri = INVENTORY_ENDPOINT + "/api/Products/order/";
 
         for (Product product: body.getProducts()) {
 
             product.setRetailOrder(body);
 
-            String productName = product.getModel();
+            String productName = null;
+            try {
+                productName = URLEncoder.encode(product.getModel(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return new ResponseEntity<RetailOrder>(body, HttpStatus.BAD_REQUEST);
+            }
 
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> entity = new HttpEntity<String>("", headers);
             String serialNumber;
             try {
-                serialNumber = restTemplate.postForObject(uri, productName, String.class);
+                serialNumber = restTemplate.postForObject(uri + productName + "/" + "1", entity, String.class);
             } catch (Exception ex) {
                 return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
             }
@@ -103,7 +117,8 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
         }
 
-        retailOrderRepository.save(body);
+        // Dont need this because product.save saves the retailorder
+        // retailOrderRepository.save(body);
 
         // Return status code
         return new ResponseEntity<RetailOrder>(body, HttpStatus.CREATED);
@@ -120,6 +135,8 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
+        body.setStatus(WholesaleOrder.StatusEnum.PLACED);
+
         // Create SalesRep associated with this wholesale, save into db
         if(body.getSalesRep().getFirstName().isEmpty() ||
             body.getSalesRep().getLastName().isEmpty() ||
@@ -128,12 +145,12 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
-        body.setStatus(WholesaleOrder.StatusEnum.PLACED);
-
-        String uri = INVENTORY_ENDPOINT + "/inventory/wholesaleOrder";
+        String uri = INVENTORY_ENDPOINT + "/api/Products/order/";
 
         try {
-            WholesaleOrder inventoryResponse = restTemplate.postForObject(uri, body, WholesaleOrder.class);
+            for (ModelCount modelCount: body.getOrderMap()){
+                restTemplate.postForObject(uri + modelCount.getModel() + "/" + modelCount.getQuantity(), "", String.class);
+            }
         } catch (Exception ex) {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.FAILED_DEPENDENCY);
         }
@@ -207,6 +224,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @ApiOperation(value = "", nickname = "getAllOrders", notes = "Endpoint to receive all orders. This is used by the inventory silo for querying our orders, finding out which ones they need to fufill, and then they fufill and update orders")
     @RequestMapping(method={RequestMethod.GET},value={"/orders/all"})
     public ResponseEntity<List<BasicOrder>> getAllOrders() {
 

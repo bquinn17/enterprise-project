@@ -31,10 +31,8 @@ class WholesaleOrderRegionDropDown extends React.Component {
             onChange={ this.props.handleSelect }
             className={ classes.region }
           >
-            <MenuItem value="North">North</MenuItem>
-            <MenuItem value="South">South</MenuItem>
-            <MenuItem value="East">East</MenuItem>
-            <MenuItem value="West">West</MenuItem>
+            <MenuItem value="North East">North East</MenuItem>
+            <MenuItem value="Rochester">Rochester</MenuItem>
           </Select>
         </div>
     )

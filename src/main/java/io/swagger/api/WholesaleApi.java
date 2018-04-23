@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
-@Api(value = "wholesale", description = "the wholesale API")
+@Api(value = "wholesale", description = "the wholesale account API")
 public interface WholesaleApi {
 
-    @ApiOperation(value = "", nickname = "addWholesaleAccount", notes = "Add a new wholesale account to the sales system", tags={  })
+    @ApiOperation(value = "", nickname = "addWholesaleAccount", notes = "Add a new wholesale account to the sales system. These accounts are used later for creating wholesale orders by the sales ui.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/wholesale/account/new",
@@ -26,7 +26,7 @@ public interface WholesaleApi {
         method = RequestMethod.POST)
     ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body);
 
-    @ApiOperation(value = "", nickname = "getWholesaleAccounts", notes = "Get all wholesale accounts", tags={  })
+    @ApiOperation(value = "", nickname = "getWholesaleAccounts", notes = "Get all wholesale accounts. This is used by the sales ui when reporting a wholesale order. The wholesale order process needs to select a wholesale account returned by this endpoint", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/wholesale/accounts",

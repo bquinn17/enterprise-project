@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
 @Api(value = "revenue", description = "the revenue API")
 public interface RevenueApi {
 
-    @ApiOperation(value = "", nickname = "getRevenueForSalesRep", notes = "Gets total revenue made by a sales rep", tags={  })
+    @ApiOperation(value = "", nickname = "getRevenueForSalesRep", notes = "Gets total revenue made by a sales rep. This endpoint is used by HR for calculating commission-based bonuses for sales reps.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/revenue/{sales_rep_id}",
@@ -29,7 +29,7 @@ public interface RevenueApi {
     ResponseEntity<Double> getRevenueForSalesRep(@DecimalMin("1") @ApiParam(value = "", required = true) @PathVariable("sales_rep_id") String salesRepId, @ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
 
 
-    @ApiOperation(value = "", nickname = "getRevenueFromRegion", notes = "Get total revenue from a region (regions are 'north', 'south', 'east', 'west'", tags={  })
+    @ApiOperation(value = "", nickname = "getRevenueFromRegion", notes = "Get total revenue from a region (regions are 'North East', 'Rochester'). This endpoint is used by HR for caluclating regional bonuses", tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/revenue/region/{region}",
@@ -38,7 +38,7 @@ public interface RevenueApi {
     ResponseEntity<Double> getRevenueFromRegion(@ApiParam(value = "",required=true) @PathVariable("region") String region,@ApiParam(value = "") @Valid @RequestParam(value = "date_from", required = false) String dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "date_to", required = false) String dateTo);
 
 
-    @ApiOperation(value = "", nickname = "getTotalRevenue", notes = "Gets total revenue made by the organization", tags={  })
+    @ApiOperation(value = "", nickname = "getTotalRevenue", notes = "Gets total revenue made by the organization (both wholesale and retail orders). This endpoint is used by HR so they can calculate bonuses for all employees across the organization.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/revenue/",

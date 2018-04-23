@@ -49,7 +49,7 @@ public class RevenueApiController implements RevenueApi {
     public void setSalesRepRepository(SalesRepRepository salesRepRepository){this.salesRepRepository = salesRepRepository;}
 
     @CrossOrigin
-    public ResponseEntity<Double> getRevenueForSalesRep(@PathVariable(value = "the sales rep's ID") String sales_rep_id,
+    public ResponseEntity<Double> getRevenueForSalesRep(@PathVariable(value = "sales_rep_id") String sales_rep_id,
                                                         @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_from", required = false) String dateFrom,
                                                         @NotNull @ApiParam(value = "", required = false) @Valid @RequestParam(value = "date_to", required = false) String dateTo) {
         List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(sales_rep_id));
