@@ -61,21 +61,22 @@ class LoginForm extends React.Component {
     ).then(function(response){
       if(response.data.status) { // This is true when a valid Kenn-U-Ware employee login occurs
 
-        // For validating the employee does have "admin" privlidges to do employee actions
+        // For validating the employee does have "Admin" privlidges to do employee actions
+        var jwt= response.data.token.split(/\./);
+        var payload = rs.KJUR.jws.JWS.readSafeJSONString(rs.b64utoutf8(jwt[1]));
+        var userId = payload.id;
+        axios.get('http://kennuware-1772705765.us-east-1.elb.amazonaws.com/api/employee?userId=' + userId).then(function(response) {
+          console.log(response.data.roleName)
+          if(response.data.roleName === "Admin") {
+            this.setState({ loading: false, error: null })
+            window.location.assign("/employee/dashboard")
+          } else {
+            this.setState({ loading: false, error: "Insufficient permissions to access this page. Must be an admin role", userId: '', password: ''})
+          }
+        }.bind(this)).catch(function(error) {
+          alert("error!" + error)
+        })
 
-        /* HR's endpoint to validate employee roles. Currently it doesn't allow cross origin requests,
-         so this part is redacted */
-
-        // var jwt= response.data.token.split(/\./);
-        // var payload = rs.KJUR.jws.JWS.readSafeJSONString(rs.b64utoutf8(jwt[1]));
-        // var userId = payload.id;
-        // axios.get('http://kennuware-1772705765.us-east-1.elb.amazonaws.com/api/employee?userId=' + userId).then(function(response) {
-        //   console.log(response.roleName)
-        // }).catch(function(error) {
-        //   alert("error!" + error)
-        // })
-        this.setState({ loading: false, error: null })
-        window.location.assign("/employee/dashboard")
       } else {
         this.setState({ loading: false, error: response.data.message, userId: '', password: ''})
       }
