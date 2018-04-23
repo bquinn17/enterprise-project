@@ -67,7 +67,7 @@ class CatalogPage extends React.Component {
     this.setState({
       loading: true
     })
-    fetch("/api/mocked/inventory/products")
+    fetch("https://inventory343.azurewebsites.net/api/Products/all")
       .then(response => response.json())
       .then(data => this.setState({ products: data, loading: false }))
       .catch(error => console.log("error!!! " + error));
@@ -77,9 +77,9 @@ class CatalogPage extends React.Component {
     var productList = this.state.products.map(function(product) {
       return <CatalogItem
                 addItem={ this.props.addItem }
-                imgSrc={ this.getImg(product.model) }
-                model={product.model}
-                cost={ this.getPrice(product.model) }
+                imgSrc={ this.getImg(product.Name) }
+                model={product.Name}
+                cost={ this.getPrice(product.Name) }
               />
     }, this)
 
