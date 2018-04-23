@@ -10,11 +10,48 @@ import Typography from 'material-ui/Typography'
 import TextField from 'material-ui/Input'
 import GridList, { GridListTile } from 'material-ui/GridList'
 //
+import { Redirect } from 'react-router'
+//
 import { Link } from 'react-router-dom'
 //
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
 import styles from './checkoutPageStyles'
+//
+import OrderPlaced from './OrderPlaced'
+
+/**
+ * Note valid_credit_card was found from online source:
+ * https://gist.github.com/DiegoSalazar/4075533
+ * as it is a valid Luhn Algorthm checker.
+ *
+ * The sales erp silo takes no credit for this code
+ */
+
+// takes the form field value and returns true on valid number
+function valid_credit_card(value) {
+  // accept only digits, dashes or spaces
+	if (/[^0-9-\s]+/.test(value)) return false;
+
+	// The Luhn Algorithm. It's so pretty.
+	var nCheck = 0, nDigit = 0, bEven = false;
+	value = value.replace(/\D/g, "");
+
+	for (var n = value.length - 1; n >= 0; n--) {
+		var cDigit = value.charAt(n),
+			  nDigit = parseInt(cDigit, 10);
+
+		if (bEven) {
+			if ((nDigit *= 2) > 9) nDigit -= 9;
+		}
+
+		nCheck += nDigit;
+		bEven = !bEven;
+	}
+
+	return (nCheck % 10) == 0;
+}
+
 
 class CheckoutPage extends React.Component {
   constructor(props) {
@@ -25,7 +62,9 @@ class CheckoutPage extends React.Component {
       shippingState: '',
       shippingStreetAddress :'',
       shippingTown: '',
-      shippingZip :''
+      shippingZip: '',
+      creditCard: '',
+      redirectToFinalize: false
     }
     this.handleFormChange = this.handleFormChange.bind(this)
     this.shouldDisableSubmit = this.shouldDisableSubmit.bind(this)
@@ -79,13 +118,31 @@ class CheckoutPage extends React.Component {
     axios.post('/api/orders/retail/new',
       request
     ).then(function(response) {
-      alert("success! " + response)
-    }).catch(function(error) {
+
+      this.setState({
+        redirectToFinalize: true
+      })
+      this.props.clearCart()
+    }.bind(this)).catch(function(error) {
       alert("error! " + error)
     })
   }
   render() {
+    if(this.state.redirectToFinalize) {
+      return <OrderPlaced />
+    }
     const { classes } = this.props
+
+    var creditCardMessage = valid_credit_card(this.state.creditCard) ? null : (
+      <Typography
+        type="subheading"
+        variant="title"
+        align="center"
+        className={classes.itemText}
+      >
+        Invalid credit card. Must follow the Luhn Algorithm
+      </Typography>
+    )
     var itemsList = []
     var totalCost = 0
 
@@ -163,7 +220,7 @@ class CheckoutPage extends React.Component {
             variant="display1"
             align="center"
           >
-            Shipping Info:
+            Shipping & Billing Info:
           </Typography>
           <Card className={ classes.itemCard }>
           <TextField
@@ -196,8 +253,17 @@ class CheckoutPage extends React.Component {
             className={ classes.finalTextBox }
             onChange = { this.handleFormChange('shippingZip') }
           />
+          <TextField
+            required="true"
+            placeholder="Credit Card Number"
+            className={ classes.finalTextBox }
+            onChange= {this.handleFormChange('creditCard')}
+          />
+          {creditCardMessage}
           <Button
-            disabled={ this.shouldDisableSubmit() }
+            disabled={ this.shouldDisableSubmit() ||
+               (!valid_credit_card(this.state.creditCard) ||
+               this.state.creditCard.length == 0)}
             className={ classes.submitButton }
             onClick={ this.handleSubmit.bind(this) }
           >
