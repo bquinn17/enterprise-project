@@ -33,8 +33,14 @@ public class ChangeOrderStatusStepDefs extends TestSetup
     public void anExistingOrder() throws Throwable
     {
         createMockOrder();
-        id = retailOrder.getID();
-        when(retailOrderRepository.getOne(id)).thenReturn(retailOrder);
+        id = 1L;
+        when(retailOrderRepository.findOne(anyLong())).thenReturn(retailOrder);
+    }
+
+    @Given("^a nonexisting order$")
+    public void aNonexistingOrder() throws Throwable
+    {
+        createMockOrder();
     }
 
     @When("^changeOrderStatus is called with a status of \"([^\"]*)\"$")
@@ -57,6 +63,6 @@ public class ChangeOrderStatusStepDefs extends TestSetup
     {
         RetailOrder retailOrder = response.getBody();
         assertNotNull(retailOrder);
-        assertEquals(retailOrder.getStatus(), RetailOrder.StatusEnum.valueOf(status));
+        assertEquals(retailOrder.getStatus().toString(), status);
     }
 }

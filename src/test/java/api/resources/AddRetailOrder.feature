@@ -1,22 +1,15 @@
-Feature: Support for adding new retail orders
-  Scenario: The products list is empty
-    Given an order without products
-    When a user adds a new "retailOrder" "/orders/retail/new"
-    Then the api will return 400
+Feature: Support for adding wholesale orders
+  Scenario: fails to complete due to missing top level information
+    Given a retail order missing top level information
+    When addRetailOrder is called
+    Then addRetailOrder will return the offending order
 
-  Scenario: The customer email is empty
-    Given an order without an email
-    When a user adds a new "retailOrder" "/orders/retail/new"
-    Then the api will return 400
+  Scenario: fails to complete due to failure to contact external endpoints
+    Given a retail order where our system fails to call an external endpoint
+    When addRetailOrder is called
+    Then addRetailOrder will return the offending order
 
-  Scenario: The customer address is empty
-    Given an order without an address
-    When a user adds a new "retailOrder" "/orders/retail/new"
-    Then the api will return 400
-
-  Scenario: A new retail order is created
-    Given a valid order
-    When a user adds a new "retailOrder" "/orders/retail/new"
-    Then the api will return 201
-
-  # The Following Tests Are Unit Tests
+  Scenario: succeeds with a valid retail order
+    Given a valid retail order
+    When addRetailOrder is called
+    Then addRetailOrder will return a valid order

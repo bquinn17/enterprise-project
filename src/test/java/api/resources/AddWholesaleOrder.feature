@@ -1,5 +1,20 @@
 Feature: Support for adding wholesale orders
-  Scenario: A new wholesale order is created
-    Given a correctly defined wholesale order
-    When a user adds a new "wholesaleOrder" "/orders/wholesale/new"
-    Then the api will return 201
+  Scenario: fails to complete due to missing top level information
+    Given a wholesale order missing top level information
+    When addWholesaleOrder is called
+    Then addWholesaleOrder will return the offending order
+
+  Scenario: fails to complete due to missing sales rep info
+    Given a wholesale order where salesrep is missing information
+    When addWholesaleOrder is called
+    Then addWholesaleOrder will return the offending order
+
+  Scenario: fails to complete due to failure to contact external endpoints
+    Given a wholesale order where our system fails to call an external endpoint
+    When addWholesaleOrder is called
+    Then addWholesaleOrder will return the offending order with the status changed to placed
+
+  Scenario: succeeds with a valid wholesale order
+    Given a valid wholesale order
+    When addWholesaleOrder is called
+    Then addWholesaleOrder will return the offending order with the status changed to placed

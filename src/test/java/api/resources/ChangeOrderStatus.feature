@@ -16,6 +16,7 @@ Feature: Support for changing the status of a Retail Order
 #    Then the api will return 202
 
   Scenario: A status is attempted to be updated on a non-existent order
+    Given a nonexisting order
     When changeOrderStatus is called with a status of ""
     Then changeOrderStatus will not return an order
 

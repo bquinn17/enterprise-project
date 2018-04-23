@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.model.*;
 import io.swagger.repository.*;
 import io.swagger.annotations.*;
@@ -41,6 +42,8 @@ public class OrdersApiController implements OrdersApi {
     @Autowired
     ProductRepository productRepository;
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     public static final String ACCCOUNTING_ENDPOINT = "http://127.0.0.1:8080";
     public static final String INVENTORY_ENDPOINT = "http://127.0.0.1:8080";
 
@@ -48,6 +51,7 @@ public class OrdersApiController implements OrdersApi {
     public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
     public void setWholesaleOrderRepository(WholesaleOrderRepository wholesaleOrderRepository){this.wholesaleOrderRepository = wholesaleOrderRepository;}
     public void setProductRepository(ProductRepository productRepository){this.productRepository = productRepository;}
+    public void setRestTemplate(RestTemplate restTemplate){this.restTemplate = restTemplate;}
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/orders/retail/new"})
@@ -73,7 +77,6 @@ public class OrdersApiController implements OrdersApi {
 
             String productName = product.getModel();
 
-            RestTemplate restTemplate = new RestTemplate();
             String serialNumber;
             try {
                 serialNumber = restTemplate.postForObject(uri, productName, String.class);
@@ -88,7 +91,6 @@ public class OrdersApiController implements OrdersApi {
         }
 
         uri = ACCCOUNTING_ENDPOINT + "/accounting/retailOrder";
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             RetailOrder accountingResponse = restTemplate.postForObject(uri, body, RetailOrder.class);
@@ -118,8 +120,6 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
-        body.setStatus(WholesaleOrder.StatusEnum.PLACED);
-
         // Create SalesRep associated with this wholesale, save into db
         if(body.getSalesRep().getFirstName().isEmpty() ||
             body.getSalesRep().getLastName().isEmpty() ||
@@ -128,7 +128,8 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<WholesaleOrder>(body, HttpStatus.BAD_REQUEST);
         }
 
-        RestTemplate restTemplate = new RestTemplate();
+        body.setStatus(WholesaleOrder.StatusEnum.PLACED);
+
         String uri = INVENTORY_ENDPOINT + "/inventory/wholesaleOrder";
 
         try {
@@ -169,7 +170,7 @@ public class OrdersApiController implements OrdersApi {
         }
 
         if(statusEnum == null) {
-            return new ResponseEntity<RetailOrder>(retailOrder, HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<RetailOrder>(HttpStatus.NOT_MODIFIED);
         }
 
         retailOrder.setStatus(statusEnum);

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class WholesaleAPIStepDefs
+public class WholesaleApiStepDefs
 {
     private WholesaleApiController wholesaleApiController;
     private WholesaleAccountRepository wholesaleAccountRepository;

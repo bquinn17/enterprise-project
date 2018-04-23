@@ -7,6 +7,7 @@ import io.swagger.repository.ProductRepository;
 import io.swagger.repository.RetailOrderRepository;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class TestSetup
     protected RetailOrderRepository retailOrderRepository;
     protected WholesaleOrderRepository wholesaleOrderRepository;
     protected ProductRepository productRepository;
+    protected RestTemplate restTemplate;
 
     protected RetailOrder retailOrder;
     protected WholesaleOrder wholesaleOrder;
@@ -29,17 +31,19 @@ public class TestSetup
         retailOrderRepository = mock(RetailOrderRepository.class);
         wholesaleOrderRepository = mock(WholesaleOrderRepository.class);
         productRepository = mock(ProductRepository.class);
+        restTemplate = mock(RestTemplate.class);
 
         ordersApiController = new OrdersApiController();
         ordersApiController.setRetailOrderRepository(retailOrderRepository);
         ordersApiController.setWholesaleOrderRepository(wholesaleOrderRepository);
         ordersApiController.setProductRepository(productRepository);
+        ordersApiController.setRestTemplate(restTemplate);
     }
 
     protected RetailOrder createMockOrder()
     {
         Product product = new Product();
-        product.setModel("KennUWare Watch");
+        product.setModel("Kenn-U-Active");
         product.setRefurbished(false);
         product.setSerialNumber("7331");
         product.priceSoldAt(100.0);
