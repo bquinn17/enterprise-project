@@ -1,5 +1,7 @@
 package io.swagger.model;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +28,10 @@ public class RetailOrder   {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "date")
+  private Date dateCreated = new Date();
 
   @Column(name = "customer_email")
   @JsonProperty("customerEmail")
@@ -95,7 +101,7 @@ public class RetailOrder   {
       return value.isEmpty();
     }
   }
-
+  
   public RetailOrder customerEmail(String customerEmail) {
     this.customerEmail = customerEmail;
     return this;
@@ -104,8 +110,11 @@ public class RetailOrder   {
      * Get ID
      * @return id of order
      **/
-    @JsonIgnore
     public Long getID() { return id; }
+
+    public Date getDateCreated(){
+      return dateCreated;
+    }
 
   /**
    * Get customerEmail
@@ -310,6 +319,7 @@ public class RetailOrder   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    totalPrice: ").append(toIndentedString(totalPrice)).append("\n");
     sb.append("    products: ").append(toIndentedString(products)).append("\n");
+    sb.append("    dateCreated: ").append(toIndentedString(dateCreated)).append("\n");
     sb.append("}");
     return sb.toString();
   }
