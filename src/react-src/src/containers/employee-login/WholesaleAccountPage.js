@@ -17,7 +17,8 @@ import styles from './wholesaleAccountPageStyles'
 import flexImg from '../../flex.jpg'
 import styleImg from '../../style.jpeg'
 import activeImg from '../../active.jpg'
-
+//
+import WholesaleAccountCreated from './WholesaleAccountCreated'
 /**
  * WholesaleOrderPage is used to wrap and respond to the form
  * that Sales Rep Managers use to report and make a wholesale order.
@@ -47,8 +48,8 @@ class WholesaleAccountPage extends React.Component {
       shippingState: '',
       shippingStreetAddress :'',
       shippingTown: '',
-      shippingZip :'',
-      redirect: false
+      shippingZip: '',
+      created: false
     }
     this.handleFormChange = this.handleFormChange.bind(this)
     this.shouldDisableSubmit = this.shouldDisableSubmit.bind(this)
@@ -117,16 +118,19 @@ class WholesaleAccountPage extends React.Component {
     axios.post('/api/wholesale/account/new',
       request
     ).then(function(response) {
-      alert("success!" + response)
-    }).catch(function(error) {
+      this.setState({
+        created: true
+      })
+    }.bind(this)).catch(function(error) {
       alert("error!" + error)
     })
-    console.log(request)
   }
 
   render() {
     const { classes } = this.props
-
+    if (this.state.created) {
+      return <WholesaleAccountCreated />
+    }
     const productList = this.state.products.map(function(product){
       return(
         <span>
@@ -205,7 +209,7 @@ class WholesaleAccountPage extends React.Component {
             className={ classes.submitButton }
             onClick={ this.handleSubmit.bind(this) }
           >
-            Submit Order
+            Create Wholesale Account
           </Button>
         </Card>
       </div>

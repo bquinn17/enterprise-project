@@ -22,7 +22,8 @@ import WholesaleOrderRepDropDown from './WholesaleOrderRepDropDown'
 import flexImg from '../../flex.jpg'
 import styleImg from '../../style.jpeg'
 import activeImg from '../../active.jpg'
-
+//
+import WholesaleOrderPlaced from './WholesaleOrderPlaced'
 /**
  * WholesaleOrderPage is used to wrap and respond to the form
  * that Sales Rep Managers use to report and make a wholesale order.
@@ -38,6 +39,7 @@ class WholesaleOrderPage extends React.Component {
       productsArr: [],
       selectedRep: null,
       wholesaleAccountId: null,
+      created: false
     }
     this.handleRegionSelect = this.handleRegionSelect.bind(this)
     this.handleRepSelect = this.handleRepSelect.bind(this)
@@ -84,13 +86,16 @@ class WholesaleOrderPage extends React.Component {
       })
     })
 
+    // Modify the region so it matches case
+    const regionName = this.state.regionName === 'rochester' ? "Rochester" : "North East"
+
     // Create the post request
     const request = {
       "orderMap": orderMap,
       "salesRep": {
         "firstName": this.state.selectedRep.firstName,
         "lastName": this.state.selectedRep.lastName,
-        "region": this.state.selectedRep.regionName.toLowerCase(),
+        "region": regionName,
         "employeeId": this.state.selectedRep.id
       },
       "totalPrice": this.getTotalCost(),
@@ -101,8 +106,10 @@ class WholesaleOrderPage extends React.Component {
     axios.post('/api/orders/wholesale/new',
       request
     ).then(function(response) {
-      alert("success!" + response)
-    }).catch(function(error) {
+      this.setState({
+        created: true
+      })
+    }.bind(this)).catch(function(error) {
       alert("error!" + error)
       console.log(error)
     })
@@ -156,6 +163,9 @@ class WholesaleOrderPage extends React.Component {
   }
 
   render() {
+    if(this.state.created) {
+      return <WholesaleOrderPlaced />
+    }
     const { classes } = this.props
 
     // Only render the repsDropDown if a region has been selected

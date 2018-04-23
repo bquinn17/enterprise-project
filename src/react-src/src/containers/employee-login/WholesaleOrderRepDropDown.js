@@ -34,7 +34,7 @@ class WholesaleOrderRepDropDown extends React.Component {
     })
 
     // Get the data
-    fetch("/api/mocked/hr/salesreps?region=" + this.props.region)
+    fetch("http://kennuware-1772705765.us-east-1.elb.amazonaws.com/api/employee?position=Sales%20Rep&region=" + this.props.region)
       .then(response => response.json())
       // Update the component with data, and stop loading
       .then(data => this.setState({ reps: data.data, loading: false }))
@@ -50,7 +50,7 @@ class WholesaleOrderRepDropDown extends React.Component {
       })
 
       // Get the data
-      fetch("/api/mocked/hr/salesreps?region=" + nextProps.region)
+      fetch("http://kennuware-1772705765.us-east-1.elb.amazonaws.com/api/employee?position=Sales%20Rep&region=" + nextProps.region)
         .then(response => response.json())
         // Update the component with data, and stop loading
         .then(data => this.setState({ reps: data.data, loading: false }))
