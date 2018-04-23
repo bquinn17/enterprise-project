@@ -61,11 +61,7 @@ class LoginForm extends React.Component {
     ).then(function(response){
       if(response.data.status) { // This is true when a valid Kenn-U-Ware employee login occurs
 
-        // For validating the employee does have "admin" privlidges to do employee actions
-
-        /* HR's endpoint to validate employee roles. Currently it doesn't allow cross origin requests,
-         so this part is redacted */
-
+        // For validating the employee does have "Admin" privlidges to do employee actions
         var jwt= response.data.token.split(/\./);
         var payload = rs.KJUR.jws.JWS.readSafeJSONString(rs.b64utoutf8(jwt[1]));
         var userId = payload.id;
