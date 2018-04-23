@@ -76,6 +76,7 @@ public interface OrdersApi {
             method = RequestMethod.GET)
     ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException;
 
+
     @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders", tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created") })

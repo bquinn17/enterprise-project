@@ -48,13 +48,9 @@ public class SalesRep   {
    * Gets or Sets region
    */
   public enum RegionEnum {
-    NORTH("north"),
-    
-    SOUTH("south"),
-    
-    EAST("east"),
-    
-    WEST("west");
+    ROCHESTER("Rochester"),
+
+    NORTHEAST("North East");
 
     private String value;
 
