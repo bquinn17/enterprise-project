@@ -21,7 +21,10 @@ team_sales
 - Then run `docker-compose up`
 
 ## Live URL ##
-- http://54.242.81.38/
+- http://167.99.239.47
+
+## API Documentation ##
+- http://167.99.239.47:8080/swagger-ui.html
 
 ## Prerequisites ##
 
