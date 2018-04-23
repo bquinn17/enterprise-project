@@ -34,12 +34,6 @@ public class RevenueApiController implements RevenueApi {
 
     private static final Logger log = LoggerFactory.getLogger(RevenueApiController.class);
 
-    private DateTimeFormatter fmt;
-
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
-
     @Autowired
     private WholesaleOrderRepository wholesaleOrderRepository;
 
@@ -48,13 +42,6 @@ public class RevenueApiController implements RevenueApi {
 
     @Autowired
     private SalesRepRepository salesRepRepository;
-
-    @org.springframework.beans.factory.annotation.Autowired
-    public RevenueApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-        this.fmt = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.US);
-    }
 
     @CrossOrigin
     public ResponseEntity<Double> getRevenueForSalesRep(@PathVariable(value = "the sales rep's ID") String sales_rep_id,
@@ -108,6 +95,10 @@ public class RevenueApiController implements RevenueApi {
         Date from;
         double result = 0.0;
 
+        DateTimeFormatter fmt;
+
+        fmt = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.US);
+
         to = fmt.parseDateTime(dateTo).toDate();
         from = fmt.parseDateTime(dateFrom).toDate();
 
@@ -125,6 +116,9 @@ public class RevenueApiController implements RevenueApi {
         Date to;
         Date from;
         double result = 0.0;
+
+        DateTimeFormatter fmt;
+        fmt = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.US);
 
         to = fmt.parseDateTime(dateTo).toDate();
         from = fmt.parseDateTime(dateFrom).toDate();
