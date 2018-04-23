@@ -169,7 +169,9 @@ class Store extends React.Component {
               to="/store/catalog"
               label="Catalog"
             />
-            <Tab component={ Link } to="/store/contact-us" label="Contact Us" />
+            <a className={ classes.linkHome } href="https://web-customersupport.azurewebsites.net/">
+              <Tab label="Contact Us"/>
+            </a>
             <div className={ classes.cart }>
               <span
                 className={ classes.totalCost }>

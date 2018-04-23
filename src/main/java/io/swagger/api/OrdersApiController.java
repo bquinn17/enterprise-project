@@ -221,6 +221,7 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
+    @ApiOperation(value = "", nickname = "getAllOrders", notes = "Endpoint to receive all orders. This is used by the inventory silo for querying our orders, finding out which ones they need to fufill, and then they fufill and update orders")
     @RequestMapping(method={RequestMethod.GET},value={"/orders/all"})
     public ResponseEntity<List<BasicOrder>> getAllOrders() {
 

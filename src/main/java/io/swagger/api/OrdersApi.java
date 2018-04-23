@@ -31,7 +31,7 @@ import javax.validation.Valid;
 @Api(value = "orders", description = "the orders API")
 public interface OrdersApi {
 
-    @ApiOperation(value = "", nickname = "addRetailOrder", notes = "Add a new retail order to the sales system", tags={  })
+    @ApiOperation(value = "", nickname = "addRetailOrder", notes = "Add a new retail order to the sales system. This endpoint is used by the sales ui to communicate a retail order being placed. This kicks off the retail order process which communicates with Accounting & Inventory silos", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/orders/retail/new",
@@ -40,7 +40,7 @@ public interface OrdersApi {
     ResponseEntity<RetailOrder> addRetailOrder(@ApiParam(value = "Retail order object that needs to be added to the Sales System" ,required=true )  @Valid @RequestBody RetailOrder body);
 
 
-    @ApiOperation(value = "", nickname = "addWholesaleOrder", notes = "Add a new wholesale order to the sales system", tags={  })
+    @ApiOperation(value = "", nickname = "addWholesaleOrder", notes = "Add a new wholesale order to the sales system. This endpoint is used by the sales ui to communicate a wholesale order being placed. This kicks off the wholesale order process which communicates with Accounting & Inventory silos", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/orders/wholesale/new",
@@ -49,7 +49,7 @@ public interface OrdersApi {
     ResponseEntity<WholesaleOrder> addWholesaleOrder(@ApiParam(value = "Add a new wholesale order to the sales system" ,required=true )  @Valid @RequestBody WholesaleOrder body);
 
 
-    @ApiOperation(value = "", nickname = "changeOrderStatus", notes = "Update the status of an order", tags={  })
+    @ApiOperation(value = "", nickname = "changeOrderStatus", notes = "Update the status of an order. This is mainly used by the Inventory silo when they fufill orders. They query our orders endpoint to find orders they need to fufill, and once fufilled they hit this endpoint to update the status", tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 202, message = "Updated") })
     @RequestMapping(value = "/orders/update/status",
@@ -58,7 +58,7 @@ public interface OrdersApi {
     ResponseEntity<RetailOrder> changeOrderStatus(@NotNull @ApiParam(value = "ID of the order", required = true) @Valid @RequestParam(value = "id", required = true) String id, @NotNull @ApiParam(value = "New status of the order", required = true) @Valid @RequestParam(value = "status", required = true) String status);
 
 
-    @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })
+    @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order given a serialNumber. This endpoint is used by the Customer Support silo to verify that the KennUWare corp sold them the product they may be having an issue with. We make sure that products serial number is attached to an order", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK") })
     @RequestMapping(value = "/orders/completed",
@@ -67,7 +67,7 @@ public interface OrdersApi {
   
     ResponseEntity<RetailOrder> getOrder( @NotNull@ApiParam(value = "", required = true) @RequestParam(value = "serial_num", required = true) String serialNum) throws NotFoundException;
 
-    @ApiOperation(value = "", notes = "Gets all orders for a given sales rep", response = Void.class, tags={  })
+    @ApiOperation(value = "", notes = "Gets all orders for a given sales rep. This endpoint is used to help track employee performance (seeing how many wholesale orders are made by a rep), and is used by the HR silo", response = Void.class, tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Created", response = Void.class) })
 
@@ -77,7 +77,7 @@ public interface OrdersApi {
     ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException;
 
 
-    @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders", tags={  })
+    @ApiOperation(value = "", nickname = "zeroDollarOrder", notes = "Support submitting of $0 orders. This endpoint is used by Customer support so they can submit refunds. This kicks off the typical order process, but with a cost of zero dollars.", tags={  })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created") })
     @RequestMapping(value = "/orders/new/refund",
