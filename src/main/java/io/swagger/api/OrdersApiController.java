@@ -97,7 +97,8 @@ public class OrdersApiController implements OrdersApi {
             return new ResponseEntity<RetailOrder>(body, HttpStatus.FAILED_DEPENDENCY);
         }
 
-        retailOrderRepository.save(body);
+        // Dont need this because product.save saves the retailorder
+        // retailOrderRepository.save(body);
 
         // Return status code
         return new ResponseEntity<RetailOrder>(body, HttpStatus.CREATED);
