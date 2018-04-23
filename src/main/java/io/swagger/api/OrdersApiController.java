@@ -46,6 +46,7 @@ public class OrdersApiController implements OrdersApi {
 
 
     public void setRetailOrderRepository(RetailOrderRepository retailOrderRepository){this.retailOrderRepository = retailOrderRepository;}
+    public void setWholesaleOrderRepository(WholesaleOrderRepository wholesaleOrderRepository){this.wholesaleOrderRepository = wholesaleOrderRepository;}
     public void setProductRepository(ProductRepository productRepository){this.productRepository = productRepository;}
 
     @CrossOrigin
@@ -195,12 +196,12 @@ public class OrdersApiController implements OrdersApi {
     @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/orders/byrep"})
     public ResponseEntity<List<WholesaleOrder>> getOrdersByRep(@NotNull@ApiParam(value = "", required = true) @RequestParam(value = "sales_rep_id", required = true) String salesRepId) throws NotFoundException {
-        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.parseLong(salesRepId));
+        List<WholesaleOrder> wholesaleOrders = wholesaleOrderRepository.findBySalesRepEmployeeId(Long.valueOf(salesRepId));
 
         if (wholesaleOrders.size() != 0){
             return new ResponseEntity<List<WholesaleOrder>>(wholesaleOrders, HttpStatus.OK);
         }else {
-            throw new NotFoundException(404, "no orders found for sales rep id");
+            return new ResponseEntity<List<WholesaleOrder>>(HttpStatus.NOT_FOUND);
         }
     }
 

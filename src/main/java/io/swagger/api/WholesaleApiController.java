@@ -29,10 +29,6 @@ public class WholesaleApiController implements WholesaleApi {
 
     private static final Logger log = LoggerFactory.getLogger(WholesaleApiController.class);
 
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
-
     @Autowired
     WholesaleOrderRepository wholesaleOrderRepository;
 
@@ -42,16 +38,12 @@ public class WholesaleApiController implements WholesaleApi {
     @Autowired
     ConfiguredPriceRepository configuredPriceRepository;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public WholesaleApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
+    public void setWholesaleAccountRepository(WholesaleAccountRepository wholesaleAccountRepository){this.wholesaleAccountRepository = wholesaleAccountRepository;}
+    public void setConfiguredPriceRepository(ConfiguredPriceRepository configuredPriceRepository){this.configuredPriceRepository = configuredPriceRepository;}
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.POST},value={"/wholesale/account/new"})
     public ResponseEntity<WholesaleAccount> addWholesaleAccount(@ApiParam(value = "Add a new wholesale account to the sale system" ,required=true )  @Valid @RequestBody WholesaleAccount body) {
-        String accept = request.getHeader("Accept");
         // Set all fields
         WholesaleAccount wholesaleAccount = new WholesaleAccount();
         wholesaleAccount.setName(body.getName());
@@ -72,12 +64,10 @@ public class WholesaleApiController implements WholesaleApi {
 
     @CrossOrigin
     @RequestMapping(method={RequestMethod.GET},value={"/wholesale/accounts"})
-    public ResponseEntity<List> getWholesaleAccounts() {
-        String accept = request.getHeader("Accept");
-
+    public ResponseEntity<List<WholesaleAccount>> getWholesaleAccounts() {
         // Get all the wholesale accounts in the database.
         List<WholesaleAccount> wholesaleAccounts = wholesaleAccountRepository.findAll();
 
-        return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
+        return new ResponseEntity<>(wholesaleAccounts, HttpStatus.FOUND);
     }
 }
