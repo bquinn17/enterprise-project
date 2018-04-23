@@ -1,12 +1,11 @@
 package io.swagger.api;
 
 import io.swagger.model.ConfiguredPrice;
-import io.swagger.model.SalesRep;
 import io.swagger.model.WholesaleAccount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import io.swagger.model.WholesaleOrder;
 import io.swagger.repository.ConfiguredPriceRepository;
-import io.swagger.repository.SalesRepRepository;
 import io.swagger.repository.WholesaleAccountRepository;
 import io.swagger.repository.WholesaleOrderRepository;
 import org.slf4j.Logger;
@@ -16,13 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-03-30T18:00:05.067Z")
 
@@ -82,5 +80,4 @@ public class WholesaleApiController implements WholesaleApi {
 
         return new ResponseEntity<List>(wholesaleAccounts, HttpStatus.FOUND);
     }
-
 }

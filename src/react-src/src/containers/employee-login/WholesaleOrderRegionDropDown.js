@@ -12,7 +12,7 @@ import styles from './WholesaleOrderPageStyles'
  * for the Region selection on the parent component,
  * WholesaleOrderPage
  *
- * Author: Brendan Jones
+ * Author: Brendan Jones, bpj1651@rit.edu, GitHub: brendanjones44
  */
 class WholesaleOrderRegionDropDown extends React.Component {
   render() {

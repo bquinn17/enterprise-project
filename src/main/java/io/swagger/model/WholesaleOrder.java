@@ -1,6 +1,7 @@
 package io.swagger.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,8 +25,11 @@ public class WholesaleOrder   {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "date")
+  private Date dateCreated = new Date();
 
   @ManyToOne(cascade = {CascadeType.ALL})
     private WholesaleAccount wholesaleAccount = null;
@@ -36,7 +40,6 @@ public class WholesaleOrder   {
 
   @Column(name = "status")
   @Enumerated(EnumType.STRING)
-  @JsonIgnore
   private StatusEnum status = null;
 
   @JsonProperty("orderMap")
@@ -91,6 +94,10 @@ public class WholesaleOrder   {
   public WholesaleOrder wholesaleAccount(WholesaleAccount wholesaleAccount) {
     this.wholesaleAccount = wholesaleAccount;
     return this;
+  }
+
+  public Date getDateCreated(){
+    return dateCreated;
   }
 
   /**
@@ -232,6 +239,7 @@ public class WholesaleOrder   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    orderMap: ").append(toIndentedString(orderMap)).append("\n");
     sb.append("    totalPrice: ").append(toIndentedString(totalPrice)).append("\n");
+    sb.append("    dateCreated: ").append(toIndentedString(dateCreated)).append("\n");
     sb.append("}");
     return sb.toString();
   }

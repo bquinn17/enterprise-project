@@ -2,13 +2,9 @@ import React from 'react'
 //
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
-import IconButton from 'material-ui/IconButton'
-import Subheader from 'material-ui/List/ListSubheader'
+import GridList from 'material-ui/GridList'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
-//
-import AddCircle from 'material-ui-icons/AddCircle'
 //
 import { Redirect } from 'react-router'
 //
@@ -17,6 +13,7 @@ import styles from './catalogPageStyles'
 import flexImg from '../../flex.jpg'
 import styleImg from '../../style.jpeg'
 import activeImg from '../../active.jpg'
+import comingSoonImg from '../../coming-soon.jpg'
 //
 import CatalogItem from './CatalogItem'
 /**
@@ -29,38 +26,7 @@ class CatalogPage extends React.Component {
   constructor(props){
     super(props)
 
-    this.state = { products: [
-      {
-        "model": "Kenn-U-Style",
-        "quantity": "100",
-        "description": "The Kenn-U-Flex offers the ultimate balance of " +
-                       "comfort, usability, and durability. The actual " +
-                       "band around the watch is made from a superb and " +
-                       "proprietary material that was engineered for comfort."
-      },
-      {
-        "model": "Kenn-U-Active",
-        "quantity": "50",
-        "description": "The Kenn-U-Active is the perfect feature-packed " +
-                       "wearable watch for anyone looking to get more out " +
-                       "of their workout. Designed specifically for " +
-                       "athletes, this water-proof watch not only tracks and " +
-                       "logs your body's movements with military-grade " +
-                       "precision, but it also offers suggestions to better " +
-                       "your workouts."
-      },
-      {
-        "model": "Kenn-U-Flex",
-        "quantity": "20",
-        "description": "The Kenn-U-Style takes all the complex features of " +
-                       "a smartphone and packs them into a sleek and " +
-                       "fashionable watch. The remarkable interface allows " +
-                       "you access to all of your applications and " +
-                       "notifications, without sacrificing performance. " +
-                       "With processor speeds 2.3x faster than the industry " +
-                       "leading smartphone, this watch will make you want to " +
-                       "forget your cellphone even existed."
-      }],
+    this.state = { products: [],
       redirect: false,
       loading: false
     }
@@ -77,11 +43,12 @@ class CatalogPage extends React.Component {
         return styleImg
       case "Kenn-U-Flex":
         return flexImg
+      default:
+        return comingSoonImg
     }
   }
 
   getPrice(model) {
-    console.log("getting model! " + model)
     switch(model) {
       case "Kenn-U-Active":
         return 69.99
@@ -106,8 +73,6 @@ class CatalogPage extends React.Component {
       .catch(error => console.log("error!!! " + error));
   }
   render() {
-    console.log("debug state")
-    console.log(this.state)
     const { classes } = this.props
     var productList = this.state.products.map(function(product) {
       return <CatalogItem

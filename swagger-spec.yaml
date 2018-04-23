@@ -62,6 +62,7 @@ paths:
       responses:
         200:
           description: "OK"
+
   /orders/retail/new:
     post:
       description: "Add a new retail order to the sales system"
@@ -128,25 +129,100 @@ paths:
           description: "OK"
 
   /orders/update/status:
-    put:
-      description: "Update the status of an order"
-      operationId: "changeOrderStatus"
+    patch:
+       description: "Update the status of an order"
+       operationId: "changeOrderStatus"
+       produces:
+       - "application/json"
+       parameters:
+       - in: "query"
+         name: "id"
+         type: "string"
+         required: true
+         description: "ID of the order"
+
+       - in: "query"
+         name: "status"
+         type: "string"
+         required: true
+         description: "New status of the order"
+
+       responses:
+         202:
+           description: "Updated"
+  /revenue/:
+    get:
+      description: "Gets total revenue made by the organization"
+      operationId: "getTotalRevenue"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "id"
+      - in: "query"
+        name: "date_from"
         type: "string"
-        description: "Update the status of an order"
-        required: true
-      - in: "body"
-        name: "status"
+        required: false
+
+      - in: "query"
+        name: "date_to"
         type: "string"
-        description: "Eh"
-        required: true
+        required: false
+
       responses:
-        202:
-          description: "Updated"
+        200:
+          description: "OK"
+
+  /revenue/region/{region}:
+    get:
+      description: "Get total revenue from a region (regions are 'north', 'south', 'east', 'west')"
+      operationId: "getRevenueFromRegion"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "region"
+        required: true
+        type: "string"
+
+      - in: "query"
+        name: "date_from"
+        type: "string"
+        required: false
+
+      - in: "query"
+        name: "date_to"
+        type: "string"
+        required: false
+      responses:
+        200:
+          description: "OK"
+
+  /revenue/{sales_rep_id}:
+      get:
+        description: "Gets total revenue made by a sales rep"
+        operationId: "getRevenueForSalesRep"
+        produces:
+        - "application/json"
+        parameters:
+        - in: "path"
+          name: "sales_rep_id"
+          required: true
+          type: "string"
+          minimum: 1
+
+        - in: "query"
+          name: "date_from"
+          type: "string"
+          required: false
+
+        - in: "query"
+          name: "date_to"
+          type: "string"
+          required: false
+
+        responses:
+          200:
+            description: "OK"
+
 definitions:
   RetailOrder:
     type: "object"

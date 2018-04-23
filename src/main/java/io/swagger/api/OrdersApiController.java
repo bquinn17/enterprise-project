@@ -9,10 +9,10 @@ import io.swagger.repository.WholesaleOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,19 +152,12 @@ public class OrdersApiController implements OrdersApi {
     }
 
     @CrossOrigin
-    @RequestMapping(method={RequestMethod.PATCH},value={"/orders/update/status"})
-    public ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
-                                                         @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status) {
-        RetailOrder retailOrder;
-        Long intId = Long.valueOf(id);
-        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.fromValue(status);
-        if(intId.toString().equals(id)) {
-            retailOrder = retailOrderRepository.getOne(intId);
-        }
-        else {
-            return new ResponseEntity<RetailOrder>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<RetailOrder> changeOrderStatus(@NotNull @ApiParam(value = "ID of the order", required = true) @Valid @RequestParam(value = "id", required = true) String id, @NotNull @ApiParam(value = "New status of the order", required = true) @Valid @RequestParam(value = "status", required = true) String status) {
 
+        RetailOrder retailOrder;
+        RetailOrder.StatusEnum statusEnum = RetailOrder.StatusEnum.fromValue(status);
+        Long longId = new Long(id);
+        retailOrder = retailOrderRepository.findOne(longId);
         if(retailOrder == null) {
             return new ResponseEntity<RetailOrder>(HttpStatus.NOT_FOUND);
         }
@@ -216,7 +209,24 @@ public class OrdersApiController implements OrdersApi {
         rep.setFirstName("Selly");
         rep.setLastName("McSellsit");
         rep.setRegion(SalesRep.RegionEnum.EAST);
-        return new ResponseEntity<SalesRep>(rep, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<SalesRep>(rep, HttpStatus.FOUND);
+    }
+
+    @CrossOrigin
+    @RequestMapping(method={RequestMethod.GET},value={"/orders/all"})
+    public ResponseEntity<List<BasicOrder>> getAllOrders() {
+
+        List<RetailOrder> retailOrders = retailOrderRepository.findAll();
+        ArrayList<BasicOrder> orders = new ArrayList<>();
+        for (RetailOrder retailOrder: retailOrders) {
+            BasicOrder basicOrder = new BasicOrder();
+            basicOrder.setID(retailOrder.getID());
+            basicOrder.setStatus(retailOrder.getStatus());
+            basicOrder.setProducts(retailOrder.getProducts());
+            orders.add(basicOrder);
+        }
+
+        return new ResponseEntity<List<BasicOrder>>(orders, HttpStatus.FOUND);
     }
 
     @CrossOrigin

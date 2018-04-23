@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -54,8 +55,7 @@ public interface OrdersApi {
     @RequestMapping(value = "/orders/update/status",
             produces = { "application/json" },
             method = RequestMethod.PATCH)
-    ResponseEntity<RetailOrder> changeOrderStatus(@ApiParam(value = "ID identifying the Order" ,required=true )  @Valid @RequestBody String id,
-                                                  @ApiParam(value = "Status to change on the Order" ,required=true )  @Valid @RequestBody String status);
+    ResponseEntity<RetailOrder> changeOrderStatus(@NotNull @ApiParam(value = "ID of the order", required = true) @Valid @RequestParam(value = "id", required = true) String id, @NotNull @ApiParam(value = "New status of the order", required = true) @Valid @RequestParam(value = "status", required = true) String status);
 
 
     @ApiOperation(value = "", nickname = "getOrder", notes = "Gets a completed Order", tags={  })

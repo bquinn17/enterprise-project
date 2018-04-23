@@ -2,21 +2,18 @@ import React from 'react'
 //
 import axios from 'axios'
 //
-import { Link } from 'react-router-dom'
-//
 import Button from 'material-ui/Button'
 import Card from 'material-ui/Card'
-import { FormControl, FormHelperText } from 'material-ui/Form'
 import IconButton from 'material-ui/IconButton'
-import Input, { InputLabel } from 'material-ui/Input'
 import TextField from 'material-ui/TextField'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 //
 import ArrowBack from 'material-ui-icons/ArrowBack'
 //
-import styles from './wholesaleAccountPageStyles'
+import { Link } from 'react-router-dom'
 //
+import styles from './wholesaleAccountPageStyles'
 import flexImg from '../../flex.jpg'
 import styleImg from '../../style.jpeg'
 import activeImg from '../../active.jpg'
@@ -25,7 +22,7 @@ import activeImg from '../../active.jpg'
  * WholesaleOrderPage is used to wrap and respond to the form
  * that Sales Rep Managers use to report and make a wholesale order.
  *
- * Author: Brendan Jones, bpj1651@rit.edu
+ * Author: Brendan Jones, bpj1651@rit.edu, GitHub: brendanjones44
  */
 class WholesaleAccountPage extends React.Component {
   constructor(props) {
