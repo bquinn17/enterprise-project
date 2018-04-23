@@ -36,6 +36,7 @@ class Store extends React.Component {
     this.addItem = this.addItem.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.getCartData = this.getCartData.bind(this)
+    this.clearCart = this.clearCart.bind(this)
   }
 
   // Remove the server-side injected CSS.
@@ -53,6 +54,13 @@ class Store extends React.Component {
     this.state.itemsInCart.push(item)
     this.setState({
       totalCost: newTotalCost,
+    })
+  }
+
+  clearCart() {
+    this.setState({
+      totalCost: 0,
+      itemsInCart: []
     })
   }
 
@@ -75,8 +83,6 @@ class Store extends React.Component {
       var modelsWithNameArr = cartData.filter(e => e.modelName === item.model)
       if (modelsWithNameArr.length > 0) {
         modelsWithNameArr[0].quantity = modelsWithNameArr[0].quantity + 1
-        console.log("test")
-        console.log(cartData)
       } else {
         cartData.push({
           cost: item.cost,
@@ -139,7 +145,7 @@ class Store extends React.Component {
         pageToShow = <ContactUs />
         break;
       case 'checkout':
-        pageToShow = <CheckoutPage cartData={ this.getCartData() }/>
+        pageToShow = <CheckoutPage cartData={ this.getCartData() } clearCart={ this.clearCart }/>
         break;
     }
 
