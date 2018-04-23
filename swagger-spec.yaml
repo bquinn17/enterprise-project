@@ -173,7 +173,7 @@ paths:
 
   /revenue/region/{region}:
     get:
-      description: "Get total revenue from a region (regions are 'north', 'south', 'east', 'west')"
+      description: "Get total revenue from a region (regions are 'Rochester', 'North East')"
       operationId: "getRevenueFromRegion"
       produces:
       - "application/json"
@@ -334,10 +334,8 @@ definitions:
       region:
         type: "string"
         enum:
-        - "north"
-        - "south"
-        - "east"
-        - "west"
+        - "North East"
+        - "Rochester"
   ConfiguredPrice:
     type: "object"
     properties:
