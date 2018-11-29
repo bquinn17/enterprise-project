@@ -10,8 +10,8 @@ services:
       - MYSQL_DATABASE=sales
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=toor
-    ports:
-        - "3306:3306"
+    ports: 
+      - "3306:3306"
   api:
     container_name: erpsales_api
     build: ./
